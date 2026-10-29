@@ -9,9 +9,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 <!-- END:nextjs-agent-rules -->
 
 
-# CLAUDE.md: Nasi Padang Nan Tujuah
+# AGENTS.md: Nasi Padang Nan Tujuah
 
-Web pemesanan langsung untuk restoran **fiktif** (portofolio, tanpa uang atau data pelanggan sungguhan). MVP 5 fitur: F1 etalase dan menu, F2 keranjang dan checkout, F3 pembayaran manual, F4 status pesanan, F5 dashboard admin. Acuan lengkap: PRD proyek ini.
+Web pemesanan langsung untuk restoran **fiktif** (portofolio, tanpa uang atau data pelanggan sungguhan). MVP 5 fitur: F1 etalase dan menu, F2 keranjang dan checkout, F3 pembayaran manual, F4 status pesanan, F5 dashboard admin. Acuan lengkap: docs/PRD.md
 
 ## Stack
 Next.js 16 (App Router) + TypeScript + Tailwind + Framer Motion. Backend lewat Server Actions dan Route Handlers (tanpa server terpisah). Database PostgreSQL, Auth admin, dan Storage bukti bayar di Supabase. Deploy di Vercel, region Singapura. Semua di free tier (Rp0).
