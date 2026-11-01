@@ -58,7 +58,6 @@ export default function Footer() {
         <div className="flex flex-col gap-4">
           <h2 className={headingClass}>Contact</h2>
           <address className="flex flex-col gap-2 not-italic text-muted">
-            <span>Jl. Nan Tujuah No. 7, Kota Padang, Sumatera Barat</span>
             <a href="tel:+6281200000707" className={linkClass}>
               0812-0000-0707
             </a>
