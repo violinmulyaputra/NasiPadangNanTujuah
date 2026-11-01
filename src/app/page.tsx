@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import BestSeller from "@/components/BestSeller";
 import Hero from "@/components/Hero";
+import Testimonials from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <Suspense fallback={<div className="min-h-[760px] bg-paper" />}>
         <BestSeller />
       </Suspense>
+      <Testimonials />
     </main>
   );
 }

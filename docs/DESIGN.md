@@ -31,7 +31,7 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 - Muat lewat `next/font/google`, bukan tag link.
 - Tidak memakai miring (italic) di seluruh antarmuka: judul, aksen, maupun teks isi, termasuk deskripsi kartu Best Seller. Miring 3D pada kartu samping coverflow adalah efek gerak, bukan gaya huruf, dan tetap dipakai.
 - Skala: judul hero `clamp(2rem, 4vw, 3.25rem)` mulai `md` dengan line-height 1.15; judul seksi `clamp(1.75rem, 4vw, 3rem)` mulai `md`; subjudul seksi 1rem sampai 1,25rem; isi 1rem.
-- Di HP (di bawah `md`) judul Hero dan judul seksi sama ukurannya, yaitu token `--text-title-mobile` (`clamp(1.5rem, 6.4vw, 2.5rem)`, sekitar 24 px di layar 375 px, utilitas `text-title-mobile`). Judul Hero di HP mengalir alami di kolom kiri (sekitar 6 baris, `text-wrap: pretty`), mulai `md` empat baris lewat span block. Judul seksi dibuat lewat komponen `SectionHeading`, rata tengah dan boleh membungkus ke dua baris dengan `text-balance`, jadi seksi berikutnya ("What Our Customers Say", "Visit Us!") otomatis memakai ukuran yang sama.
+- Di HP (di bawah `md`) judul Hero dan judul seksi sama ukurannya, yaitu token `--text-title-mobile` (`clamp(1.5rem, 6.4vw, 2.5rem)`, sekitar 24 px di layar 375 px, utilitas `text-title-mobile`). Judul Hero di HP mengalir alami di kolom kiri (sekitar 6 baris, `text-wrap: pretty`), mulai `md` empat baris lewat span block. Judul seksi dibuat lewat komponen `SectionHeading`, rata tengah dan boleh membungkus ke dua baris dengan `text-balance`, jadi seksi berikutnya ("What Our Customers Say?", "Visit Us!") otomatis memakai ukuran yang sama.
 
 ## Tata letak
 - Mobile-first. Hero berdampingan di semua lebar: judul, paragraf, dan tombol di kolom kiri, piring di kanan, blok kiri sejajar vertikal di tengah piring. Hero memakai satu `h1` yang posisinya diatur lewat `grid-template-areas` (judul tidak digandakan).
@@ -44,7 +44,7 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 1. **Navbar**: logo (SVG atau PNG transparan), 4 tautan, tombol keranjang yang membuka panel samping.
 2. **Hero**: judul 4 baris mulai `md`: "Dengan beberapa" / "kali ketukan," / "Nasi Padang Nan Tujuah" / "siap diantarkan!"; di HP judul mengalir alami di kolom kiri (sekitar 6 baris). Kata "ketukan," dan "diantarkan!" berwarna brand solid, baris 3 tidak boleh terpotong. Deskripsi persis: "Sekarang, Anda bisa menikmati cita rasa khas Minangkabau yang otentik ala Nasi Padang Nan Tujuah di rumah Anda masing-masing." Tombol "Pesan Sekarang" ke /menu, piring yang bisa diputar.
 3. **Our Best Seller Menu**: carousel coverflow 3D dengan data menu `is_popular = true`. Kartu: foto, garis pemisah, nama, deskripsi singkat, tombol ke /menu.
-4. **What Our Customers Say**: kartu testimoni berjalan (marquee). Data contoh fiktif berlabel "contoh".
+4. **What Our Customers Say?**: kartu testimoni berjalan (marquee), "Our Customers" berwarna brand, subjudul "Inilah pengalaman nyata dari tamu-tamu kami". Enam ulasan contoh fiktif (nama dan kota, tanpa rating), tanpa label di kartu; keterangan data contoh ada di footer. Avatar memakai inisial.
 5. **Visit Us!**: carousel tumpukan kartu foto suasana (kiri, dengan judul dan keterangan yang mengikuti foto), daftar alamat cabang (kanan).
 6. **Footer**: logo dan nama, kalimat singkat, Quick Links, Contact, Follow Us (Facebook, X, Instagram, LinkedIn).
 
@@ -58,8 +58,8 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 Panel samping dari kanan. Isi tahap ini hanya kerangka: judul "Keranjang Anda", keadaan kosong "Keranjang masih kosong", dan tombol "Lanjut Belanja" ke /menu. Isi keranjang sungguhan dikerjakan di tahap F2.
 
 ## Konten
-- Bahasa Indonesia untuk semua teks tampilan, kecuali judul seksi yang sengaja berbahasa Inggris sesuai sketsa ("Our Best Seller Menu", "What Our Customers Say", "Visit Us!").
-- Tidak ada foto orang asli atau angka yang dikarang. Ulasan dan rating adalah data contoh fiktif dan diberi label.
+- Bahasa Indonesia untuk semua teks tampilan, kecuali judul seksi yang sengaja berbahasa Inggris sesuai sketsa ("Our Best Seller Menu", "What Our Customers Say?", "Visit Us!").
+- Tidak ada foto orang asli atau angka yang dikarang. Ulasan dan rating adalah data contoh fiktif; keterangannya ada di catatan footer.
 - Alamat, telepon, dan email adalah data contoh fiktif.
 
 ## Aset (di folder public/images/)
