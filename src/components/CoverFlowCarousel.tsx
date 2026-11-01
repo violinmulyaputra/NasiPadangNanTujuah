@@ -48,9 +48,9 @@ export interface CoverFlowCarouselProps {
   className?: string;
 }
 
-// Tombol panah: paper dengan garis line, hover brand. Blur bawaan dipertahankan.
+// Tombol panah: paper dengan garis line, hover dan fokus brand (sama dengan panah Visit Us). Blur bawaan dipertahankan.
 const arrowClass =
-  "absolute top-1/2 z-40 flex size-[46px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-line bg-paper text-ink shadow-control backdrop-blur-[8px] transition-all duration-200 hover:border-brand hover:bg-brand hover:text-paper motion-reduce:transition-none";
+  "absolute top-1/2 z-40 flex size-[46px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-line bg-paper text-ink shadow-control backdrop-blur-[8px] transition-all duration-150 hover:border-brand hover:bg-brand hover:text-paper focus-visible:border-brand focus-visible:bg-brand focus-visible:text-paper motion-reduce:transition-none";
 
 export default function CoverFlowCarousel({
   items,
