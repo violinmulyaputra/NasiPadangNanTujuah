@@ -25,8 +25,9 @@
 
   --radius-card: 18px;
 
-  /* Lebar konten maksimum, pakai lewat max-w-(--container) */
+  /* Lebar konten maksimum, pakai lewat max-w-(--container) atau max-w-container */
   --container: 1280px;
+  --max-width-container: var(--container);
 
   /* Marquee testimoni. Atur kecepatan dan jarak lewat --duration dan --gap di elemen. */
   --animate-marquee: marquee var(--duration, 40s) linear infinite;
