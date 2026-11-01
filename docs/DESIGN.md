@@ -30,16 +30,16 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 - Teks dan UI: Plus Jakarta Sans.
 - Muat lewat `next/font/google`, bukan tag link.
 - Tidak memakai miring (italic) pada judul atau aksen.
-- Skala: judul hero `clamp(2.25rem, 6vw, 4.5rem)`; judul seksi `clamp(1.75rem, 4vw, 3rem)`; subjudul seksi 1rem sampai 1,25rem; isi 1rem.
+- Skala: judul hero `clamp(2rem, 4vw, 3.25rem)` mulai `md` (di HP menyesuaikan lebar layar, lihat Tata letak) dengan line-height 1.15; judul seksi `clamp(1.75rem, 4vw, 3rem)`; subjudul seksi 1rem sampai 1,25rem; isi 1rem.
 
 ## Tata letak
-- Mobile-first. Hero: teks di atas, piring di bawah (di HP); dua kolom mulai `md`.
+- Mobile-first. Hero selalu dua kolom di semua lebar: teks di kiri, piring di kanan, sejajar vertikal di tengah. Judul hero selalu 4 baris di semua lebar layar (di bawah 340 px hanya baris 3 yang boleh membungkus). Di HP (di bawah `md`) seksi memakai `py-12`, kolom teks berakhir di sekitar 62 persen layar dengan padding kiri 24 px, ukuran judul menyesuaikan lebar layar (`clamp(1rem, 4.5vw, 1.5rem)`, baris 3 muat tanpa membungkus mulai 340 px), paragraf 0,875rem, dan tombol ringkas setinggi 44 px. Piring sekitar 42vw (140 sampai 260 px), sejajar vertikal di tengah blok teks, dan hanya sedikit terpotong di tepi kanan (kurang dari 10 persen diameternya). Pembungkus hero memakai `overflow-x: clip`, piring tidak menumpuk di atas teks. Mulai `md` piring tampil penuh.
 - Semua seksi dipusatkan, jarak vertikal antarseksi `py-16 md:py-24`.
 - Navbar menempel di atas: logo kiri, tautan tengah (Tentang, Menu, Ulasan, Kontak), ikon keranjang kanan. Di HP tautan jadi menu lipat.
 
 ## Seksi dan komponen
 1. **Navbar**: logo (SVG atau PNG transparan), 4 tautan, tombol keranjang yang membuka panel samping.
-2. **Hero**: judul "Dengan beberapa kali ketukan, Nasi Padang Nan Tujuah siap diantarkan!" (kata "ketukan." dan "diantarkan!" berwarna brand), deskripsi, tombol "Pesan Sekarang" ke /menu, piring yang bisa diputar.
+2. **Hero**: judul selalu 4 baris di semua lebar layar: "Dengan beberapa" / "kali ketukan," / "Nasi Padang Nan Tujuah" / "siap diantarkan!". Kata "ketukan," dan "diantarkan!" berwarna brand solid, baris 3 tidak boleh terpotong. Deskripsi persis: "Sekarang, Anda bisa menikmati cita rasa khas Minangkabau yang otentik ala Nasi Padang Nan Tujuah di rumah Anda masing-masing." Tombol "Pesan Sekarang" ke /menu, piring yang bisa diputar.
 3. **Our Best Seller Menu**: carousel coverflow 3D dengan data menu `populer = true`. Kartu: foto, garis pemisah, nama, deskripsi singkat, tombol ke /menu.
 4. **What Our Customers Say**: kartu testimoni berjalan (marquee). Data contoh fiktif berlabel "contoh".
 5. **Visit Us!**: carousel tumpukan kartu foto suasana (kiri, dengan judul dan keterangan yang mengikuti foto), daftar alamat cabang (kanan).
