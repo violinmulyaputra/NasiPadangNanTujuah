@@ -73,3 +73,4 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 - Server backend terpisah atau layanan berbayar (budget Rp0).
 - Menyalin teks, foto, atau nama dari situs referensi Bites. Konten harus buatan sendiri.
 - Menambah fitur di luar F1 sampai F5 tanpa persetujuan. Kalau ragu, tanyakan dulu.
+- Jangan pakai skill superdesign kecuali saya memintanya secara eksplisit.
