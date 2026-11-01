@@ -38,6 +38,11 @@
   }
 }
 
+/* Kunci scroll halaman saat panel keranjang terbuka */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
