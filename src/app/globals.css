@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Token dari docs/DESIGN.md. Komponen memakai utilitas ini, bukan nilai langsung. */
+@theme {
+  --color-brand: #e1331c;
+  --color-ink: #161513;
+  --color-paper: #fffdf9;
+  --color-muted: #6b655e;
+  --color-line: #d9d4cb;
+
+  --radius-card: 18px;
+
+  /* Lebar konten maksimum, pakai lewat max-w-(--container) */
+  --container: 1280px;
+
+  /* Marquee testimoni. Atur kecepatan dan jarak lewat --duration dan --gap di elemen. */
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap, 1rem)));
+    }
+  }
 }
 
+/* Font dari next/font (variabel di <html>), jadi pakai inline */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
