@@ -29,18 +29,21 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 - Judul besar: Fraunces (serif hangat), bobot 600 sampai 700. Kata aksen berwarna brand.
 - Teks dan UI: Plus Jakarta Sans.
 - Muat lewat `next/font/google`, bukan tag link.
-- Tidak memakai miring (italic) pada judul atau aksen.
-- Skala: judul hero `clamp(2rem, 4vw, 3.25rem)` mulai `md` (di HP menyesuaikan lebar layar, lihat Tata letak) dengan line-height 1.15; judul seksi `clamp(1.75rem, 4vw, 3rem)`; subjudul seksi 1rem sampai 1,25rem; isi 1rem.
+- Tidak memakai miring (italic) di seluruh antarmuka: judul, aksen, maupun teks isi, termasuk deskripsi kartu Best Seller. Miring 3D pada kartu samping coverflow adalah efek gerak, bukan gaya huruf, dan tetap dipakai.
+- Skala: judul hero `clamp(2rem, 4vw, 3.25rem)` mulai `md` dengan line-height 1.15; judul seksi `clamp(1.75rem, 4vw, 3rem)` mulai `md`; subjudul seksi 1rem sampai 1,25rem; isi 1rem.
+- Di HP (di bawah `md`) judul Hero dan judul seksi sama ukurannya, yaitu token `--text-title-mobile` (`clamp(1.5rem, 6.4vw, 2.5rem)`, sekitar 24 px di layar 375 px, utilitas `text-title-mobile`). Judul Hero di HP mengalir alami di kolom kiri (sekitar 6 baris, `text-wrap: pretty`), mulai `md` empat baris lewat span block. Judul seksi dibuat lewat komponen `SectionHeading`, rata tengah dan boleh membungkus ke dua baris dengan `text-balance`, jadi seksi berikutnya ("What Our Customers Say", "Visit Us!") otomatis memakai ukuran yang sama.
 
 ## Tata letak
-- Mobile-first. Hero selalu dua kolom di semua lebar: teks di kiri, piring di kanan, sejajar vertikal di tengah. Judul hero selalu 4 baris di semua lebar layar (di bawah 340 px hanya baris 3 yang boleh membungkus). Di HP (di bawah `md`) seksi memakai `py-12`, kolom teks berakhir di sekitar 62 persen layar dengan padding kiri 24 px, ukuran judul menyesuaikan lebar layar (`clamp(1rem, 4.5vw, 1.5rem)`, baris 3 muat tanpa membungkus mulai 340 px), paragraf 0,875rem, dan tombol ringkas setinggi 44 px. Piring sekitar 42vw (140 sampai 260 px), sejajar vertikal di tengah blok teks, dan hanya sedikit terpotong di tepi kanan (kurang dari 10 persen diameternya). Pembungkus hero memakai `overflow-x: clip`, piring tidak menumpuk di atas teks. Mulai `md` piring tampil penuh.
+- Mobile-first. Hero berdampingan di semua lebar: judul, paragraf, dan tombol di kolom kiri, piring di kanan, blok kiri sejajar vertikal di tengah piring. Hero memakai satu `h1` yang posisinya diatur lewat `grid-template-areas` (judul tidak digandakan).
+- Hero di HP (di bawah `md`): seksi `py-12`. Kolom kiri sekitar 60 persen lebar layar dengan padding kiri 24 px: judul (ukuran sama dengan judul seksi, `--text-title-mobile`, mengalir alami), lalu paragraf 0,875rem berjarak 16 px, lalu tombol ringkas setinggi 40 px berjarak 24 px. Kolom kanan piring sekitar 48vw yang sekitar 20 persen diameternya terpotong di tepi kanan layar dan tidak menimpa teks. Pembungkus hero memakai `overflow-x: clip`.
+- Hero mulai `md`: judul empat baris, paragraf, dan tombol di kolom kiri, piring di kanan tampil penuh, sejajar vertikal di tengah.
 - Semua seksi dipusatkan, jarak vertikal antarseksi `py-16 md:py-24`.
 - Navbar menempel di atas: logo kiri, tautan tengah (Tentang, Menu, Ulasan, Kontak), ikon keranjang kanan. Di HP tautan jadi menu lipat.
 
 ## Seksi dan komponen
 1. **Navbar**: logo (SVG atau PNG transparan), 4 tautan, tombol keranjang yang membuka panel samping.
-2. **Hero**: judul selalu 4 baris di semua lebar layar: "Dengan beberapa" / "kali ketukan," / "Nasi Padang Nan Tujuah" / "siap diantarkan!". Kata "ketukan," dan "diantarkan!" berwarna brand solid, baris 3 tidak boleh terpotong. Deskripsi persis: "Sekarang, Anda bisa menikmati cita rasa khas Minangkabau yang otentik ala Nasi Padang Nan Tujuah di rumah Anda masing-masing." Tombol "Pesan Sekarang" ke /menu, piring yang bisa diputar.
-3. **Our Best Seller Menu**: carousel coverflow 3D dengan data menu `populer = true`. Kartu: foto, garis pemisah, nama, deskripsi singkat, tombol ke /menu.
+2. **Hero**: judul 4 baris mulai `md`: "Dengan beberapa" / "kali ketukan," / "Nasi Padang Nan Tujuah" / "siap diantarkan!"; di HP judul mengalir alami di kolom kiri (sekitar 6 baris). Kata "ketukan," dan "diantarkan!" berwarna brand solid, baris 3 tidak boleh terpotong. Deskripsi persis: "Sekarang, Anda bisa menikmati cita rasa khas Minangkabau yang otentik ala Nasi Padang Nan Tujuah di rumah Anda masing-masing." Tombol "Pesan Sekarang" ke /menu, piring yang bisa diputar.
+3. **Our Best Seller Menu**: carousel coverflow 3D dengan data menu `is_popular = true`. Kartu: foto, garis pemisah, nama, deskripsi singkat, tombol ke /menu.
 4. **What Our Customers Say**: kartu testimoni berjalan (marquee). Data contoh fiktif berlabel "contoh".
 5. **Visit Us!**: carousel tumpukan kartu foto suasana (kiri, dengan judul dan keterangan yang mengikuti foto), daftar alamat cabang (kanan).
 6. **Footer**: logo dan nama, kalimat singkat, Quick Links, Contact, Follow Us (Facebook, X, Instagram, LinkedIn).
@@ -98,7 +101,7 @@ Konsistensi
 
 ## Pengecualian komponen 21st.dev
 Larangan di atas tidak berlaku di dalam 4 komponen ini. Pertahankan gaya aslinya:
-- **Carousel coverflow (Best Seller):** latar gelap, aksen emas, gradien overlay, tombol panah dengan blur (`backdrop-filter`), tag di kartu (isi dengan kategori menu, misalnya "#Ayam"), bayangan, dan transisi `all` pada tombol. Seksi ini akan tampil lebih gelap daripada seksi lain, dan itu disengaja.
+- **Carousel coverflow (Best Seller):** tema terang menggantikan latar gelap dan aksen emas aslinya. Latar seksi `paper` tanpa foto buram atau gradien. Semua kartu (termasuk kartu tengah) semi-transparan: `surface` dengan opasitas 45 persen dan blur latar, garis tepi tipis 1 px `line`, dan bayangan hangat lembut; foto piring diberi bayangan halus (`drop-shadow-plate`) tanpa latar tambahan. Kartu memakai aksen merah brand (garis pembatas, tombol "Lihat Menu" dengan hover `brand-dark`, titik halaman aktif). Judul menu `ink` (huruf besar), tag dan deskripsi `muted`. Kartu samping diredupkan dengan lapisan `paper` sekitar 55 persen. Tombol panah `paper` dengan garis `line` dan ikon `ink`, hover `brand`. Ukuran kartu tengah 350 x 525 px mulai `md`. Di HP kartu 290 x 480 px dengan foto lebih besar dan teks lebih kecil: foto persegi 240 px (sekitar 83 persen lebar kartu) di tengah bagian atas, judul menu 1,25rem, deskripsi 0,8125rem (paling banyak 4 baris, tidak miring), dan tombol "Lihat Menu" setinggi 40 px dengan teks 0,75rem. Kartu samping mengikuti proporsi yang sama. Efek yang dipertahankan: coverflow 3D (miring dan kedalaman), blur pada panah (`backdrop-filter`), bayangan, dan transisi bawaan.
 - **Testimoni berjalan:** gradien lembut pada kartu, `border-t`, dan avatar shadcn bawaan. Avatar memakai inisial (tanpa foto orang).
 - **Tumpukan kartu foto (Visit Us):** CSS bawaan komponen, termasuk transisi dan bayangannya.
 - **Piring putar:** komponen buatan sendiri, tetap ikut seluruh larangan di atas.

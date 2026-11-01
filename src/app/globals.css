@@ -7,6 +7,21 @@
   --color-paper: #fffdf9;
   --color-muted: #6b655e;
   --color-line: #d9d4cb;
+  /* Latar kartu carousel Best Seller (sedikit lebih gelap dari paper) */
+  --color-surface: #f3ede2;
+  /* Hover tombol brand: merah lebih gelap, solid */
+  --color-brand-dark: #b8281a;
+
+  /* Bayangan hangat dari ink, opasitas rendah */
+  --shadow-card: 0 20px 40px rgb(22 21 19 / 0.12);
+  --shadow-card-side: 0 10px 24px rgb(22 21 19 / 0.08);
+  --shadow-control: 0 8px 24px rgb(22 21 19 / 0.12);
+  /* Bayangan halus foto piring agar piring putih tetap terpisah dari kartu semi-transparan */
+  --drop-shadow-plate: 0 8px 14px rgb(22 21 19 / 0.16);
+
+  /* Ukuran judul di HP (di bawah md): judul Hero dan judul seksi sama besar.
+     Dipakai lewat utilitas text-title-mobile. */
+  --text-title-mobile: clamp(1.5rem, 6.4vw, 2.5rem);
 
   --radius-card: 18px;
 
