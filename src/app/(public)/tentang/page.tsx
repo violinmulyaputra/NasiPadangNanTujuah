@@ -92,7 +92,7 @@ export default function AboutPage() {
               <p className={textClass}>
                 Sekembalinya ke Semarang, ia mengembangkan resep yang dipelajari dengan tetap{" "}
                 <strong className={accentClass}>mempertahankan karakter autentiknya</strong>. Dari
-                perjalanan inilah Nan Tujuah hadir sebagai restoran yang menyajikan{" "}
+                perjalanan inilah, Nan Tujuah hadir sebagai restoran yang menyajikan{" "}
                 <strong className={accentClass}>masakan Padang</strong> dalam suasana nyaman dengan
                 pelayanan hangat.
               </p>
