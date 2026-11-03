@@ -1,8 +1,7 @@
 "use server";
 
-import { createHash } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
+import { getIpHash } from "@/lib/ip-hash";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { validateReview } from "@/lib/review-validation";
 import type { ReviewFormState } from "@/types/review";
@@ -12,15 +11,6 @@ const MIN_GAP_MS = 20_000;
 const RATE_LIMIT_MESSAGE = "Terlalu sering mengirim. Coba lagi nanti.";
 const GENERIC_ERROR = "Ulasan gagal dikirim. Coba lagi beberapa saat lagi.";
 const SUCCESS_MESSAGE = "Terima kasih! Ulasan Anda sudah terkirim.";
-
-async function getIpHash(salt: string) {
-  const h = await headers();
-  // Di Vercel, nilai pertama x-forwarded-for adalah IP klien.
-  // Tanpa header (mis. dev lokal) semua permintaan berbagi satu kuota.
-  const ip =
-    h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip")?.trim() || "unknown";
-  return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
-}
 
 export async function submitReview(
   _prevState: ReviewFormState,
@@ -47,10 +37,7 @@ export async function submitReview(
   }
 
   try {
-    const salt = process.env.REVIEW_IP_SALT;
-    if (!salt) throw new Error("REVIEW_IP_SALT belum diisi");
-
-    const ipHash = await getIpHash(salt);
+    const ipHash = await getIpHash();
     const supabase = createAdminClient();
 
     // shortcut: cek lalu tulis tidak atomik, kiriman serentak bisa lolos sedikit

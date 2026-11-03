@@ -40,7 +40,9 @@ export default function MenuDetailDialog({ item, openKey, onSubmit, onClose }: P
         if (e.target === e.currentTarget) ref.current?.close();
       }}
       className={cn(
-        "m-auto max-h-[90dvh] w-[calc(100%-2rem)] overflow-hidden rounded-card bg-card p-0 text-ink backdrop:bg-ink/50",
+        // overflow-clip, bukan hidden: elemen overflow hidden tetap bisa digulir browser saat
+        // elemen di dalamnya difokus, sehingga bilah bawah pernah ikut terangkat.
+        "m-auto max-h-[90dvh] w-[calc(100%-2rem)] overflow-clip rounded-card bg-card p-0 text-ink backdrop:bg-ink/50",
         "scale-96 opacity-0 transition-[opacity,scale,display,overlay] transition-discrete duration-250 ease-out open:scale-100 open:opacity-100 starting:open:scale-96 starting:open:opacity-0 motion-reduce:transition-none",
         hasGroups ? "max-w-[760px]" : "max-w-md",
       )}
@@ -84,7 +86,7 @@ function DialogBody({
   };
 
   return (
-    <form onSubmit={submit} className="flex max-h-[90dvh] flex-col">
+    <form onSubmit={submit} className="relative flex max-h-[90dvh] flex-col">
       <button
         type="button"
         autoFocus
@@ -95,14 +97,23 @@ function DialogBody({
         <X aria-hidden className="size-5" />
       </button>
 
-      <div className={cn("grid min-h-0 gap-8 overflow-y-auto p-6 pt-14 md:p-8", hasGroups && "md:grid-cols-2")}>
-        <div className="flex flex-col">
+      {/* Satu area gulir. HP (dan menu tanpa pilihan): seluruh isi tergulir. Mulai md dengan
+          pilihan: kolom kiri tetap, hanya kolom pilihan yang tergulir. Bilah bawah di luar. */}
+      <div
+        className={cn(
+          "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+          hasGroups && "md:grid md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:overflow-hidden",
+        )}
+      >
+        {/* md:overflow-y-auto hanya cadangan bila deskripsi sangat panjang di jendela pendek */}
+        <div className={cn("flex flex-col p-6 pt-14", hasGroups ? "md:min-h-0 md:overflow-y-auto md:p-8 md:pr-4" : "md:p-8")}>
           <MenuPhoto
             src={item.image_url}
             alt={item.name}
             sizes="(min-width: 768px) 280px, 160px"
             eager
-            className="mx-auto size-40 rounded-card md:size-[280px]"
+            // Mulai md mengecil di jendela pendek agar kolom kiri muat tanpa digulir
+            className="mx-auto size-40 rounded-card md:size-[min(280px,26dvh)]"
           />
           <h2 className="mt-6 text-center text-lg font-semibold text-brand-strong uppercase">{item.name}</h2>
           <span aria-hidden className="mx-auto mt-3 h-0.5 w-14 bg-brand" />
@@ -138,7 +149,7 @@ function DialogBody({
         </div>
 
         {hasGroups && (
-          <div className="divide-y divide-line">
+          <div className="divide-y divide-line px-6 pb-6 md:min-h-0 md:overflow-y-auto md:overscroll-contain md:p-8 md:pl-4">
             {groups.map((group) => (
               <fieldset key={group.id} className="py-4 first:pt-0 last:pb-0">
                 <legend className="float-left mb-2 w-full text-xs font-semibold tracking-wider text-brand-strong uppercase">
@@ -146,7 +157,9 @@ function DialogBody({
                 </legend>
                 <div className="clear-left">
                   {group.choices.map((choice) => (
-                    <label key={choice.id} className="flex min-h-11 cursor-pointer items-center justify-between gap-4 py-1">
+                    // relative: radio sr-only (absolute) diposisikan di labelnya, di dalam area gulir,
+                    // jadi fokus hanya menggulir kolom pilihan secukupnya.
+                    <label key={choice.id} className="relative flex min-h-11 cursor-pointer items-center justify-between gap-4 py-1">
                       <span>
                         <span className="block text-sm">{choice.label}</span>
                         <span className="block text-xs text-muted">{formatRupiah(choice.price)}</span>
