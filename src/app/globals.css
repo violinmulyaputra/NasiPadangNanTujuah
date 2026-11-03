@@ -9,6 +9,8 @@
   --color-line: #d9d4cb;
   /* Latar kartu carousel Best Seller (sedikit lebih gelap dari paper) */
   --color-surface: #f3ede2;
+  /* Latar kartu halaman Ulasan (ringkasan, form, kartu ulasan) */
+  --color-card: #f9f6ef;
   /* Hover tombol brand: merah lebih gelap, solid */
   --color-brand-dark: #b8281a;
   /* Teks merah berukuran kecil di atas paper: kontras 5,20:1 (brand hanya 4,41:1) */

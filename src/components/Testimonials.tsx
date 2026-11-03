@@ -2,6 +2,7 @@
 // avatar shadcn, dan gerak marquee dipertahankan (lihat "Pengecualian komponen 21st.dev" di
 // docs/DESIGN.md). Komponen server: marquee murni CSS (animate-marquee dari globals.css).
 import { Avatar, AvatarFallback } from "./Avatar";
+import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
 // Ulasan contoh fiktif (bukan pelanggan sungguhan)
@@ -69,22 +70,22 @@ export default function Testimonials() {
   return (
     <section className="bg-paper py-16 text-ink md:py-24">
       <div className="mx-auto flex max-w-container flex-col items-center gap-8 text-center md:gap-16">
-        <div className="px-4">
+        <Reveal index={0} className="px-4">
           <SectionHeading
             title={
               <>
-                What <span className="text-brand">Our Customers</span> Say?
+                Apa <span className="text-brand">Kata</span> Mereka
               </>
             }
             subtitle="Inilah pengalaman nyata dari tamu-tamu kami"
           />
-        </div>
+        </Reveal>
 
         {/* Dua salinan daftar berjalan berurutan; salinan kedua hanya untuk efek bersambung
             (aria-hidden). Berhenti saat hover atau saat fokus di dalamnya. Untuk
             prefers-reduced-motion animasi mati (globals.css), salinan kedua disembunyikan,
             dan daftar bisa digulir horizontal. */}
-        <div className="relative w-full">
+        <Reveal index={1} className="relative w-full">
           <div
             tabIndex={0}
             role="region"
@@ -108,7 +109,7 @@ export default function Testimonials() {
 
           <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/3 bg-linear-to-r from-paper motion-safe:sm:block" />
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 bg-linear-to-l from-paper motion-safe:sm:block" />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

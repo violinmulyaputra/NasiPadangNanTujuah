@@ -66,7 +66,7 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 - Payment gateway (Midtrans, Xendit) atau pembayaran uang sungguhan. Rekening dan QRIS hanya data contoh.
 - Pelacakan kurir real-time atau GPS, dan ongkir berdasarkan jarak. Ongkir tetap per zona.
 - Notifikasi otomatis lewat WhatsApp API. Cukup tautan `wa.me`.
-- Promo, kupon, poin loyalitas, dan fitur kirim ulasan. Ulasan dan rating di etalase hanya data contoh.
+- Promo, kupon, dan poin loyalitas. Ulasan dan rating di etalase beranda hanya data contoh.
 - Multi-cabang, multi-admin berperan, laporan keuangan, PWA, aplikasi mobile native, dan multi-bahasa.
 - Reservasi meja dan blog.
 - Integrasi GoFood, GrabFood, atau ShopeeFood.
@@ -74,6 +74,9 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 - Menyalin teks, foto, atau nama dari situs referensi Bites. Konten harus buatan sendiri.
 - Menambah fitur di luar F1 sampai F5 tanpa persetujuan. Kalau ragu, tanyakan dulu.
 - Jangan pakai skill superdesign kecuali saya memintanya secara eksplisit.
+
+## Keputusan cakupan
+- 2026-11-03: fitur kirim ulasan disetujui sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Larangan lain tetap berlaku.
 
 <!-- BEGIN:nextjs-agent-feedback -->
 

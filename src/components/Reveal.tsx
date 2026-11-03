@@ -30,7 +30,7 @@ export default function Reveal({ index = 0, className, children }: Props) {
       variants={reduce ? instant : variants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       className={className}
     >
       {/* Tanpa JavaScript konten tetap terlihat */}
