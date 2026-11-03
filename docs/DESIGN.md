@@ -41,7 +41,9 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 - Hero di HP (di bawah `md`): seksi `py-12`. Kolom kiri sekitar 60 persen lebar layar dengan padding kiri 24 px: judul (ukuran sama dengan judul seksi, `--text-title-mobile`, mengalir alami), lalu paragraf 0,875rem berjarak 16 px, lalu tombol ringkas setinggi 40 px berjarak 24 px. Kolom kanan piring sekitar 48vw yang sekitar 20 persen diameternya terpotong di tepi kanan layar dan tidak menimpa teks. Pembungkus hero memakai `overflow-x: clip`.
 - Hero mulai `md`: judul empat baris, paragraf, dan tombol di kolom kiri, piring di kanan tampil penuh, sejajar vertikal di tengah.
 - Semua seksi dipusatkan, jarak vertikal antarseksi `py-16 md:py-24`.
-- Latar halaman `paper` dipasang di `html` dan `body` (`globals.css`), termasuk area overscroll di HP. Seksi tidak memberi latar sendiri (paling jauh `bg-paper`, sama dengan halaman); warna lain hanya untuk kartu (`card`, `surface`). Tanpa putih murni (`bg-white`, `#fff`) sebagai latar; putih hanya untuk teks atau ikon di atas merah, lewat token `paper`.
+- **Satu latar situs: `paper` (#FFFDF9).** Dipasang di `html` dan `body` (`globals.css`), termasuk area overscroll di HP, dan sebagai `theme-color` (export `viewport` di `layout.tsx`; meta tag tidak bisa membaca variabel CSS, jadi nilainya disalin dan harus diubah bersama token). Navbar, menu lipat HP, panel keranjang, dan footer juga `bg-paper`. Seksi tidak memberi latar sendiri (paling jauh `bg-paper`, sama dengan halaman); warna lain hanya untuk kartu (`card` di Ulasan dan Kontak, `surface` di seksi lain), tombol, dan overlay. Tanpa putih murni (`bg-white`, `#fff`) atau `bg-neutral/gray/slate/stone/zinc-*` sebagai latar; putih hanya untuk teks atau ikon di atas merah, lewat token `paper`.
+- **Variabel shadcn:** proyek tidak memakai variabel bawaan shadcn (`--background`, `--card`, `--popover`, dan sejenisnya tidak ada di `globals.css`). Komponen shadcn (Avatar) memakai token proyek langsung (`bg-surface`). Jika komponen shadcn baru ditambahkan, variabelnya dipetakan ke token proyek (`--background` ke `--color-paper`, `--foreground` ke `--color-ink`, `--card` ke `--color-card`, `--border` ke `--color-line`, `--muted-foreground` ke `--color-muted`), bukan putih bawaan.
+- **Pemudaran ke latar:** setiap gradasi atau mask yang berakhir ke latar memakai `paper` persis (`from-paper`, `to-paper`, atau mask ke transparan di atas latar `paper`), bukan putih atau krem lain: tepi marquee testimoni, scrim dan pemudaran bawah band Ulasan dan Kontak. Foto yang tepinya sudah memudar tetapi tidak persis `paper` (selisih lebih dari 2 per kanal) tidak diubah berkasnya; tepinya diberi mask tipis.
 - Navbar menempel di atas: logo kiri, tautan tengah (Tentang, Menu, Ulasan, Kontak), ikon keranjang kanan. Di HP tautan jadi menu lipat.
 
 ## Seksi dan komponen
@@ -99,7 +101,7 @@ Seksi kedua halaman Tentang, di bawah dua baris cerita, `py-16 md:py-24`.
   | 7. Kebersamaan | 1,31 / 3,00 | 3,12 / 1,36 | meja dan tamu di sisi kanan |
 - **Interaksi:** hover mouse (gerak kursor nyata) membuka kartu; klik atau ketuk strip membuka kartu itu; klik atau ketuk kartu terbuka membuka modal. Tiap item `<button>` dengan `aria-label` judul dan `aria-expanded`; fokus keyboard yang terlihat ikut membuka kartu, Enter atau Space membuka modal, ring fokus `brand`.
 - **Modal:** overlay `bg-paper/70` dengan `backdrop-blur-lg`, foto 1:1 selebar `min(92vw, 560px)` dengan transisi `layoutId` dari kartu. Teks (gaya sama dengan panel) di kartu `paper` di bawah foto, tidak menumpuk di atas foto. Tombol tutup, Escape, atau klik overlay menutup; `role="dialog"`, `aria-modal`, scroll body terkunci, fokus kembali ke item pemicu.
-- **Foto:** `public/images/tentang/value-1.webp` sampai `value-7.webp`, foto polos tanpa teks, sumber 1:1, 1200 x 1200 px, WebP maksimal 150 KB; di kartu tampil `object-cover`. Judul dan deskripsi selalu dari kode. 
+- **Foto:** `public/images/tentang/value-1.webp` sampai `value-7.webp`, foto polos tanpa teks, sumber 1:1, 1200 x 1200 px, WebP maksimal 150 KB; di kartu tampil `object-cover`. Tepi bawah ketujuh foto memudar ke putih murni (selisih 6 dari `paper`), jadi foto di kartu akordeon diberi mask tipis `mask-b-from-96%` (4 persen terbawah memudar ke latar `paper`); foto di modal tanpa mask. Judul dan deskripsi selalu dari kode. 
 - **Gerak:** lebar kartu bertransisi 300 ms `ease-in-out`. `prefers-reduced-motion`: tanpa transisi lebar, tanpa animasi layout, panel langsung tampil.
 
 ## Halaman Ulasan
@@ -141,20 +143,20 @@ Rute `/ulasan` (`src/app/(public)/ulasan/page.tsx`), komponen server. Tautan "Ul
 ## Halaman Kontak
 Rute `/kontak` (`src/app/(public)/kontak/page.tsx`), komponen server. Tautan "Kontak" di navbar, menu lipat HP, dan Quick Links footer lewat `src/lib/nav-links.ts`; bagian Contact footer tidak berubah. Tanpa formulir kontak, tanpa peta, tanpa WhatsApp API.
 - **Band judul** (seksi pertama, cara yang sama dengan band Ulasan): `section` `relative overflow-hidden` selebar layar, tinggi minimal 240 px di HP dan 320 px mulai `md`, isi sejajar vertikal di tengah di dalam kontainer `--container`.
-  - Foto `public/images/kontak/hero.webp`: 16:9, 1920 x 1080, WebP, sekitar 63 KB. Absolut `inset-0`, `object-cover` posisi tengah atas agar lampu gantung terlihat. Foto memudar sendiri ke krem di sisi kanan dan bawah, tetapi band pendek memotong tepi bawahnya, jadi lapisan `h-1/3` dari transparan ke `paper` di tepi bawah band (semua lebar) menyatukannya dengan seksi kartu tanpa garis batas.
+  - Foto `public/images/kontak/hero.webp`: 3:1, 1920 x 640, WebP, sekitar 40 KB (meja makan dengan mawar merah). Absolut `inset-0`, `object-cover` posisi tengah atas. Foto memudar sendiri ke krem di sisi kanan dan bawah (tepi bawah selisih paling besar 10 dari `paper`, kanan 4), tetapi band pendek memotong tepi bawahnya, jadi lapisan `h-1/3` dari transparan ke `paper` di tepi bawah band (semua lebar) menyatukannya dengan seksi kartu tanpa garis batas.
   - Judul `h1` "Hubungi Kami" ("Hubungi" `brand`, "Kami" `ink`) rata kanan di semua lebar, ukuran sama dengan judul halaman lain; di bawahnya "Hubungi Nasi Padang Nan Tujuah sesuai kebutuhan Anda." rata kanan, `ink`, 1rem di HP dan 1,125rem mulai `md`, jarak 12 px. Foto, scrim, `h1`, dan subjudul tanpa animasi (tanpa `Reveal`). Foto: `next/image` `fill`, `preload` (pengganti `priority`), `sizes="100vw"`, `alt=""`, `aria-hidden`.
-  - **Scrim** `paper` di antara foto dan teks: di HP rata 30 persen (teks selebar layar); mulai `md` gradien ke kanan 0 persen di tepi kiri naik ke 20 persen di tengah lalu tetap 20 persen, jadi sisi kiri foto tetap jelas. Halo teks tidak diperlukan.
-  - **Pengukuran kontras** (piksel foto asli dipetakan ke kotak kata sesuai `object-cover` posisi atas, dicampur scrim dan pemudaran bawah; rata-rata / persentil 10 terburuk; syarat `ink` 4,5:1, `brand` besar 3:1). Yang menentukan hanya "Hubungi": tanpa scrim p10 hanya 2,53 sampai 2,96:1. Kepekatan terendah yang lolos per lebar: 30 persen (360, 375), 25 persen (414), 15 persen (768), 20 persen (1024, 1280), 10 persen (1920). Hasil akhir:
+  - **Scrim** `paper` di antara foto dan teks: di HP rata 45 persen (teks selebar layar); mulai `md` gradien ke kanan 0 persen di tepi kiri naik ke 30 persen di tengah lalu tetap 30 persen, jadi sisi kiri foto tetap jelas. Halo teks tidak diperlukan.
+  - **Pengukuran kontras** (piksel foto asli dipetakan ke kotak kata sesuai `object-cover` posisi atas, dicampur scrim dan pemudaran bawah; rata-rata / persentil 10 terburuk; syarat `ink` 4,5:1, `brand` besar 3:1). Yang menentukan hanya "Hubungi". Foto diganti (1920 x 640) setelah pengukuran pertama, jadi diukur ulang: scrim lama (30 persen HP, 20 persen mulai `md`) gagal di 360 sampai 414 px (p10 2,74 sampai 2,81:1) dan 1920 px (2,92:1). Kepekatan terendah yang lolos per lebar: 45 persen (360), 40 persen (375, 414), 20 persen (768 sampai 1280), 25 persen (1920, tepat 3,00:1, jadi dipakai 30 persen agar ada cadangan). Hasil akhir:
 
     | Lebar | "Hubungi" `brand` | "Kami" `ink` | Subjudul `ink` |
     | --- | --- | --- | --- |
-    | 360 | 3,39 / 3,02 | 16,08 / 14,99 | 14,91 / 12,62 |
-    | 375 | 3,45 / 3,07 | 16,18 / 15,17 | 15,03 / 12,71 |
-    | 414 | 3,49 / 3,10 | 16,34 / 15,42 | 14,53 / 11,90 |
-    | 768 | 3,58 / 3,10 | 16,56 / 15,68 | 13,96 / 11,34 |
-    | 1024 | 3,51 / 3,06 | 16,80 / 15,68 | 14,48 / 11,95 |
-    | 1280 | 3,49 / 3,01 | 16,75 / 15,79 | 14,87 / 12,47 |
-    | 1920 | 3,48 / 3,22 | 14,57 / 14,16 | 12,93 / 11,60 |
+    | 360 | 3,33 / 3,06 | 14,58 / 13,67 | 14,76 / 13,34 |
+    | 375 | 3,35 / 3,10 | 14,71 / 13,71 | 14,82 / 13,41 |
+    | 414 | 3,36 / 3,11 | 15,00 / 14,23 | 14,60 / 12,97 |
+    | 768 | 3,62 / 3,24 | 15,76 / 15,39 | 14,40 / 12,87 |
+    | 1024 | 3,74 / 3,50 | 16,73 / 16,00 | 15,23 / 13,78 |
+    | 1280 | 3,60 / 3,32 | 16,73 / 15,83 | 15,71 / 13,87 |
+    | 1920 | 3,27 / 3,09 | 14,48 / 13,55 | 13,38 / 12,11 |
 - **Kartu** (seksi `py-16 md:py-24`, lebar `--container`): grid 1 kolom di bawah `lg` (lebar maksimal 36rem, di tengah) dan 3 kolom sama lebar mulai `lg`, jarak kolom 32 px, jarak baris 48 px (ruang ikon), tinggi kartu sama. Kartu `SpotlightCard`: latar `card`, garis 1 px `line`, sudut `--radius-card`, padding 24 px (atas 40 px di HP, 48 px mulai `md`), tidak `overflow-hidden`.
   - Ikon lingkaran `brand` 48 px (56 px mulai `md`) berisi ikon lucide `paper` 24 px (`MessagesSquare`, `Users`, `Package`), `aria-hidden`, menimpa tepi atas kartu (`-translate-y-1/2`), sejajar padding kiri.
   - Isi berurutan: `h2` semibold `brand-strong` 1,0625rem (1,125rem mulai `md`), `leading-snug` (kontras di atas `card` 4,90:1); deskripsi 0,9375rem `ink` `leading-relaxed`; garis pendek 56 x 1 px `ink`; kota sebagai `h3` semibold ("Semarang", "Yogyakarta"); tiap cabang dalam `<address>` `not-italic` (alamat, lalu "Telepon: ..."), jarak antarcabang 12 px; garis pendek kedua; label jam semibold dan isi jam. Semua rata kiri, `ink`, minimal 0,875rem.
@@ -170,7 +172,7 @@ Panel samping dari kanan. Isi tahap ini hanya kerangka: judul "Keranjang Anda", 
 - Bahasa Indonesia untuk semua teks tampilan, termasuk judul seksi beranda ("Hidangan Andalan", "Apa Kata Mereka", "Kunjungi Kami!").
 - Tidak ada foto orang asli atau angka yang dikarang. Ulasan dan rating di beranda adalah data contoh fiktif; keterangannya ada di catatan footer. Halaman Ulasan menampilkan ulasan kiriman pengunjung ditambah data contoh (`is_sample`).
 - Pengecualian foto orang: foto hero Halaman Ulasan (`public/images/ulasan/hero.webp`) memuat tangan orang tanpa wajah dan dipakai atas keputusan pemilik proyek. Sumber dan lisensi foto ini harus dipastikan sebelum situs dipublikasikan.
-- Foto hero Halaman Kontak (`public/images/kontak/hero.webp`) memuat layar TV kecil bergambar orang di sisi kanan (terlihat kecil di bawah `lg`, terpotong mulai `lg`). Sumber dan lisensi foto ini juga harus dipastikan sebelum situs dipublikasikan.
+- Foto hero Halaman Kontak (`public/images/kontak/hero.webp`) memuat tepi bawah layar TV (teks berjalan, tanpa orang) di pojok kanan atas. Sumber dan lisensi foto ini juga harus dipastikan sebelum situs dipublikasikan.
 - Alamat cabang, telepon, dan email adalah data contoh fiktif.
 
 ## Aset (di folder public/images/)
