@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { createOrder } from "@/lib/actions/order";
 import { clear, type CartLine } from "@/lib/cart";
@@ -333,7 +334,16 @@ function SuccessView({ order, onClose }: { order: Success; onClose: () => void }
       </div>
 
       {/* Bilah tombol menempel di dasar area gulir pop-up, jadi tidak ikut bergeser. */}
-      <div className="sticky bottom-0 -mx-6 mt-6 -mb-6 border-t border-line bg-paper px-6 py-4 md:-mx-8 md:-mb-8 md:px-8">
+      <div className="sticky bottom-0 -mx-6 mt-6 -mb-6 flex flex-col gap-3 border-t border-line bg-paper px-6 py-4 md:-mx-8 md:-mb-8 md:px-8">
+        {/* Menutup semua pop-up (checkout dan panel keranjang) lalu pindah halaman;
+            pesanan tetap tersimpan. */}
+        <Link
+          href={`/pesanan/${order.code}`}
+          onClick={() => document.querySelectorAll("dialog[open]").forEach((d) => (d as HTMLDialogElement).close())}
+          className="flex min-h-12 w-full items-center justify-center rounded-full border border-ink bg-paper px-4 text-sm font-semibold text-ink transition-colors duration-150 hover:border-brand-strong hover:text-brand-strong"
+        >
+          Lacak pesanan
+        </Link>
         <button
           type="button"
           onClick={onClose}

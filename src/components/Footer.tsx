@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RESTAURANT_PHONE, RESTAURANT_PHONE_DISPLAY } from "@/lib/contact-info";
 import { navLinks } from "@/lib/nav-links";
 import { FacebookIcon, InstagramIcon, LinkedInIcon, XIcon } from "./Icons";
 
@@ -52,14 +53,19 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/pesanan" className={linkClass}>
+                Lacak Pesanan
+              </Link>
+            </li>
           </ul>
         </nav>
 
         <div className="flex flex-col gap-4">
           <h2 className={headingClass}>Contact</h2>
           <address className="flex flex-col gap-2 not-italic text-muted">
-            <a href="tel:+6281200000707" className={linkClass}>
-              0812-0000-0707
+            <a href={`tel:+${RESTAURANT_PHONE}`} className={linkClass}>
+              {RESTAURANT_PHONE_DISPLAY}
             </a>
             <a href="mailto:halo@nantujuah.example" className={linkClass}>
               halo@nantujuah.example

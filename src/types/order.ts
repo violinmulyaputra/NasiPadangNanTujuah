@@ -71,3 +71,20 @@ export type CreateOrderResult =
       total: number;
     }
   | { status: "error"; message: string; fieldErrors: Partial<Record<OrderField, string>> };
+
+// Data halaman lacak (F4). HANYA data non-pribadi: tanpa nama, email, telepon,
+// alamat, catatan, jalur bukti bayar, atau id internal.
+export type OrderTracking = {
+  code: string;
+  status: OrderStatus;
+  createdAt: string;
+  zoneName: string;
+  deliveryFee: number;
+  subtotal: number;
+  total: number;
+  paymentMethod: PaymentMethod | null;
+  proofUploadedAt: string | null;
+  // Untuk batas ganti bukti 3 kali di PaymentPanel.
+  proofUploadCount: number;
+  items: OrderSummaryLine[];
+};
