@@ -41,6 +41,15 @@
   /* Marquee testimoni. Atur kecepatan dan jarak lewat --duration dan --gap di elemen. */
   --animate-marquee: marquee var(--duration, 40s) linear infinite;
 
+  /* Angka keranjang di Navbar membesar sebentar saat jumlah berubah (transform saja) */
+  --animate-bump: bump 300ms ease-out;
+
+  @keyframes bump {
+    40% {
+      transform: scale(1.3);
+    }
+  }
+
   @keyframes marquee {
     from {
       transform: translateX(0);
