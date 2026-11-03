@@ -3,7 +3,7 @@
 import { randomBytes } from "node:crypto";
 import { detectImageType } from "@/lib/image-type";
 import { getIpHash } from "@/lib/ip-hash";
-import { ORDER_CODE_PATTERN } from "@/lib/order-code";
+import { normalizeOrderCode } from "@/lib/order-code-format";
 import { takeAttempt } from "@/lib/order-rate-limit";
 import { MAX_PROOF_BYTES, MAX_PROOF_UPLOADS } from "@/lib/payment-info";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -18,12 +18,6 @@ const RATE_LIMIT_MESSAGE = "Terlalu sering mengirim. Coba lagi nanti.";
 const GENERIC_ERROR = "Bukti bayar gagal diunggah. Coba lagi beberapa saat lagi.";
 
 const fail = (message: string): UploadProofResult => ({ status: "error", message });
-
-// "npt-7kq2xh9m " -> "NPT-7KQ2XH9M"; null bila bentuknya salah.
-const normalizeCode = (raw: unknown) => {
-  const code = typeof raw === "string" ? raw.trim().toUpperCase() : "";
-  return ORDER_CODE_PATTERN.test(code) ? code : null;
-};
 
 // Unggah bukti bayar (F3). FormData berisi code, method ('transfer' atau 'qris'), dan file.
 // Berkas disimpan di bucket privat lewat service role; status pesanan TIDAK diubah
@@ -49,7 +43,7 @@ export async function uploadPaymentProof(formData: FormData): Promise<UploadProo
 
     // Kode salah bentuk dan kode tidak ada mendapat pesan yang sama. Pencarian kode
     // selalu satu query yang sama, jadi waktunya tidak membedakan keduanya secara berarti.
-    const code = normalizeCode(formData.get("code"));
+    const code = normalizeOrderCode(formData.get("code"));
     if (!code) return fail(NOT_FOUND);
     const { data: order, error: findError } = await supabase
       .from("orders")
@@ -111,7 +105,7 @@ export async function uploadPaymentProof(formData: FormData): Promise<UploadProo
 // shortcut: tanpa batas laju; kode 8 karakter acak (sekitar 2^39) membuat tebakan
 // tidak praktis. Tambahkan takeAttempt bila endpoint ini disalahgunakan.
 export async function getPaymentStatus(rawCode: string): Promise<OrderPaymentStatus | null> {
-  const code = normalizeCode(rawCode);
+  const code = normalizeOrderCode(rawCode);
   if (!code) return null;
 
   const { data, error } = await createAdminClient()

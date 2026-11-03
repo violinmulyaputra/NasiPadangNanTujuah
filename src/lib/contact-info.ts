@@ -1,5 +1,9 @@
 import { MessagesSquare, Package, Users, type LucideIcon } from "lucide-react";
 
+// Nomor restoran di footer, juga tujuan tautan wa.me halaman lacak (F4). Tanpa WhatsApp API.
+export const RESTAURANT_PHONE = "6281200000707";
+export const RESTAURANT_PHONE_DISPLAY = "0812-0000-0707";
+
 // Data contoh fiktif. Nomor telepon tampil sebagai teks biasa, bukan tautan tel:
 // (nomor contoh bisa saja milik orang sungguhan).
 type Branch = { address: string; phone: string };

@@ -25,7 +25,8 @@ src/
     (public)/            # F1: beranda, tentang, menu, ulasan, kontak
     keranjang/           # F2
     checkout/            # TIDAK dipakai: checkout berupa pop-up di keranjang (keputusan 2026-11-04)
-    pesanan/[kode]/      # F4: lacak lewat kode pesanan
+    pesanan/             # F4: form kode pesanan (/pesanan)
+    pesanan/[kode]/      # F4: status pesanan lewat kode (kode dicek dulu di src/proxy.ts)
     admin/               # F5: wajib login
     api/health/          # cek DB, dipanggil UptimeRobot
   components/            # UI bersama (PascalCase.tsx)
