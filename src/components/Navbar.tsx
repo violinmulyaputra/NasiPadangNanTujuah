@@ -11,14 +11,26 @@ export default function Navbar() {
         aria-label="Navigasi utama"
         className="relative mx-auto flex h-16 max-w-(--container) items-center justify-between gap-4 px-4 md:px-8"
       >
-        <Link href="/" className="shrink-0">
+        {/* Logo hitam ke merah saat hover/fokus, mengikuti tautan teks (hover:text-brand, tanpa transisi).
+            group-hover Tailwind v4 hanya aktif di perangkat hover: hover, jadi tidak menempel di HP. */}
+        <Link href="/" className="group relative shrink-0">
           <Image
             src="/images/logo/logo.png"
             alt="Nasi Padang Nan Tujuah"
             width={480}
             height={344}
             priority
-            className="h-12 w-auto"
+            className="h-12 w-auto group-hover:opacity-0 group-focus-visible:opacity-0"
+          />
+          {/* Kanvas sama 480x344, dimuat eager agar hover pertama tidak berkedip */}
+          <Image
+            src="/images/logo/logo-red.webp"
+            alt=""
+            aria-hidden
+            width={480}
+            height={344}
+            loading="eager"
+            className="absolute inset-0 size-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
           />
         </Link>
 
