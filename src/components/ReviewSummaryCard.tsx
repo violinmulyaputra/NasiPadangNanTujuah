@@ -38,9 +38,9 @@ const instant: Variants = {
   visible: { opacity: 1, transition: { duration: 0 } },
 };
 
-type Props = { rating: number; reviewCount: number; className?: string };
+type Props = { rating: number; reviewCount: number; align?: "center" | "left"; className?: string };
 
-export default function ReviewSummaryCard({ rating, reviewCount, className }: Props) {
+export default function ReviewSummaryCard({ rating, reviewCount, align = "center", className }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const ratingRef = useRef<HTMLSpanElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
@@ -83,7 +83,8 @@ export default function ReviewSummaryCard({ rating, reviewCount, className }: Pr
       initial="hidden"
       animate={state}
       className={cn(
-        "mx-auto flex w-full max-w-md flex-col items-center justify-center rounded-card border border-line bg-card p-6 text-center md:p-8",
+        "flex w-full max-w-md flex-col justify-center rounded-card border border-line bg-card p-4 md:p-8",
+        align === "left" ? "items-start text-left" : "mx-auto items-center text-center",
         className,
       )}
     >
@@ -91,19 +92,19 @@ export default function ReviewSummaryCard({ rating, reviewCount, className }: Pr
       <div className="flex items-center gap-1" aria-hidden>
         {[0, 1, 2, 3, 4].map((i) => (
           <motion.span key={i} custom={i} variants={reduce ? instant : starVariants}>
-            <StarIcon fill={empty ? 0 : shown - i} className="size-7 md:size-8" />
+            <StarIcon fill={empty ? 0 : shown - i} className="size-5 md:size-8" />
           </motion.span>
         ))}
       </div>
 
       {empty ? (
-        <p className="mt-4 text-xl font-semibold text-ink md:text-2xl">Belum ada ulasan</p>
+        <p className="mt-3 text-lg font-semibold text-ink md:mt-4 md:text-2xl">Belum ada ulasan</p>
       ) : (
         <>
           {/* Angka beranimasi disembunyikan dari pembaca layar; kalimat di bawahnya statis */}
-          <p aria-hidden className="mt-4 font-display text-4xl font-bold tracking-tight text-ink tabular-nums">
+          <p aria-hidden className="mt-3 font-display text-2xl font-bold tracking-tight text-ink tabular-nums md:mt-4 md:text-4xl">
             <span ref={ratingRef}>{formatRating(shown)}</span>
-            <span className="text-2xl font-semibold md:text-3xl">
+            <span className="text-lg font-semibold md:text-3xl">
               {" "}(<span ref={countRef}>{countFormat.format(reviewCount)}</span> Ulasan)
             </span>
           </p>
