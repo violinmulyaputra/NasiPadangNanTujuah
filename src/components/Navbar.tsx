@@ -1,10 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDeliveryZones } from "@/lib/delivery-zones";
 import { navLinks } from "@/lib/nav-links";
 import CartPanel from "./CartPanel";
 import MobileMenu from "./MobileMenu";
 
-export default function Navbar() {
+export default async function Navbar() {
+  // Zona untuk pop-up checkout di keranjang. Di-cache ("use cache"), jadi Navbar tetap statis.
+  // Gagal dimuat: daftar kosong, createOrder tetap menolak zona yang tidak valid.
+  const zones = await getDeliveryZones().catch((e: unknown) => {
+    console.error(e);
+    return [];
+  });
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper">
       <nav
@@ -45,7 +53,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-1">
-          <CartPanel />
+          <CartPanel zones={zones} />
           <MobileMenu />
         </div>
       </nav>

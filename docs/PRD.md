@@ -25,7 +25,7 @@ MVP hanya berisi 5 fitur, yaitu alur minimum dari melihat menu sampai pesanan se
 | # | Fitur | Isi minimum |
 | --- | --- | --- |
 | F1 | Etalase dan menu | Beranda (hero, hidangan populer, testimoni), Tentang, Ulasan (daftar ulasan dan form kirim ulasan, lihat keputusan 2026-11-03), Kontak, dan halaman Menu berisi 44 item dalam 6 kategori (Ayam, Sapi, Seafood, Sayuran, Minuman, Buah) dengan foto, harga Rupiah, dan status tersedia atau habis |
-| F2 | Keranjang dan checkout tanpa akun | Ubah jumlah item, isi nama, nomor WhatsApp, alamat, zona antar, dan catatan |
+| F2 | Keranjang dan checkout tanpa akun | Ubah jumlah item; pop-up checkout di keranjang berisi nama, email, nomor telepon, alamat, zona antar, dan catatan (lihat keputusan 2026-11-04) |
 | F3 | Pembayaran manual | Kode pesanan unik, instruksi transfer atau QRIS contoh, unggah bukti bayar |
 | F4 | Status pesanan | Halaman lacak dengan kode pesanan: menunggu bayar, diproses, diantar, selesai |
 | F5 | Dashboard admin | Login admin, daftar pesanan, ubah status, tandai lunas, tombol menu habis, tautan WhatsApp ke pelanggan |
@@ -51,7 +51,28 @@ Daftar 44 menu, deskripsi, dan harga per porsi ada di `docs/referensi/menu-44.md
 - **Harga satu porsi** = harga dasar + jumlah harga pilihan terpilih. **Total baris** = harga satu porsi x jumlah. Jumlah per baris 1 sampai 20.
 - **Baris keranjang** dibedakan per kombinasi menu dan pilihan. Menu sama dengan pilihan sama digabung (jumlah bertambah, maksimal 20); pilihan berbeda menjadi baris terpisah. Keranjang disimpan di localStorage browser dengan versi skema; data versi lama dibuang otomatis.
 - **Server menghitung ulang saat checkout (F2).** Total di keranjang hanya untuk tampilan. Saat checkout, server membaca harga dari `menu_items`, memvalidasi pilihan dengan `validateSelections` (pilihan tidak dikenal ditolak), menolak menu habis, lalu menghitung ulang dengan `pricing.ts`. Harga atau total kiriman klien tidak dipakai.
-- **Catatan skema untuk F2:** tabel `order_items` saat ini punya `unique (order_id, menu_item_id)`, `quantity between 1 and 50`, dan belum punya kolom pilihan. Sebelum checkout dibangun, skema perlu disesuaikan agar satu menu bisa muncul beberapa kali dengan pilihan berbeda (misalnya kolom pilihan jsonb, batas jumlah 1 sampai 20).
+- **Skema F2:** `supabase/schema-pesanan.sql` menyesuaikan `order_items` (unik per menu dihapus, jumlah 1 sampai 20, kolom `selections` jsonb dan `option_labels`), jadi satu menu bisa muncul beberapa kali dengan pilihan berbeda.
+
+### Zona antar dan ongkir (F2)
+
+Data contoh untuk restoran fiktif. Nama zona berupa rentang jarak dari restoran dan pelanggan memilih zonanya sendiri; ongkir tetap per zona. Tidak ada hitung jarak, GPS, atau peta. Jangkauan antar maksimal 15 km. Disimpan di tabel `delivery_zones` (kode, nama, tarif integer Rupiah, status aktif) dan dibaca server saat checkout.
+
+| Kode | Zona | Ongkir | Status |
+| --- | --- | --- | --- |
+| zona-1 | Sampai 5 km | Rp8.000 | aktif |
+| zona-2 | 5 sampai 10 km | Rp12.000 | aktif |
+| zona-3 | 10 sampai 15 km | Rp18.000 | aktif |
+| zona-4 | Di atas 15 km (tidak dipakai) | Rp25.000 | nonaktif (`is_active = false`), tidak tampil dan ditolak server |
+
+### Model data pesanan (F2, dipakai F3 sampai F5)
+
+Skema di `supabase/schema.sql` lalu `supabase/schema-pesanan.sql`. Tipe di `src/types/order.ts`.
+
+- **`orders`:** `code` (unik, format `NPT-` + 8 karakter acak tanpa 0, O, 1, I, L, dibuat `src/lib/order-code.ts` dari crypto; server mencoba ulang bila bentrok), `customer_name` (2 sampai 60), `customer_email` (maksimal 120), `customer_phone` (ternormalisasi `62xxxxxxxxxx` untuk tautan wa.me), `delivery_address` (10 sampai 200), `delivery_zone` (foreign key ke `delivery_zones`), `delivery_fee` (disalin dari zona saat checkout), `notes` (maksimal 200, boleh kosong), `subtotal`, `total` (kolom generated = subtotal + ongkir), `status` (`menunggu_bayar`, `diproses`, `diantar`, `selesai`; awal selalu `menunggu_bayar`), kolom bukti bayar untuk F3, `created_at`, `updated_at`.
+- **`order_items`:** salinan nama, `base_price`, `unit_price` (termasuk pilihan), `quantity` (1 sampai 20), `line_total` (generated), `selections` jsonb, dan `option_labels`. `menu_item_id` jadi null bila menu dihapus kemudian.
+- **`order_attempts`:** hash sha256 IP + salt (`REVIEW_IP_SALT`) untuk batas laju checkout: maksimal 5 percobaan per jam dan jeda minimal 10 detik. IP mentah tidak disimpan.
+- **Pembuatan pesanan:** Server Action `createOrder` (`src/lib/actions/order.ts`) memvalidasi input (pesan per kolom berbahasa Indonesia, kolom jebakan `website`), membaca harga, ketersediaan, dan ongkir dari database, menghitung ulang semuanya dengan `pricing.ts` (angka dari klien diabaikan), lalu memanggil fungsi SQL `create_order` yang menyisipkan pesanan dan itemnya dalam satu transaksi. Tidak ada pesanan tanpa item.
+- **Privasi:** RLS aktif di `orders`, `order_items`, dan `order_attempts` tanpa kebijakan publik, jadi data pemesan (nama, email, telepon, alamat) tidak bisa dibaca publik. Penulisan hanya lewat service role di server; dashboard F5 memakai kebijakan admin terpisah. Dari `delivery_zones` publik hanya bisa membaca zona aktif.
 
 ## 2. User story
 
@@ -66,7 +87,7 @@ Setiap fitur punya satu user story dan satu kriteria selesai yang bisa diuji.
 
 - Sebagai pelanggan setia, saya mau memesan tanpa membuat akun, supaya saya bisa memesan dalam hitungan menit.
 - Selesai bila: total (item ditambah ongkir zona) benar dan pesanan tersimpan dengan kode unik.
-- Status: panel keranjang (daftar item, ubah jumlah, hapus, subtotal, tombol "Lanjut ke Checkout") sudah dibangun bersama halaman Menu. Rute /checkout baru berupa halaman penampung. Form checkout (nama, nomor WhatsApp, alamat, zona antar, catatan), ongkir per zona, dan pembuatan pesanan dikerjakan di F2; instruksi pembayaran dan unggah bukti bayar dikerjakan di F3.
+- Status: panel keranjang (daftar item, ubah jumlah, hapus, subtotal, tombol "Lanjut ke Checkout") sudah dibangun bersama halaman Menu. Checkout berupa pop-up di atas panel keranjang (keputusan 2026-11-04), tanpa halaman /checkout: isian nama, email, nomor telepon, alamat, zona antar, dan catatan, lalu `createOrder` menyimpan pesanan dan layar sukses menampilkan kode pesanan serta total resmi dari server. Instruksi pembayaran dan unggah bukti bayar dikerjakan di F3 (layar sukses sementara berisi penampung).
 
 **F3. Pembayaran manual**
 
@@ -101,6 +122,8 @@ Semua hal berikut sengaja tidak dikerjakan dalam 5 hari ini.
 - Reservasi meja, blog, dan aplikasi mobile seperti di situs referensi
 
 **Keputusan 2026-11-03.** Pemilik proyek menyetujui fitur kirim ulasan sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Hal lain di daftar ini tetap di luar scope.
+
+**Keputusan 2026-11-04.** Pemilik proyek (Violin) memutuskan checkout berupa pop-up di panel keranjang, bukan halaman terpisah; folder rute `checkout/` tidak dipakai. Form checkout mengumpulkan nama, email, nomor telepon, dan alamat pengiriman (ditambah zona antar dan catatan). Tidak ada nomor kartu dan tidak ada pembayaran uang sungguhan; pembayaran tetap manual dengan rekening dan QRIS contoh (F3). Hal lain di daftar ini tetap di luar scope.
 
 ## 4. Metrik keberhasilan MVP
 

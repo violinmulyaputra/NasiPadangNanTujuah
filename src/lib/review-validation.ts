@@ -1,13 +1,13 @@
 import type { ReviewField } from "@/types/review";
 
 // Karakter kontrol selain tab, baris baru, dan carriage return.
-const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/;
+export const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/;
 // Tautan: http(s)://, www., atau pola domain seperti contoh.com dan toko.co.id.
 const URL_PATTERN =
   /(https?:\/\/|www\.|[a-z0-9-]+\.(com|id|net|org|co|io|me|xyz|info|biz|site|online|store|shop|link|ly|app|dev)\b)/i;
 
 // Panjang dihitung per karakter Unicode, sama seperti char_length di PostgreSQL.
-const charLength = (s: string) => [...s].length;
+export const charLength = (s: string) => [...s].length;
 
 export type ReviewInput = { author_name: string; rating: number; comment: string };
 

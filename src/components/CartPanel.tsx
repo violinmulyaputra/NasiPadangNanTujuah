@@ -2,10 +2,12 @@
 
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { removeItem, updateQuantity, useCart } from "@/lib/cart";
 import { formatRupiah } from "@/lib/format";
 import { calculateLineTotal, MAX_QUANTITY, MIN_QUANTITY } from "@/lib/pricing";
+import type { DeliveryZone } from "@/types/order";
+import CheckoutDialog from "./CheckoutDialog";
 import { CartIcon, CloseIcon } from "./Icons";
 import MenuPhoto from "./MenuPhoto";
 
@@ -25,8 +27,11 @@ const primaryButton =
 // Isi dari store localStorage (src/lib/cart.ts). Render server dan hidrasi pertama
 // memakai keranjang kosong (getServerSnapshot), lalu isi asli tampil, jadi tanpa hydration mismatch.
 // <dialog> modal bawaan: focus trap, Escape menutup, aria-modal, dan fokus kembali ke ikon keranjang.
-export default function CartPanel() {
+export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const checkoutRef = useRef<HTMLButtonElement>(null);
+  const [checkoutKey, setCheckoutKey] = useState(0);
   const close = () => dialogRef.current?.close();
   const lines = useCart();
   const count = lines.reduce((sum, l) => sum + l.quantity, 0);
@@ -72,6 +77,7 @@ export default function CartPanel() {
             </h2>
             <button
               type="button"
+              ref={closeRef}
               aria-label="Tutup keranjang"
               onClick={close}
               className="inline-flex size-11 items-center justify-center rounded-full text-ink hover:bg-line/50"
@@ -157,22 +163,32 @@ export default function CartPanel() {
                 </p>
               </div>
             </div>
-            {lines.length === 0 ? (
-              <button type="button" disabled className={`${primaryButton} mt-4 cursor-not-allowed bg-line text-muted`}>
-                Lanjut ke Checkout
-              </button>
-            ) : (
-              <Link
-                href="/checkout"
-                onClick={close}
-                className={`${primaryButton} mt-4 bg-ink text-paper transition-colors duration-150 hover:bg-brand-strong`}
-              >
-                Lanjut ke Checkout
-              </Link>
-            )}
+            {/* Membuka pop-up checkout di atas panel (keputusan 2026-11-04), nonaktif bila kosong */}
+            <button
+              ref={checkoutRef}
+              type="button"
+              aria-haspopup="dialog"
+              disabled={lines.length === 0}
+              onClick={() => setCheckoutKey((k) => k + 1)}
+              className={`${primaryButton} mt-4 bg-ink text-paper transition-colors duration-150 hover:bg-brand-strong disabled:cursor-not-allowed disabled:bg-line disabled:text-muted`}
+            >
+              Lanjut ke Checkout
+            </button>
           </div>
         </div>
       </dialog>
+
+      {/* Saudara panel (bukan anak), jadi klik di pop-up tidak dianggap klik overlay panel */}
+      <CheckoutDialog
+        lines={lines}
+        zones={zones}
+        openKey={checkoutKey}
+        onClose={() => {
+          // Fokus kembali ke tombol pemicu; setelah sukses keranjang kosong dan tombol
+          // nonaktif, jadi fokus pindah ke tombol tutup panel.
+          (checkoutRef.current?.disabled ? closeRef.current : checkoutRef.current)?.focus();
+        }}
+      />
     </>
   );
 }

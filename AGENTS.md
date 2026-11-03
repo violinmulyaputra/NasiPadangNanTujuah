@@ -24,7 +24,7 @@ src/
   app/
     (public)/            # F1: beranda, tentang, menu, ulasan, kontak
     keranjang/           # F2
-    checkout/            # F2 + F3
+    checkout/            # TIDAK dipakai: checkout berupa pop-up di keranjang (keputusan 2026-11-04)
     pesanan/[kode]/      # F4: lacak lewat kode pesanan
     admin/               # F5: wajib login
     api/health/          # cek DB, dipanggil UptimeRobot
@@ -77,6 +77,7 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 
 ## Keputusan cakupan
 - 2026-11-03: fitur kirim ulasan disetujui sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Larangan lain tetap berlaku.
+- 2026-11-04: pemilik proyek (Violin) memutuskan checkout berupa pop-up di panel keranjang; tidak ada halaman /checkout dan folder rute `checkout/` tidak dipakai. Form checkout mengumpulkan nama, email, nomor telepon, dan alamat pengiriman (ditambah zona antar dan catatan). Tanpa nomor kartu dan tanpa pembayaran uang sungguhan. Data pemesan hanya ditulis dan dibaca lewat server (service role), tidak pernah lewat kebijakan publik. Zona dan ongkir: lihat PRD "Zona antar dan ongkir".
 
 <!-- BEGIN:nextjs-agent-feedback -->
 
