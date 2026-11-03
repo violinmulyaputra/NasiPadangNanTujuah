@@ -127,8 +127,14 @@ html:has(dialog[open]) {
   overflow: hidden;
 }
 
+/* Latar halaman: paper juga di html, jadi kanvas (termasuk area overscroll di HP) tidak
+   bergantung pada perambatan latar body. Seksi tidak memberi latar sendiri. */
+html,
 body {
   background: var(--color-paper);
+}
+
+body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }

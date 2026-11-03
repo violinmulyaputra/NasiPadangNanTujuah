@@ -41,6 +41,7 @@ Kontras teks terhadap latar minimal 4,5:1. Merah brand tidak dipakai untuk teks 
 - Hero di HP (di bawah `md`): seksi `py-12`. Kolom kiri sekitar 60 persen lebar layar dengan padding kiri 24 px: judul (ukuran sama dengan judul seksi, `--text-title-mobile`, mengalir alami), lalu paragraf 0,875rem berjarak 16 px, lalu tombol ringkas setinggi 40 px berjarak 24 px. Kolom kanan piring sekitar 48vw yang sekitar 20 persen diameternya terpotong di tepi kanan layar dan tidak menimpa teks. Pembungkus hero memakai `overflow-x: clip`.
 - Hero mulai `md`: judul empat baris, paragraf, dan tombol di kolom kiri, piring di kanan tampil penuh, sejajar vertikal di tengah.
 - Semua seksi dipusatkan, jarak vertikal antarseksi `py-16 md:py-24`.
+- Latar halaman `paper` dipasang di `html` dan `body` (`globals.css`), termasuk area overscroll di HP. Seksi tidak memberi latar sendiri (paling jauh `bg-paper`, sama dengan halaman); warna lain hanya untuk kartu (`card`, `surface`). Tanpa putih murni (`bg-white`, `#fff`) sebagai latar; putih hanya untuk teks atau ikon di atas merah, lewat token `paper`.
 - Navbar menempel di atas: logo kiri, tautan tengah (Tentang, Menu, Ulasan, Kontak), ikon keranjang kanan. Di HP tautan jadi menu lipat.
 
 ## Seksi dan komponen
