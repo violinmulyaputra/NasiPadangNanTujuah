@@ -6,6 +6,9 @@ import { randomInt } from "node:crypto";
 const ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
 const LENGTH = 8;
 
+// Sama dengan constraint orders_code_format di database.
+export const ORDER_CODE_PATTERN = /^NPT-[2-9A-HJKMNP-Z]{8}$/;
+
 // Contoh: "NPT-7KQ2XH9M". Bentrok dengan kode lama ditangani pemanggil (coba ulang).
 export function generateOrderCode(): string {
   let code = "NPT-";

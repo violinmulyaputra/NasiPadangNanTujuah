@@ -12,6 +12,15 @@ const dateFormat = new Intl.DateTimeFormat("id-ID", {
   timeZone: "Asia/Jakarta",
 });
 
+const dateTimeFormat = new Intl.DateTimeFormat("id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "Asia/Jakarta",
+});
+
 const rupiahFormat = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
 
 // 25000 -> "Rp25.000"
@@ -22,3 +31,6 @@ export const formatRating = (value: number) => ratingFormat.format(value);
 
 // "2026-11-02T11:30:00Z" -> "2 November 2026"
 export const formatDate = (iso: string) => dateFormat.format(new Date(iso));
+
+// "2026-11-04T07:30:00Z" -> "4 November 2026 pukul 14.30 WIB"
+export const formatDateTime = (iso: string) => `${dateTimeFormat.format(new Date(iso))} WIB`;
