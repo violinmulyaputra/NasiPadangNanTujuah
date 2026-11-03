@@ -12,6 +12,11 @@ const dateFormat = new Intl.DateTimeFormat("id-ID", {
   timeZone: "Asia/Jakarta",
 });
 
+const rupiahFormat = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
+
+// 25000 -> "Rp25.000"
+export const formatRupiah = (value: number) => `Rp${rupiahFormat.format(value)}`;
+
 // 4.5 -> "4,5"
 export const formatRating = (value: number) => ratingFormat.format(value);
 

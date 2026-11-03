@@ -30,6 +30,29 @@ MVP hanya berisi 5 fitur, yaitu alur minimum dari melihat menu sampai pesanan se
 | F4 | Status pesanan | Halaman lacak dengan kode pesanan: menunggu bayar, diproses, diantar, selesai |
 | F5 | Dashboard admin | Login admin, daftar pesanan, ubah status, tandai lunas, tombol menu habis, tautan WhatsApp ke pelanggan |
 
+### Opsi pesanan dan aturan harga (F1, F2)
+
+Daftar 44 menu, deskripsi, dan harga per porsi ada di `docs/referensi/menu-44.md`, dimuat ke database lewat `supabase/seed-menu-lengkap.sql`. Logikanya ada di `src/lib/menu-options.ts` dan `src/lib/pricing.ts`, modul murni yang dipakai klien dan server.
+
+- **Harga di database adalah sumber kebenaran.** Kolom `menu_items.price` (integer Rupiah) adalah harga dasar per porsi. Harga pilihan didefinisikan di `menu-options.ts`.
+- **Kelompok pilihan, pilih satu per kelompok.** Harga pilihan dihitung per porsi.
+
+| Kategori | Kelompok (bawaan) | Pilihan dan tambahan harga |
+| --- | --- | --- |
+| Ayam, Sapi, Seafood | Pilihan Nasi (Tidak pakai) | Nasi pulen Rp5.000; Nasi pera Rp5.000; Tidak pakai nasi Rp0 |
+| | Pilihan Gulai (Tidak pakai) | Gulai cubadak Rp5.000; Gulai cancang Rp10.000; Tidak pakai gulai Rp0 |
+| | Pilihan Sayur (Tidak pakai) | Daun pucuk ubi Rp5.000; Tidak pakai sayur Rp0 |
+| | Pilihan Sambal (Tidak pakai) | Sambal cabai merah Rp2.500; Sambal cabai hijau Rp2.500; Tidak pakai sambal Rp0 |
+| Minuman | Pilihan Gula (Pakai) | Pakai; Sedikit; Tidak pakai (semua Rp0) |
+| | Pilihan Es (Pakai) | Pakai; Sedikit; Tidak pakai (semua Rp0) |
+| Sayuran, Buah | Tanpa kelompok | Hanya jumlah |
+
+- **Pengecualian minuman** (konstanta `DRINK_OPTION_EXCEPTIONS`): Air Mineral Botol 330 ml tanpa pilihan; Es Teh Tawar hanya Pilihan Es.
+- **Harga satu porsi** = harga dasar + jumlah harga pilihan terpilih. **Total baris** = harga satu porsi x jumlah. Jumlah per baris 1 sampai 20.
+- **Baris keranjang** dibedakan per kombinasi menu dan pilihan. Menu sama dengan pilihan sama digabung (jumlah bertambah, maksimal 20); pilihan berbeda menjadi baris terpisah. Keranjang disimpan di localStorage browser dengan versi skema; data versi lama dibuang otomatis.
+- **Server menghitung ulang saat checkout (F2).** Total di keranjang hanya untuk tampilan. Saat checkout, server membaca harga dari `menu_items`, memvalidasi pilihan dengan `validateSelections` (pilihan tidak dikenal ditolak), menolak menu habis, lalu menghitung ulang dengan `pricing.ts`. Harga atau total kiriman klien tidak dipakai.
+- **Catatan skema untuk F2:** tabel `order_items` saat ini punya `unique (order_id, menu_item_id)`, `quantity between 1 and 50`, dan belum punya kolom pilihan. Sebelum checkout dibangun, skema perlu disesuaikan agar satu menu bisa muncul beberapa kali dengan pilihan berbeda (misalnya kolom pilihan jsonb, batas jumlah 1 sampai 20).
+
 ## 2. User story
 
 Setiap fitur punya satu user story dan satu kriteria selesai yang bisa diuji.
@@ -43,6 +66,7 @@ Setiap fitur punya satu user story dan satu kriteria selesai yang bisa diuji.
 
 - Sebagai pelanggan setia, saya mau memesan tanpa membuat akun, supaya saya bisa memesan dalam hitungan menit.
 - Selesai bila: total (item ditambah ongkir zona) benar dan pesanan tersimpan dengan kode unik.
+- Status: panel keranjang (daftar item, ubah jumlah, hapus, subtotal, tombol "Lanjut ke Checkout") sudah dibangun bersama halaman Menu. Rute /checkout baru berupa halaman penampung. Form checkout (nama, nomor WhatsApp, alamat, zona antar, catatan), ongkir per zona, dan pembuatan pesanan dikerjakan di F2; instruksi pembayaran dan unggah bukti bayar dikerjakan di F3.
 
 **F3. Pembayaran manual**
 
