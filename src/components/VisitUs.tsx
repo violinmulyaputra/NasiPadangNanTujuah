@@ -1,4 +1,5 @@
 import CardDeckCarousel, { type Slide } from "./CardDeckCarousel";
+import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
 // Foto suasana 354 x 472 px (3:4), urut sesuai docs/DESIGN.md
@@ -52,24 +53,28 @@ export default function VisitUs() {
       <div className="mx-auto max-w-container px-6 md:px-8">
         <div className="grid gap-8 md:grid-cols-[3fr_2fr] md:gap-12">
           {/* Lebar kartu 260 px di HP, 320 px mulai md; rasio 3:4 */}
-          <CardDeckCarousel
-            slides={slides}
-            ariaLabel="Foto suasana restoran"
-            sizes="(min-width: 768px) 320px, 260px"
-            className="[--cd-w:260px] md:[--cd-w:320px]"
-          />
+          <Reveal index={1}>
+            <CardDeckCarousel
+              slides={slides}
+              ariaLabel="Foto suasana restoran"
+              sizes="(min-width: 768px) 320px, 260px"
+              className="[--cd-w:260px] md:[--cd-w:320px]"
+            />
+          </Reveal>
 
           {/* Judul seksi rata kiri di atas daftar cabang (sesuai sketsa). Mulai md kolom ini
               setinggi padding carousel + kartu 320 x 427 px, jadi isinya sejajar di tengah kartu. */}
           <div className="flex flex-col md:h-[calc(48px_+_320px_*_4_/_3)] md:justify-center">
-            <SectionHeading
-              title={
-                <>
-                  Visit <span className="text-brand">Us!</span>
-                </>
-              }
-            />
-            <div className="mt-6 divide-y divide-line">
+            <Reveal index={0}>
+              <SectionHeading
+                title={
+                  <>
+                    Kunjungi <span className="text-brand">Kami!</span>
+                  </>
+                }
+              />
+            </Reveal>
+            <Reveal index={1} className="mt-6 divide-y divide-line">
               {branches.map((b) => (
                 <div key={b.city} className="py-6 first:pt-0 last:pb-0">
                   <h3 className="font-semibold text-ink">{b.city}</h3>
@@ -80,7 +85,7 @@ export default function VisitUs() {
                   </ul>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>

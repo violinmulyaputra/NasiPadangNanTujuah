@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import HoverGlow from "@/components/HoverGlow";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import ValuesAccordion from "@/components/ValuesAccordion";
@@ -29,17 +30,12 @@ const row2Cols =
 const textClass = "relative text-sm leading-relaxed text-ink md:text-lg lg:text-xl";
 const accentClass = "font-semibold text-brand-strong";
 
-// Hover hanya di perangkat dengan kursor (hover Tailwind v4 berlaku pada (hover: hover)).
-// Cahaya krem hangat solid dengan blur statis; yang dianimasikan hanya opacity dan scale.
-// Kepekatan lewat alpha warna (80 persen; 50 persen hampir tak terlihat di atas paper), opacity
-// lapisan hanya 0 atau 1. Inset 16 px karena scale 1.04 menutup sekitar 8 px tiap sisi foto.
+// Hover hanya di perangkat dengan kursor: foto membesar dan cahaya krem muncul di belakangnya.
+// Yang dianimasikan hanya opacity dan scale.
 function StoryPhoto({ src, alt, preload }: { src: string; alt: string; preload?: boolean }) {
   return (
     <div className="group relative">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-4 rounded-card bg-cream-glow/80 opacity-0 blur-[32px] transition-opacity duration-300 ease-out group-hover:opacity-100"
-      />
+      <HoverGlow />
       <div
         className={`relative overflow-hidden rounded-card transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.04] ${PHOTO_ASPECT}`}
       >

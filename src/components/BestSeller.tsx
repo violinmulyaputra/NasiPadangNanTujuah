@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import Reveal from "./Reveal";
 import CoverFlowCarousel, { type CarouselItem } from "./CoverFlowCarousel";
 import SectionHeading from "./SectionHeading";
 // Komponen server: mengambil menu populer dari Supabase lalu mengirimnya ke carousel (client).
@@ -31,14 +32,16 @@ export default async function BestSeller() {
 
   return (
     <CoverFlowCarousel items={items} label="Menu terlaris">
-      <SectionHeading
-        title={
-          <>
-            Our <span className="text-brand">Best Seller</span> Menu
-          </>
-        }
-        subtitle="Inilah hidangan yang paling disukai oleh pelanggan kami"
-      />
+      <Reveal index={0}>
+        <SectionHeading
+          title={
+            <>
+              Hidangan <span className="text-brand">Andalan</span>
+            </>
+          }
+          subtitle="Inilah hidangan yang paling disukai oleh pelanggan kami"
+        />
+      </Reveal>
     </CoverFlowCarousel>
   );
 }

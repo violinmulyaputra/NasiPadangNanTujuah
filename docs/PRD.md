@@ -24,7 +24,7 @@ MVP hanya berisi 5 fitur, yaitu alur minimum dari melihat menu sampai pesanan se
 
 | # | Fitur | Isi minimum |
 | --- | --- | --- |
-| F1 | Etalase dan menu | Beranda (hero, hidangan populer, testimoni), Tentang, Ulasan (data contoh), Kontak, dan halaman Menu berisi 44 item dalam 6 kategori (Ayam, Sapi, Seafood, Sayuran, Minuman, Buah) dengan foto, harga Rupiah, dan status tersedia atau habis |
+| F1 | Etalase dan menu | Beranda (hero, hidangan populer, testimoni), Tentang, Ulasan (daftar ulasan dan form kirim ulasan, lihat keputusan 2026-11-03), Kontak, dan halaman Menu berisi 44 item dalam 6 kategori (Ayam, Sapi, Seafood, Sayuran, Minuman, Buah) dengan foto, harga Rupiah, dan status tersedia atau habis |
 | F2 | Keranjang dan checkout tanpa akun | Ubah jumlah item, isi nama, nomor WhatsApp, alamat, zona antar, dan catatan |
 | F3 | Pembayaran manual | Kode pesanan unik, instruksi transfer atau QRIS contoh, unggah bukti bayar |
 | F4 | Status pesanan | Halaman lacak dengan kode pesanan: menunggu bayar, diproses, diantar, selesai |
@@ -69,13 +69,14 @@ Semua hal berikut sengaja tidak dikerjakan dalam 5 hari ini.
 - Pelacakan kurir real-time atau GPS
 - Ongkir dinamis berdasarkan jarak (MVP memakai ongkir tetap per zona)
 - Notifikasi otomatis lewat WhatsApp API (MVP hanya tautan wa.me)
-- Promo, kupon, poin loyalitas, dan ulasan
+- Promo, kupon, dan poin loyalitas
 - Multi-cabang, multi-admin dengan peran berbeda, dan laporan keuangan
 - Aplikasi mobile native dan mode PWA offline
 - Integrasi dengan GoFood, GrabFood, atau ShopeeFood
 - Dukungan lebih dari satu bahasa
 - Reservasi meja, blog, dan aplikasi mobile seperti di situs referensi
-- Pengiriman ulasan oleh pengguna (ulasan dan rating di etalase berupa data contoh)
+
+**Keputusan 2026-11-03.** Pemilik proyek menyetujui fitur kirim ulasan sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Hal lain di daftar ini tetap di luar scope.
 
 ## 4. Metrik keberhasilan MVP
 
