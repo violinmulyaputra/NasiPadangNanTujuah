@@ -58,6 +58,17 @@
     0 0 12px color-mix(in oklab, var(--color-paper) 70%, transparent);
 }
 
+/* Kartu membesar sedikit saat hover (kartu Ulasan Terkini dan kartu Kontak). Hanya perangkat
+   dengan kursor, jadi tidak menempel setelah ketukan; reduced motion: tanpa scale. */
+@utility hover-lift {
+  transition: scale 300ms ease-out;
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover {
+      scale: 1.02;
+    }
+  }
+}
+
 /* Font dari next/font (variabel di <html>), jadi pakai inline */
 @theme inline {
   --font-sans: var(--font-jakarta);
@@ -67,6 +78,47 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
     animation: none;
+  }
+}
+
+/* Kartu spotlight halaman Kontak (adaptasi 21st.dev): garis tepi 1 px brand yang menyala
+   di sekitar kursor. radial-gradient dipotong jadi garis tepi saja lewat mask
+   (padding-box dikurangi border-box). Posisi --mx/--my diisi SpotlightCard. */
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background: radial-gradient(
+      200px circle at var(--mx, 50%) var(--my, 50%),
+      var(--color-brand),
+      transparent
+    )
+    border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  pointer-events: none;
+}
+
+/* Hanya perangkat dengan kursor; di layar sentuh tidak ada efek */
+@media (hover: hover) and (pointer: fine) {
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-card::before {
+    transition: none;
   }
 }
 

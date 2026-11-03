@@ -35,7 +35,7 @@ export default async function ReviewList() {
           <Reveal index={Math.min(i + 1, 3)}>
             <article className="group relative">
               <HoverGlow className="-z-10" />
-              <div className="rounded-card border border-line bg-card p-4 transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.02] md:p-6">
+              <div className="rounded-card border border-line bg-card p-4 hover-lift md:p-6">
                 <div className="flex items-center gap-3">
                   <Avatar className="size-12">
                     <AvatarFallback className="bg-paper text-sm font-semibold">
