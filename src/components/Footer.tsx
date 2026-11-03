@@ -87,8 +87,8 @@ export default function Footer() {
 
       <div className="border-t border-line">
         <p className="mx-auto max-w-(--container) px-4 py-6 text-sm text-muted md:px-8">
-          © 2026 Nasi Padang Nan Tujuah. Restoran fiktif untuk portofolio. Alamat, kontak, dan ulasan di
-          atas adalah data contoh.
+          © 2026 Nasi Padang Nan Tujuah. Situs ini proyek portofolio. Restoran dan pembayaran bersifat
+          fiktif. Alamat, kontak, ulasan, rekening, dan QRIS adalah data contoh.
         </p>
       </div>
     </footer>

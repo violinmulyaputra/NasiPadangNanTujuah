@@ -70,9 +70,21 @@ Skema di `supabase/schema.sql` lalu `supabase/schema-pesanan.sql`. Tipe di `src/
 
 - **`orders`:** `code` (unik, format `NPT-` + 8 karakter acak tanpa 0, O, 1, I, L, dibuat `src/lib/order-code.ts` dari crypto; server mencoba ulang bila bentrok), `customer_name` (2 sampai 60), `customer_email` (maksimal 120), `customer_phone` (ternormalisasi `62xxxxxxxxxx` untuk tautan wa.me), `delivery_address` (10 sampai 200), `delivery_zone` (foreign key ke `delivery_zones`), `delivery_fee` (disalin dari zona saat checkout), `notes` (maksimal 200, boleh kosong), `subtotal`, `total` (kolom generated = subtotal + ongkir), `status` (`menunggu_bayar`, `diproses`, `diantar`, `selesai`; awal selalu `menunggu_bayar`), kolom bukti bayar untuk F3, `created_at`, `updated_at`.
 - **`order_items`:** salinan nama, `base_price`, `unit_price` (termasuk pilihan), `quantity` (1 sampai 20), `line_total` (generated), `selections` jsonb, dan `option_labels`. `menu_item_id` jadi null bila menu dihapus kemudian.
-- **`order_attempts`:** hash sha256 IP + salt (`REVIEW_IP_SALT`) untuk batas laju checkout: maksimal 5 percobaan per jam dan jeda minimal 10 detik. IP mentah tidak disimpan.
+- **`order_attempts`:** hash sha256 IP + salt (`REVIEW_IP_SALT`) dan kolom `kind` (`order` untuk checkout, `proof` untuk unggah bukti bayar F3), dicek lewat `src/lib/order-rate-limit.ts`. Checkout: maksimal 5 percobaan per jam dan jeda minimal 10 detik. IP mentah tidak disimpan.
 - **Pembuatan pesanan:** Server Action `createOrder` (`src/lib/actions/order.ts`) memvalidasi input (pesan per kolom berbahasa Indonesia, kolom jebakan `website`), membaca harga, ketersediaan, dan ongkir dari database, menghitung ulang semuanya dengan `pricing.ts` (angka dari klien diabaikan), lalu memanggil fungsi SQL `create_order` yang menyisipkan pesanan dan itemnya dalam satu transaksi. Tidak ada pesanan tanpa item.
 - **Privasi:** RLS aktif di `orders`, `order_items`, dan `order_attempts` tanpa kebijakan publik, jadi data pemesan (nama, email, telepon, alamat) tidak bisa dibaca publik. Penulisan hanya lewat service role di server; dashboard F5 memakai kebijakan admin terpisah. Dari `delivery_zones` publik hanya bisa membaca zona aktif.
+
+### Pembayaran manual (F3)
+
+Hanya transfer bank atau QRIS dengan data **contoh** (`src/lib/payment-info.ts`): Bank Jono, rekening 0000 1234 5678 atas nama "Nasi Padang Nan Tujuah", dan gambar `public/images/pembayaran/qris.webp` dengan QR diburamkan sehingga tidak bisa dipindai. Rekening dan QRIS tetap data contoh. Panel pembayaran tidak memuat catatan peringatan; keterangan fiktif ada di footer setiap halaman: "Situs ini proyek portofolio. Restoran dan pembayaran bersifat fiktif." Tidak ada payment gateway dan tidak ada uang sungguhan.
+
+- **Tanpa status baru.** Status tetap `menunggu_bayar`, `diproses`, `diantar`, `selesai`. Keterangan "bukti terkirim" diturunkan dari `proof_uploaded_at`. Admin yang memindahkan status dan menandai lunas (`is_paid`, `paid_at`) di F5.
+- **Kolom `orders` (skema `supabase/schema-pembayaran.sql`):** `payment_method` (`transfer` atau `qris`), `payment_proof_path` (jalur di bucket), `proof_uploaded_at`, `proof_upload_count` (0 sampai 3).
+- **Bucket `payment-proofs`:** privat, maksimal 2 MB (2097152 byte), hanya `image/jpeg`, `image/png`, `image/webp`. Tidak ada kebijakan apa pun di `storage.objects` untuk bucket ini; hanya service role di server yang menulis, membaca, dan menghapus. Jalur berkas `<id pesanan>/<32 karakter hex acak>.<ext>`; nama asli berkas tidak disimpan dan tidak ditampilkan.
+- **Server Action `uploadPaymentProof`** (`src/lib/actions/payment.ts`, FormData `code`, `method`, `file`): ukuran dicek dari isi berkas (maksimal 2 MB), jenis dicek dari magic bytes (`src/lib/image-type.ts`), bukan dari nama atau Content-Type. Hanya untuk pesanan berstatus `menunggu_bayar`, maksimal 3 kali unggah per pesanan; unggahan baru mengganti berkas lama (berkas lama dihapus setelah yang baru tersimpan). Update memakai syarat status dan jumlah unggah, jadi unggahan serentak atau status yang baru diubah admin tidak menimpa data. Kode salah bentuk dan kode tidak ada sama-sama dijawab "Pesanan tidak ditemukan." Detail error Supabase dan jalur berkas hanya di log server.
+- **Batas laju unggah:** `order_attempts` dengan `kind = 'proof'`, maksimal 10 per jam per IP dan jeda minimal 5 detik ("Terlalu sering mengirim. Coba lagi nanti.").
+- **`getPaymentStatus(code)`:** hanya data non-pribadi: kode, status, total, metode bayar, apakah bukti terkirim, waktunya, dan jumlah unggah (untuk batas 3 kali). `uploadPaymentProof` yang sukses juga mengembalikan jumlah unggah terbaru. Tanpa nama, email, telepon, alamat, atau jalur berkas.
+- **Batas body Server Action** dinaikkan ke `3mb` (`experimental.serverActions.bodySizeLimit` di `next.config.ts`) untuk gambar 2 MB ditambah overhead multipart; masih di bawah batas body fungsi Vercel 4,5 MB. Batas ini berlaku untuk semua Server Action, yang tetap memvalidasi isinya sendiri.
 
 ## 2. User story
 
@@ -87,12 +99,13 @@ Setiap fitur punya satu user story dan satu kriteria selesai yang bisa diuji.
 
 - Sebagai pelanggan setia, saya mau memesan tanpa membuat akun, supaya saya bisa memesan dalam hitungan menit.
 - Selesai bila: total (item ditambah ongkir zona) benar dan pesanan tersimpan dengan kode unik.
-- Status: panel keranjang (daftar item, ubah jumlah, hapus, subtotal, tombol "Lanjut ke Checkout") sudah dibangun bersama halaman Menu. Checkout berupa pop-up di atas panel keranjang (keputusan 2026-11-04), tanpa halaman /checkout: isian nama, email, nomor telepon, alamat, zona antar, dan catatan, lalu `createOrder` menyimpan pesanan dan layar sukses menampilkan kode pesanan serta total resmi dari server. Instruksi pembayaran dan unggah bukti bayar dikerjakan di F3 (layar sukses sementara berisi penampung).
+- Status: panel keranjang (daftar item, ubah jumlah, hapus, subtotal, tombol "Lanjut ke Checkout") sudah dibangun bersama halaman Menu. Checkout berupa pop-up di atas panel keranjang (keputusan 2026-11-04), tanpa halaman /checkout: isian nama, email, nomor telepon, alamat, zona antar, dan catatan, lalu `createOrder` menyimpan pesanan dan layar sukses menampilkan kode pesanan serta total resmi dari server. Layar sukses memuat panel pembayaran F3.
 
 **F3. Pembayaran manual**
 
 - Sebagai pelanggan setia, saya mau melihat cara bayar dan mengunggah bukti transfer, supaya restoran tahu pesanan saya sudah dibayar.
 - Selesai bila: bukti bayar (gambar maksimal 2 MB) tertaut ke pesanan yang benar.
+- Status: panel pembayaran (`PaymentPanel`) tampil di layar sukses checkout: total, pilihan Transfer bank atau QRIS dengan data contoh, unggah bukti (gambar dikecilkan di browser sebelum dikirim), keadaan "Bukti bayar terkirim. Menunggu verifikasi admin." dan "Ganti bukti bayar" sampai 3 kali. Menutup pop-up tidak membatalkan pesanan; pelanggan melanjutkan pembayaran nanti lewat halaman lacak (F4, belum dibangun) dengan kode pesanan. Panel yang sama dipakai di halaman lacak. Rincian tampilan di DESIGN.md "Panel pembayaran".
 
 **F4. Status pesanan**
 

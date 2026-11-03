@@ -7,7 +7,10 @@ import { clear, type CartLine } from "@/lib/cart";
 import { formatRupiah } from "@/lib/format";
 import { calculateLineTotal } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
-import type { CreateOrderResult, DeliveryZone, OrderField } from "@/types/order";
+import PaymentPanel from "@/components/PaymentPanel";
+import type { CreateOrderResult, DeliveryZone, OrderField, PaymentInitialState } from "@/types/order";
+
+const NO_PAYMENT_YET: PaymentInitialState = { paymentMethod: null, proofUploadedAt: null, proofUploadCount: 0 };
 
 type Props = {
   lines: CartLine[];
@@ -325,18 +328,20 @@ function SuccessView({ order, onClose }: { order: Success; onClose: () => void }
         </div>
       </div>
 
-      {/* Penampung sementara: diganti instruksi transfer dan QRIS contoh pada F3. */}
-      <p className="mt-4 rounded-xl border border-dashed border-line p-4 text-sm text-muted">
-        Instruksi pembayaran akan ditampilkan di sini.
-      </p>
+      <div className="mt-6">
+        <PaymentPanel code={order.code} total={order.total} initialState={NO_PAYMENT_YET} />
+      </div>
 
-      <button
-        type="button"
-        onClick={onClose}
-        className="mt-6 min-h-12 w-full rounded-full bg-ink px-4 text-sm font-semibold text-paper transition-colors duration-150 hover:bg-brand-strong"
-      >
-        Tutup
-      </button>
+      {/* Bilah tombol menempel di dasar area gulir pop-up, jadi tidak ikut bergeser. */}
+      <div className="sticky bottom-0 -mx-6 mt-6 -mb-6 border-t border-line bg-paper px-6 py-4 md:-mx-8 md:-mb-8 md:px-8">
+        <button
+          type="button"
+          onClick={onClose}
+          className="min-h-12 w-full rounded-full bg-ink px-4 text-sm font-semibold text-paper transition-colors duration-150 hover:bg-brand-strong"
+        >
+          Tutup
+        </button>
+      </div>
     </div>
   );
 }

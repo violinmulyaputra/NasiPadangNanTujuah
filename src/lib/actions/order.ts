@@ -3,6 +3,7 @@
 import { getIpHash } from "@/lib/ip-hash";
 import { getOptionGroups, selectionLabels, validateSelections } from "@/lib/menu-options";
 import { generateOrderCode } from "@/lib/order-code";
+import { takeAttempt } from "@/lib/order-rate-limit";
 import { validateOrderInput } from "@/lib/order-validation";
 import { calculateLineTotal, calculateUnitPrice } from "@/lib/pricing";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -37,22 +38,9 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
     const supabase = createAdminClient();
     const ipHash = await getIpHash();
 
-    // shortcut: cek lalu tulis tidak atomik, kiriman serentak bisa lolos sedikit di atas
-    // batas; pindah ke fungsi SQL bila spam serentak jadi masalah (sama dengan ulasan).
-    const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    const { data: attempts, error: attemptsError } = await supabase
-      .from("order_attempts")
-      .select("created_at")
-      .eq("ip_hash", ipHash)
-      .gte("created_at", since)
-      .order("created_at", { ascending: false });
-    if (attemptsError) throw attemptsError;
-    const last = attempts[0] ? new Date(attempts[0].created_at).getTime() : 0;
-    if (attempts.length >= MAX_PER_HOUR || Date.now() - last < MIN_GAP_MS) return fail(RATE_LIMIT_MESSAGE);
-
     // Dicatat sebelum menu dan zona dicek, jadi kiriman berulang dengan data salah ikut terhitung.
-    const { error: logError } = await supabase.from("order_attempts").insert({ ip_hash: ipHash });
-    if (logError) throw logError;
+    const allowed = await takeAttempt(supabase, ipHash, "order", { maxPerHour: MAX_PER_HOUR, minGapMs: MIN_GAP_MS });
+    if (!allowed) return fail(RATE_LIMIT_MESSAGE);
 
     const { data: zone, error: zoneError } = await supabase
       .from("delivery_zones")
