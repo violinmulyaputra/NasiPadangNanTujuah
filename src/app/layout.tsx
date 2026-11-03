@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -19,6 +19,12 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Nasi Padang Nan Tujuah",
   description: "Pesan nasi Padang langsung dari dapur kami, diantar ke rumah Anda.",
+};
+
+// Warna bilah browser HP = --color-paper. Meta tag tidak bisa membaca variabel CSS,
+// jadi nilainya disalin; ubah bersama token di globals.css.
+export const viewport: Viewport = {
+  themeColor: "#fffdf9",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

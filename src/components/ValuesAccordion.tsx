@@ -104,7 +104,9 @@ export default function ValuesAccordion() {
                     alt={`Foto untuk nilai ${value.title}`}
                     fill
                     sizes="(min-width: 1024px) 600px, (min-width: 768px) 60vw, 70vw"
-                    className="object-cover"
+                    // Tepi bawah foto memudar ke putih murni (selisih 6 dari paper); mask tipis
+                    // membuatnya pudar ke latar halaman agar tepi kartu menyatu.
+                    className="object-cover mask-b-from-96%"
                   />
                 </motion.div>
                 {isOpen && (

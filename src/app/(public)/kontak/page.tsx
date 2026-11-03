@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Hubungi Nasi Padang Nan Tujuah di Semarang dan Yogyakarta untuk informasi, reservasi meja, pesanan acara, dan kerja sama.",
 };
 
-// Foto hero 16:9 (1920x1080), memudar sendiri ke paper di sisi kanan dan bawah.
+// Foto hero 3:1 (1920x640), memudar sendiri ke krem di sisi kanan dan bawah.
 const HERO_PHOTO = "/images/kontak/hero.webp";
 
 const Rule = () => <div aria-hidden className="my-6 h-px w-14 bg-ink" />;
@@ -57,7 +57,7 @@ export default function ContactPage() {
     <main className="flex-1">
       {/* Band judul: foto 16:9 sebagai latar penuh, judul rata kanan menimpa foto */}
       <section className="relative flex min-h-60 items-center overflow-hidden md:min-h-80">
-        {/* Foto dekoratif tanpa animasi (elemen LCP); posisi atas agar lampu gantung terlihat */}
+        {/* Foto dekoratif tanpa animasi (elemen LCP), posisi tengah atas */}
         <Image
           src={HERO_PHOTO}
           alt=""
@@ -68,11 +68,11 @@ export default function ContactPage() {
           className="object-cover object-top"
         />
         {/* Scrim paper di bawah teks, kepekatan terendah yang lolos pengukuran kontras (lihat
-            DESIGN.md): yang menentukan kata merah "Hubungi". HP rata 30% karena teks selebar
-            layar; mulai md 0% di kiri naik ke 20% di tengah, jadi sisi kiri foto tetap jelas. */}
+            DESIGN.md): yang menentukan kata merah "Hubungi". HP rata 45% karena teks selebar
+            layar; mulai md 0% di kiri naik ke 30% di tengah, jadi sisi kiri foto tetap jelas. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-paper/30 md:bg-transparent md:bg-linear-to-r md:from-paper/0 md:via-paper/20 md:via-50% md:to-paper/20"
+          className="absolute inset-0 bg-paper/45 md:bg-transparent md:bg-linear-to-r md:from-paper/0 md:via-paper/30 md:via-50% md:to-paper/30"
         />
         {/* Band pendek memotong tepi bawah foto yang sudah pudar, jadi dipudarkan ke paper */}
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-b from-paper/0 to-paper" />
