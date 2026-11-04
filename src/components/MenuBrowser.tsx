@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { addItem } from "@/lib/cart";
 import type { Selections } from "@/lib/menu-options";
 import type { MenuCategory, MenuItem } from "@/types/menu";
@@ -28,6 +28,9 @@ export default function MenuBrowser({ items }: { items: MenuItem[] }) {
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   const visibleCount = category ? items.filter((i) => i.category === category).length : items.length;
+
+  // notifikasi lama tidak muncul lagi saat kembali ke /menu
+  useLayoutEffect(() => () => setStatus(null), []);
 
   useEffect(() => {
     if (!status) return;

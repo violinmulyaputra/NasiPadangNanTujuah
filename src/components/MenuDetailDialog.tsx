@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Minus, Plus, X } from "lucide-react";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { formatRupiah } from "@/lib/format";
 import { defaultSelections, getOptionGroups, type Selections } from "@/lib/menu-options";
 import { calculateLineTotal, calculateUnitPrice, MAX_QUANTITY, MIN_QUANTITY } from "@/lib/pricing";
@@ -21,10 +21,20 @@ const stepperClass =
 
 export default function MenuDetailDialog({ item, openKey, onSubmit, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
+  const shownKey = useRef(0);
 
+  // Activity (cacheComponents) menjalankan ulang efek saat halaman tampil lagi; buka hanya untuk klik baru
   useEffect(() => {
-    if (openKey > 0) ref.current?.showModal();
+    if (openKey === shownKey.current) return;
+    shownKey.current = openKey;
+    ref.current?.showModal();
   }, [openKey]);
+
+  // tutup saat halaman disembunyikan Activity agar kembali ke /menu selalu tertutup
+  useLayoutEffect(() => {
+    const dialog = ref.current;
+    return () => dialog?.close();
+  }, []);
 
   const hasGroups = item ? getOptionGroups(item).length > 0 : false;
 

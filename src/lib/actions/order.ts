@@ -16,6 +16,8 @@ const MAX_CODE_TRIES = 5;
 const RATE_LIMIT_MESSAGE = "Terlalu sering mengirim. Coba lagi nanti.";
 const GENERIC_ERROR = "Pesanan gagal dibuat. Coba lagi beberapa saat lagi.";
 const CHECK_FIELDS = "Periksa lagi isian yang ditandai.";
+const SOLD_OUT_MESSAGE =
+  "Menu yang dipilih sedang habis. Hapus dari keranjang untuk lanjut. Mohon refresh halaman agar tanda habis muncul.";
 
 const fail = (message: string, fieldErrors: Extract<CreateOrderResult, { status: "error" }>["fieldErrors"] = {}) =>
   ({ status: "error", message, fieldErrors }) as const;
@@ -59,8 +61,7 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
     let subtotal = 0;
     for (const item of items) {
       const m = menu.get(item.menuItemId);
-      if (!m) return fail(CHECK_FIELDS, { items: "Ada menu yang sudah tidak tersedia. Perbarui keranjang Anda." });
-      if (!m.is_available) return fail(CHECK_FIELDS, { items: `${m.name} sedang habis. Hapus dari keranjang untuk melanjutkan.` });
+      if (!m?.is_available) return fail(CHECK_FIELDS, { items: SOLD_OUT_MESSAGE });
 
       const groups = getOptionGroups({ name: m.name, category: m.category as MenuCategory });
       const checked = validateSelections(groups, item.selections);

@@ -40,8 +40,13 @@ export default function CheckoutDialog({ lines, zones, openKey, onClose }: Props
   const [values, setValues] = useState(EMPTY_FORM);
   const [success, setSuccess] = useState<Success | null>(null);
 
+  const shownKey = useRef(0);
+
+  // efek bisa jalan ulang tanpa klik baru (Activity); buka hanya untuk openKey baru
   useEffect(() => {
-    if (openKey > 0) ref.current?.showModal();
+    if (openKey === shownKey.current) return;
+    shownKey.current = openKey;
+    ref.current?.showModal();
   }, [openKey]);
 
   const close = () => ref.current?.close();

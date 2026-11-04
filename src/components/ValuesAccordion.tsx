@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { aboutValues, type AboutValue } from "@/lib/about-values";
 import { CloseIcon } from "./Icons";
@@ -43,6 +43,16 @@ export default function ValuesAccordion() {
     setModal(null);
     triggers.current[i]?.focus();
   };
+
+  // tutup modal saat halaman disembunyikan Activity (mis. tombol Back); key baru melewati animasi keluar yang macet saat tersembunyi
+  const [hideCount, setHideCount] = useState(0);
+  useLayoutEffect(
+    () => () => {
+      setModal(null);
+      setHideCount((c) => c + 1);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!modal) return;
@@ -118,7 +128,7 @@ export default function ValuesAccordion() {
 
       {typeof document !== "undefined" &&
         createPortal(
-          <AnimatePresence>
+          <AnimatePresence key={hideCount}>
             {modal && (
               <motion.div
                 key="overlay"
