@@ -9,7 +9,7 @@ import type { AdminReview, AdminReviewFilter } from "@/types/review";
 
 export const REVIEWS_PER_PAGE = 20;
 const MAX_PAGE = 10_000;
-const FILTERS: AdminReviewFilter[] = ["semua", "tampil", "tersembunyi", "contoh", "baru"];
+const FILTERS: AdminReviewFilter[] = ["semua", "tampil", "tersembunyi", "baru"];
 
 export type ReviewListParams = { filter: AdminReviewFilter; page: number };
 
@@ -32,7 +32,6 @@ export async function listReviews({ filter, page }: ReviewListParams) {
     .range(from, from + REVIEWS_PER_PAGE - 1);
   if (filter === "tampil") request = request.eq("is_visible", true);
   if (filter === "tersembunyi") request = request.eq("is_visible", false);
-  if (filter === "contoh") request = request.eq("is_sample", true);
   if (filter === "baru") request = request.gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
   const { data, count, error } = await request;

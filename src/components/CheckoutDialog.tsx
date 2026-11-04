@@ -201,19 +201,19 @@ function CheckoutForm({
       )}
 
       <div className="mt-6 space-y-4">
-        {field("customerName", "Nama lengkap", (p) => <input {...p} type="text" autoComplete="name" maxLength={60} />)}
+        {field("customerName", "Nama lengkap", (p) => <input {...p} type="text" autoComplete="name" maxLength={60} placeholder="Masukkan nama Anda" />)}
         {field("customerEmail", "Email", (p) => (
-          <input {...p} type="email" inputMode="email" autoComplete="email" maxLength={120} placeholder="nama@contoh.com" />
+          <input {...p} type="email" inputMode="email" autoComplete="email" maxLength={120} placeholder="Masukkan email Anda" />
         ))}
         {field("customerPhone", "Nomor telepon", (p) => (
-          <input {...p} type="tel" inputMode="tel" autoComplete="tel" maxLength={20} placeholder="08xxxxxxxxxx" />
+          <input {...p} type="tel" inputMode="tel" autoComplete="tel" maxLength={20} placeholder="Masukkan nomor telepon Anda" />
         ))}
         {field("deliveryAddress", "Alamat pengiriman", (p) => (
-          <textarea {...p} rows={3} autoComplete="street-address" maxLength={200} className={cn(inputClass, "resize-none")} />
+          <textarea {...p} rows={3} autoComplete="street-address" maxLength={200} placeholder="Masukkan alamat pengiriman Anda" className={cn(inputClass, "resize-none")} />
         ))}
         {field("deliveryZone", "Zona pengiriman", (p) => (
           <select {...p}>
-            <option value="">Pilih zona</option>
+            <option value="">Pilih zona pengiriman Anda</option>
             {zones.map((z) => (
               <option key={z.code} value={z.code}>
                 {`${z.name} (${formatRupiah(z.fee)})`}
@@ -222,7 +222,7 @@ function CheckoutForm({
           </select>
         ))}
         {field("notes", "Catatan (opsional)", (p) => (
-          <input {...p} type="text" maxLength={200} placeholder="Contoh: rumah pagar hijau" />
+          <input {...p} type="text" maxLength={200} placeholder="Masukkan catatan Anda (opsional)" />
         ))}
         {/* Kolom jebakan: tersembunyi dari manusia, bot biasanya mengisinya */}
         <div aria-hidden className="sr-only">

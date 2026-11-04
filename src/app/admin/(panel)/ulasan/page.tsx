@@ -14,7 +14,6 @@ const FILTERS: { value: AdminReviewFilter; label: string }[] = [
   { value: "semua", label: "Semua" },
   { value: "tampil", label: "Tampil" },
   { value: "tersembunyi", label: "Disembunyikan" },
-  { value: "contoh", label: "Contoh" },
   { value: "baru", label: "7 hari terakhir" },
 ];
 
@@ -83,9 +82,6 @@ async function ReviewModeration({ searchParams }: { searchParams: PageProps<"/ad
                   <span className="font-semibold break-words">{review.author_name}</span>
                   <StarRow value={review.rating} starClassName="size-4" />
                   <span className="sr-only">Rating {formatRating(review.rating)} dari 5</span>
-                  {review.is_sample && (
-                    <span className="rounded-full border border-ink px-2 py-0.5 text-xs font-semibold">Contoh</span>
-                  )}
                   {!review.is_visible && (
                     <span className="rounded-full bg-ink px-2 py-0.5 text-xs font-semibold text-paper">Disembunyikan</span>
                   )}
@@ -131,9 +127,6 @@ export default function AdminReviewsPage({ searchParams }: PageProps<"/admin/ula
   return (
     <main>
       <h1 className="font-display text-2xl font-semibold md:text-3xl">Ulasan</h1>
-      <p className="mt-1 text-sm text-muted">
-        Ulasan yang disembunyikan tidak tampil di halaman Ulasan dan tidak dihitung di ringkasan rating.
-      </p>
       <Suspense
         fallback={
           <div

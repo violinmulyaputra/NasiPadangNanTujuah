@@ -19,7 +19,9 @@ async function SearchWithMessage({ searchParams }: { searchParams: PageProps<"/p
 export default function TrackOrderPage({ searchParams }: PageProps<"/pesanan">) {
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-4 py-12 md:py-20">
-      <h1 className="font-display text-title-mobile font-bold text-ink md:text-5xl">Lacak Pesanan</h1>
+      <h1 className="font-display text-title-mobile font-bold text-ink md:text-5xl">
+        Lacak <span className="text-brand">Pesanan</span>
+      </h1>
       <p className="mt-3 text-base text-muted">
         Masukkan kode pesanan yang Anda terima setelah checkout untuk melihat status dan cara pembayarannya.
       </p>

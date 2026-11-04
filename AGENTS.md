@@ -67,7 +67,7 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 - Payment gateway (Midtrans, Xendit) atau pembayaran uang sungguhan. Rekening dan QRIS hanya data contoh.
 - Pelacakan kurir real-time atau GPS, dan ongkir berdasarkan jarak. Ongkir tetap per zona.
 - Notifikasi otomatis lewat WhatsApp API. Cukup tautan `wa.me`.
-- Promo, kupon, dan poin loyalitas. Ulasan dan rating di etalase beranda hanya data contoh.
+- Promo, kupon, dan poin loyalitas. (Ulasan dan rating berasal dari pengunjung dan dimoderasi admin, bukan data contoh.)
 - Multi-cabang, multi-admin berperan, laporan keuangan, PWA, aplikasi mobile native, dan multi-bahasa.
 - Reservasi meja dan blog.
 - Integrasi GoFood, GrabFood, atau ShopeeFood.
@@ -77,7 +77,8 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 - Jangan pakai skill superdesign kecuali saya memintanya secara eksplisit.
 
 ## Keputusan cakupan
-- 2026-11-03: fitur kirim ulasan disetujui sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Larangan lain tetap berlaku.
+- 2026-11-03: fitur kirim ulasan disetujui sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi lewat dashboard admin (F5) dengan menyembunyikan atau menghapus ulasan. Larangan lain tetap berlaku.
+- 2026-11-04: ulasan berasal dari pengunjung, dimoderasi admin. Beranda ("Apa Kata Mereka") dan /ulasan membaca ulasan sungguhan yang tampil; ulasan contoh (`seed-ulasan.sql`) tidak dipakai lagi dan kolom `is_sample` tidak dibedakan di tampilan.
 - 2026-11-04: pemilik proyek (Violin) memutuskan checkout berupa pop-up di panel keranjang; tidak ada halaman /checkout dan folder rute `checkout/` tidak dipakai. Form checkout mengumpulkan nama, email, nomor telepon, dan alamat pengiriman (ditambah zona antar dan catatan). Tanpa nomor kartu dan tanpa pembayaran uang sungguhan. Data pemesan hanya ditulis dan dibaca lewat server (service role), tidak pernah lewat kebijakan publik. Zona dan ongkir: lihat PRD "Zona antar dan ongkir".
 - 2026-11-04: admin tunggal untuk F5. Akun dibuat manual di Supabase Auth, tidak ada pendaftaran, dan akses ditentukan tabel `admin_users` (`supabase/schema-admin.sql`). Halaman admin memanggil `requireAdmin()` dan aksi admin memanggil `getAdmin()` (`src/lib/admin-auth.ts`, `getUser` lalu cek `admin_users`); Proxy bukan satu-satunya penjaga.
 
