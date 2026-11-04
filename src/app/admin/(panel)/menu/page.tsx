@@ -131,9 +131,6 @@ export default function AdminMenuPage({ searchParams }: PageProps<"/admin/menu">
   return (
     <main>
       <h1 className="font-display text-2xl font-semibold md:text-3xl">Menu</h1>
-      <p className="mt-1 text-sm text-muted">
-        Perubahan langsung tampil di halaman Menu dan beranda. Pesanan lama tetap memakai harga saat dipesan.
-      </p>
       <Suspense
         fallback={
           <div

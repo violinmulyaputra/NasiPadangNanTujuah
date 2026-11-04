@@ -22,7 +22,7 @@ export type ReviewFormState = {
 };
 
 // Filter daftar ulasan admin (F5). "baru" = 7 hari terakhir.
-export type AdminReviewFilter = "semua" | "tampil" | "tersembunyi" | "contoh" | "baru";
+export type AdminReviewFilter = "semua" | "tampil" | "tersembunyi" | "baru";
 
 // Satu baris ulasan untuk admin, termasuk yang disembunyikan.
 export type AdminReview = Review & { is_visible: boolean };

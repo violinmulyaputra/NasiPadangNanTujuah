@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { signIn } from "@/lib/actions/admin";
 
 const inputClass =
-  "mt-1.5 w-full rounded-xl border border-line bg-paper px-4 py-3 text-base text-ink focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none";
+  "mt-1.5 w-full rounded-xl border border-line bg-paper px-4 py-3 text-base text-ink placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none";
 
 export default function AdminLoginForm() {
   const [state, action, pending] = useActionState(signIn, null);
@@ -23,6 +23,7 @@ export default function AdminLoginForm() {
           autoComplete="username"
           required
           maxLength={254}
+          placeholder="Masukkan email Anda"
           className={inputClass}
         />
       </div>
@@ -37,6 +38,7 @@ export default function AdminLoginForm() {
           autoComplete="current-password"
           required
           maxLength={200}
+          placeholder="Masukkan password Anda"
           className={inputClass}
         />
       </div>

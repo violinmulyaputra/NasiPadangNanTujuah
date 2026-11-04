@@ -18,7 +18,7 @@ const linkClass = "text-muted hover:text-brand";
 export default function Footer() {
   return (
     <footer className="mt-auto border-t border-line bg-paper">
-      <div className="mx-auto grid max-w-(--container) gap-12 px-4 py-16 md:grid-cols-[2fr_1fr_1.5fr_1fr] md:px-8">
+      <div className="mx-auto grid max-w-(--container) gap-12 px-4 py-16 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1.5fr_1fr] md:px-8">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex w-fit items-center gap-3">
             <Image
@@ -31,8 +31,8 @@ export default function Footer() {
             <span className="font-display text-xl font-semibold text-ink">Nasi Padang Nan Tujuah</span>
           </Link>
           <p className="max-w-xs text-muted">
-            Rendang, gulai, dan sambal lado dimasak dari resep keluarga Minang, lalu diantar hangat ke
-            rumah Anda.
+            Restoran dengan sentuhan arsitektur Minangkabau dan cahaya hangat yang siap menyambut Anda
+            untuk menikmati kelezatan masakan Padang.
           </p>
         </div>
 
@@ -63,12 +63,13 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4">
           <h2 className={headingClass}>Contact</h2>
-          <address className="flex flex-col gap-2 not-italic text-muted">
+          {/* Pengaman: email panjang boleh patah agar kolom grid tidak melebar */}
+          <address className="flex flex-col gap-2 not-italic text-muted [overflow-wrap:anywhere]">
             <a href={`tel:+${RESTAURANT_PHONE}`} className={linkClass}>
               {RESTAURANT_PHONE_DISPLAY}
             </a>
-            <a href="mailto:halo@nantujuah.example" className={linkClass}>
-              halo@nantujuah.example
+            <a href="mailto:info@nasipadangnantujuah.com" className={linkClass}>
+              info@nasipadangnantujuah.com
             </a>
           </address>
         </div>
@@ -93,8 +94,8 @@ export default function Footer() {
 
       <div className="border-t border-line">
         <p className="mx-auto max-w-(--container) px-4 py-6 text-sm text-muted md:px-8">
-          © 2026 Nasi Padang Nan Tujuah. Situs ini proyek portofolio. Restoran dan pembayaran bersifat
-          fiktif. Alamat, kontak, ulasan, rekening, dan QRIS adalah data contoh.
+          © 2026 Nasi Padang Nan Tujuah. Semua hal yang berkaitan dengan restoran dan pembayaran bersifat
+          fiktif.
         </p>
       </div>
     </footer>

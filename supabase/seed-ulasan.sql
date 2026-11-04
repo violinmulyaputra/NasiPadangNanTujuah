@@ -1,4 +1,14 @@
 -- =============================================================================
+-- TIDAK DIPAKAI LAGI (2026-11-04). Ulasan kini hanya dari pengunjung (form di /ulasan)
+-- dan dimoderasi admin di /admin/ulasan. Isi lama disimpan sebagai arsip di dalam
+-- komentar blok di bawah, jadi menjalankan file ini tidak menambah baris apa pun.
+--
+-- Membersihkan ulasan contoh yang dulu terlanjur diisi (opsional, jalankan manual):
+--   delete from public.reviews where is_sample = true;
+-- =============================================================================
+
+/* ARSIP, JANGAN DIJALANKAN
+-- =============================================================================
 -- Data contoh ulasan: 6 testimoni fiktif dari seksi Testimoni beranda
 -- (src/components/Testimonials.tsx), ditandai is_sample = true.
 -- Komponen itu tidak punya rating, jadi rating dibuat bervariasi 4.5 dan 5.0.
@@ -34,3 +44,4 @@ where not exists (
   select 1 from public.reviews r
   where r.is_sample and r.author_name = v.author_name and r.comment = v.comment
 );
+*/

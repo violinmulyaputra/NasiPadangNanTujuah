@@ -5,7 +5,7 @@
 -- menyembunyikan ulasan (is_visible = false).
 --
 -- Cara pakai: tempel ke Supabase SQL Editor lalu jalankan, setelah schema.sql.
--- Aman dijalankan ulang (idempotent). Lanjutkan dengan seed-ulasan.sql.
+-- Aman dijalankan ulang (idempotent). Ulasan hanya dari pengunjung; seed-ulasan.sql tidak dipakai lagi.
 --
 -- Model akses (RLS):
 --   - Pengunjung (anon) dan user login hanya boleh MEMBACA ulasan yang tampil.
@@ -28,7 +28,7 @@ create table if not exists public.reviews (
   comment      text not null check (char_length(comment) between 10 and 500),
   -- false bila disembunyikan admin (moderasi F5).
   is_visible   boolean not null default true,
-  -- true untuk data contoh fiktif dari seed.
+  -- Warisan seed lama (tidak dipakai lagi); tidak dibedakan di tampilan.
   is_sample    boolean not null default false,
   created_at   timestamptz not null default now()
 );
