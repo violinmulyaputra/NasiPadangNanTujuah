@@ -13,7 +13,6 @@ type Props = { code: string; total: number; initialState: PaymentInitialState };
 type Picked = { file: File; url: string };
 
 const ACCEPT = ["image/jpeg", "image/png", "image/webp"];
-// Batas berkas mentah sebelum dikecilkan, supaya foto raksasa tidak menghabiskan memori HP.
 const MAX_INPUT_BYTES = 20 * 1024 * 1024;
 const TOO_BIG = "Ukuran gambar maksimal 2 MB.";
 
@@ -27,9 +26,6 @@ const primaryButton =
 const textButton =
   "min-h-11 font-semibold text-ink underline underline-offset-4 hover:text-brand-strong focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none rounded";
 
-// Panel pembayaran manual (F3) dengan data rekening dan QRIS CONTOH. Mandiri: dipakai
-// di layar sukses checkout dan nanti di halaman lacak pesanan (F4). Status pesanan
-// tidak diubah di sini; "Bukti terkirim" hanya dari waktu unggah.
 export default function PaymentPanel({ code, total, initialState }: Props) {
   const id = useId();
   const [method, setMethod] = useState<PaymentMethod>(initialState.paymentMethod ?? "transfer");
@@ -48,10 +44,8 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
 
   const showForm = !sentAt || replacing;
 
-  // Lepas URL pratinjau lama supaya memori tidak bocor.
   useEffect(() => () => void (picked && URL.revokeObjectURL(picked.url)), [picked]);
 
-  // Fokus dipindah setelah tampilan berganti, supaya fokus tidak hilang ke body.
   useEffect(() => {
     if (focusAfter.current === "sent") sentRef.current?.focus();
     if (focusAfter.current === "file") fileRef.current?.focus();
@@ -69,7 +63,6 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
 
   const onPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    // Dikosongkan supaya memilih berkas yang sama lagi tetap memicu onChange.
     e.target.value = "";
     if (!file) return;
     const token = ++pickToken.current;
@@ -81,9 +74,8 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
 
     setPreparing(true);
     const small = await compressImage(file);
-    if (token !== pickToken.current) return; // sudah diganti pilihan yang lebih baru
+    if (token !== pickToken.current) return;
     setPreparing(false);
-    // Pakai hasil kecil bila memang lebih kecil; bila gagal dikecilkan, berkas asli.
     const out = small && small.size < file.size ? small : file;
     if (out.size > MAX_PROOF_BYTES) return setError(TOO_BIG);
     setPicked({ file: out, url: URL.createObjectURL(out) });
@@ -91,7 +83,7 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (pending || preparing || !picked) return; // tanpa kirim ganda
+    if (pending || preparing || !picked) return;
     setPending(true);
     setError("");
     try {
@@ -107,7 +99,6 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
       setReplacing(false);
       setPicked(null);
     } catch {
-      // Metode dan gambar terpilih tetap, jadi cukup tekan kirim lagi.
       setError("Bukti bayar gagal dikirim. Periksa koneksi Anda lalu coba lagi.");
     } finally {
       setPending(false);
@@ -124,7 +115,6 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
 
       <fieldset className="mt-4">
         <legend className="font-semibold">Metode pembayaran</legend>
-        {/* Radio bawaan: panah kiri dan kanan memindah pilihan, Spasi memilih. */}
         <div className="mt-2 grid grid-cols-2 gap-1 rounded-full border border-line bg-paper p-1">
           {METHODS.map((m) => (
             <label key={m.value} className="relative">
@@ -224,8 +214,6 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
             </p>
             <p className="mt-1 text-muted">Jangan unggah data sensitif selain bukti transfer.</p>
 
-            {/* Input asli disembunyikan, labelnya tampil sebagai tombol besar. Tanpa
-                atribut capture, jadi HP menawarkan galeri dan kamera. */}
             <label className="mt-3 flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-ink bg-paper px-4 font-semibold text-ink transition-colors duration-150 hover:border-brand-strong hover:text-brand-strong has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-card">
               <input
                 ref={fileRef}
@@ -243,7 +231,6 @@ export default function PaymentPanel({ code, total, initialState }: Props) {
             {picked && (
               <div className="mt-3 flex items-center gap-3">
                 <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-line bg-paper">
-                  {/* URL blob lokal, jadi tanpa optimasi server. */}
                   <Image src={picked.url} alt="Pratinjau bukti bayar" fill unoptimized className="object-cover" />
                 </div>
                 <p className="text-muted">Gambar siap dikirim ({Math.max(1, Math.round(picked.file.size / 1024))} KB)</p>

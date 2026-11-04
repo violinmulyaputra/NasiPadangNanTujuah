@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 
-// Font variabel: semua bobot tersedia. Fraunces hanya normal, judul tidak boleh miring.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
@@ -21,8 +20,6 @@ export const metadata: Metadata = {
   description: "Pesan nasi Padang langsung dari dapur kami, diantar ke rumah Anda.",
 };
 
-// Warna bilah browser HP = --color-paper. Meta tag tidak bisa membaca variabel CSS,
-// jadi nilainya disalin; ubah bersama token di globals.css.
 export const viewport: Viewport = {
   themeColor: "#fffdf9",
 };

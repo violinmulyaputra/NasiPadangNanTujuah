@@ -13,8 +13,6 @@ import { statusLabel } from "@/components/OrderTimeline";
 import type { MenuEditState } from "@/types/menu";
 import type { AdminActionResult, OrderStatus } from "@/types/order";
 
-// Satu pesan untuk semua kegagalan login, supaya tidak membocorkan apakah email ada,
-// sandinya salah, atau akunnya bukan admin.
 const LOGIN_FAILED = "Email atau kata sandi salah.";
 const NOT_ADMIN = "Sesi admin berakhir. Silakan masuk lagi.";
 const GENERIC_ERROR = "Perubahan gagal disimpan. Coba lagi beberapa saat lagi.";
@@ -22,13 +20,12 @@ const ORDER_NOT_FOUND = "Pesanan tidak ditemukan.";
 
 const fail = (message: string): AdminActionResult => ({ status: "error", message });
 
-// Jeda acak sekitar 300 ms pada login gagal: memperlambat tebakan dan menyamarkan waktu.
 const failureDelay = () => new Promise((resolve) => setTimeout(resolve, 200 + Math.random() * 200));
 
 export type SignInState = { message: string } | null;
 
+// Login
 export async function signIn(_prev: SignInState, formData: FormData): Promise<SignInState> {
-  // Server Action bisa dipanggil langsung dengan isi apa pun, bukan hanya dari form.
   if (!(formData instanceof FormData)) return { message: LOGIN_FAILED };
   const email = formData.get("email");
   const password = formData.get("password");
@@ -59,7 +56,6 @@ export async function signIn(_prev: SignInState, formData: FormData): Promise<Si
     .maybeSingle();
   if (dbError) console.error("Gagal memeriksa admin_users saat login:", dbError);
   if (!admin) {
-    // Akun Supabase biasa (bukan admin): sesi langsung dicabut.
     await supabase.auth.signOut();
     await failureDelay();
     return { message: LOGIN_FAILED };
@@ -75,9 +71,7 @@ export async function signOut() {
   redirect("/admin/login");
 }
 
-// Pindah status satu langkah (maju, atau mundur untuk koreksi). updated_at diisi trigger
-// orders_set_updated_at. Halaman lacak pelanggan membaca status tanpa cache, jadi status
-// baru tampil pada muatan berikutnya; refresh() memperbarui halaman admin ini.
+// Pesanan
 export async function updateOrderStatus(rawCode: unknown, rawStatus: unknown): Promise<AdminActionResult> {
   if (!(await getAdmin())) return fail(NOT_ADMIN);
   const code = normalizeOrderCode(rawCode);
@@ -98,7 +92,6 @@ export async function updateOrderStatus(rawCode: unknown, rawStatus: unknown): P
     if (!isValidTransition(current, newStatus))
       return fail(`Status tidak bisa dipindah dari ${statusLabel(current)} ke ${statusLabel(newStatus)}.`);
 
-    // Syarat status lama diulang: bila status berubah di tab lain, tidak ada yang tertimpa.
     const { data: updated, error: updateError } = await supabase
       .from("orders")
       .update({ status: newStatus, updated_at: new Date().toISOString() })
@@ -118,8 +111,6 @@ export async function updateOrderStatus(rawCode: unknown, rawStatus: unknown): P
   }
 }
 
-// Tandai lunas atau batalkan tanda lunas (PRD F5). paid_at mengikuti is_paid
-// (constraint orders_paid_at_consistent).
 export async function setOrderPaid(rawCode: unknown, paid: unknown): Promise<AdminActionResult> {
   if (!(await getAdmin())) return fail(NOT_ADMIN);
   const code = normalizeOrderCode(rawCode);
@@ -143,15 +134,10 @@ export async function setOrderPaid(rawCode: unknown, paid: unknown): Promise<Adm
   }
 }
 
-// id baris (uuid) dari klien dicek bentuknya sebelum dipakai di query.
+// Ulasan
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const isUuid = (value: unknown): value is string => typeof value === "string" && UUID_PATTERN.test(value);
 
-// ---------------------------------------------------------------------------
-// Ulasan (moderasi). /ulasan publik dan view review_stats dibaca per permintaan
-// tanpa "use cache" (patuh RLS is_visible), jadi perubahan langsung terlihat pada muatan
-// berikutnya. revalidatePath("/ulasan") sama seperti submitReview, refresh() untuk halaman admin.
-// ---------------------------------------------------------------------------
 
 export async function setReviewVisible(id: unknown, visible: unknown): Promise<AdminActionResult> {
   if (!(await getAdmin())) return fail(NOT_ADMIN);
@@ -189,13 +175,8 @@ export async function deleteReview(id: unknown): Promise<AdminActionResult> {
   return { status: "success", message: "Ulasan dihapus permanen." };
 }
 
-// ---------------------------------------------------------------------------
-// Menu. /menu memakai "use cache" bertag MENU_CACHE_TAG, jadi setiap perubahan memanggil
-// updateTag (permintaan berikutnya menunggu data baru, bukan data basi). Hidangan Andalan
-// di beranda dibaca per permintaan. Pesanan lama tidak berubah: order_items menyimpan
-// salinan nama dan harga. Slug, kategori, gambar, dan urutan tidak bisa diubah di sini.
-// ---------------------------------------------------------------------------
 
+// Menu
 type MenuFlag = "is_available" | "is_popular";
 
 async function setMenuFlag(id: unknown, flag: MenuFlag, value: unknown): Promise<AdminActionResult> {
@@ -232,7 +213,6 @@ export async function setMenuPopular(id: unknown, popular: unknown) {
   return setMenuFlag(id, "is_popular", popular);
 }
 
-// Ubah nama, deskripsi, dan harga (FormData id, name, description, price) lewat useActionState.
 export async function updateMenuItem(_prev: MenuEditState, formData: FormData): Promise<MenuEditState> {
   const error = (message: string): MenuEditState => ({ status: "error", message, fieldErrors: {} });
   if (!(await getAdmin())) return error(NOT_ADMIN);

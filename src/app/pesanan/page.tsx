@@ -8,14 +8,12 @@ export const metadata: Metadata = {
   description: "Lacak status pesanan Anda dengan kode pesanan.",
 };
 
-// ?galat diisi Proxy saat /pesanan/[kode] tidak ditemukan atau terkena batas laju.
 async function SearchWithMessage({ searchParams }: { searchParams: PageProps<"/pesanan">["searchParams"] }) {
   const { galat } = await searchParams;
   const message = galat === "batas" ? TRACK_RATE_LIMITED : galat === "tidak-ditemukan" ? TRACK_NOT_FOUND : "";
   return <TrackOrderSearch message={message} />;
 }
 
-// F4: form kode pesanan. Rute /pesanan/[kode] menampilkan statusnya.
 export default function TrackOrderPage({ searchParams }: PageProps<"/pesanan">) {
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-4 py-12 md:py-20">

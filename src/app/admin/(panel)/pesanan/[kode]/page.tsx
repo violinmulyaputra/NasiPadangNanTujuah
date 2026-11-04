@@ -17,7 +17,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const card = "rounded-card border border-line bg-card p-4 md:p-6";
 
-// Nomor tersimpan sudah 62xxxxxxxxxx; dinormalisasi lagi untuk data lama atau tulisan lain.
 function toWhatsAppNumber(phone: string) {
   const digits = phone.replace(/\D/g, "");
   if (digits.startsWith("0")) return `62${digits.slice(1)}`;
@@ -36,7 +35,6 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 
 async function OrderDetail({ params }: { params: Props["params"] }) {
   const { kode } = await params;
-  // getAdminOrder memanggil requireAdmin() sebelum menyentuh data.
   const order = await getAdminOrder(kode);
   if (!order) notFound();
 
@@ -150,9 +148,6 @@ async function OrderDetail({ params }: { params: Props["params"] }) {
           </dl>
           {order.proofUrl ? (
             <figure className="mt-4">
-              {/* <img>, bukan next/image: signed URL berumur 60 detik dan berisi token. next/image
-                  akan menyalin gambar ke cache optimasinya (lebih lama dari 60 detik) dan memakai
-                  kuota optimasi gambar. Gambar dimuat sekali langsung dari Supabase. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={order.proofUrl}
@@ -175,7 +170,6 @@ async function OrderDetail({ params }: { params: Props["params"] }) {
   );
 }
 
-// F5: detail pesanan untuk admin. Data pemesan hanya di halaman ini (setelah requireAdmin).
 export default function AdminOrderPage({ params }: Props) {
   return (
     <main>

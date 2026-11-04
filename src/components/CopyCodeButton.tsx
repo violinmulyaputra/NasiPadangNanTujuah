@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-// Tombol "Salin kode" dengan konfirmasi aria-live (halaman lacak F4).
 export default function CopyCodeButton({ code }: { code: string }) {
   const [status, setStatus] = useState("");
 

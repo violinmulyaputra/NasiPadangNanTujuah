@@ -1,10 +1,4 @@
--- =============================================================================
--- Foto menu: isi image_url untuk menu yang fotonya ada di public/images/menu/.
--- Berkas ini DIBUAT OTOMATIS oleh scripts/generate-menu-photo-sql.mjs, jangan
--- diedit manual. Hanya UPDATE, aman dijalankan ulang. Menu yang belum punya
--- foto tidak disentuh.
--- Jumlah foto: 44
--- =============================================================================
+-- Foto menu
 
 update public.menu_items
 set image_url = '/images/menu/air-mineral-botol-330-ml.webp'

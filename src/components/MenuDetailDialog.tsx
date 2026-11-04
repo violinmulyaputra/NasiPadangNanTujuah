@@ -11,7 +11,6 @@ import MenuPhoto from "./MenuPhoto";
 
 type Props = {
   item: MenuItem | null;
-  // Naik setiap kali pop-up dibuka; dipakai sebagai key agar pilihan dan jumlah kembali ke bawaan.
   openKey: number;
   onSubmit: (item: MenuItem, selections: Selections, quantity: number) => void;
   onClose: () => void;
@@ -20,8 +19,6 @@ type Props = {
 const stepperClass =
   "inline-flex size-11 items-center justify-center rounded-full border-2 border-brand-strong text-brand-strong transition-colors duration-150 hover:bg-brand-strong hover:text-paper disabled:cursor-not-allowed disabled:border-line disabled:text-muted disabled:hover:bg-transparent";
 
-// <dialog> modal bawaan (sama dengan panel keranjang): fokus terkunci, Escape menutup,
-// role dialog dan aria-modal otomatis. Kunci scroll body lewat html:has(dialog[open]) di globals.css.
 export default function MenuDetailDialog({ item, openKey, onSubmit, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -40,8 +37,6 @@ export default function MenuDetailDialog({ item, openKey, onSubmit, onClose }: P
         if (e.target === e.currentTarget) ref.current?.close();
       }}
       className={cn(
-        // overflow-clip, bukan hidden: elemen overflow hidden tetap bisa digulir browser saat
-        // elemen di dalamnya difokus, sehingga bilah bawah pernah ikut terangkat.
         "m-auto max-h-[90dvh] w-[calc(100%-2rem)] overflow-clip rounded-card bg-card p-0 text-ink backdrop:bg-ink/50",
         "scale-96 opacity-0 transition-[opacity,scale,display,overlay] transition-discrete duration-250 ease-out open:scale-100 open:opacity-100 starting:open:scale-96 starting:open:opacity-0 motion-reduce:transition-none",
         hasGroups ? "max-w-[760px]" : "max-w-md",
@@ -97,22 +92,18 @@ function DialogBody({
         <X aria-hidden className="size-5" />
       </button>
 
-      {/* Satu area gulir. HP (dan menu tanpa pilihan): seluruh isi tergulir. Mulai md dengan
-          pilihan: kolom kiri tetap, hanya kolom pilihan yang tergulir. Bilah bawah di luar. */}
       <div
         className={cn(
           "min-h-0 flex-1 overflow-y-auto overscroll-contain",
           hasGroups && "md:grid md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:overflow-hidden",
         )}
       >
-        {/* md:overflow-y-auto hanya cadangan bila deskripsi sangat panjang di jendela pendek */}
         <div className={cn("flex flex-col p-6 pt-14", hasGroups ? "md:min-h-0 md:overflow-y-auto md:p-8 md:pr-4" : "md:p-8")}>
           <MenuPhoto
             src={item.image_url}
             alt={item.name}
             sizes="(min-width: 768px) 280px, 160px"
             eager
-            // Mulai md mengecil di jendela pendek agar kolom kiri muat tanpa digulir
             className="mx-auto size-40 rounded-card md:size-[min(280px,26dvh)]"
           />
           <h2 className="mt-6 text-center text-lg font-semibold text-brand-strong uppercase">{item.name}</h2>
@@ -157,8 +148,6 @@ function DialogBody({
                 </legend>
                 <div className="clear-left">
                   {group.choices.map((choice) => (
-                    // relative: radio sr-only (absolute) diposisikan di labelnya, di dalam area gulir,
-                    // jadi fokus hanya menggulir kolom pilihan secukupnya.
                     <label key={choice.id} className="relative flex min-h-11 cursor-pointer items-center justify-between gap-4 py-1">
                       <span>
                         <span className="block text-sm">{choice.label}</span>
@@ -172,7 +161,6 @@ function DialogBody({
                         onChange={() => setSelections((s) => ({ ...s, [group.id]: choice.id }))}
                         className="peer sr-only"
                       />
-                      {/* Radio bertampilan kotak centang, sesuai sketsa */}
                       <span
                         aria-hidden
                         className="inline-flex size-5 shrink-0 items-center justify-center rounded border-2 border-line text-transparent peer-checked:border-brand-strong peer-checked:bg-brand-strong peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink"
@@ -188,7 +176,6 @@ function DialogBody({
         )}
       </div>
 
-      {/* Di luar area scroll, jadi selalu menempel di dasar dialog */}
       <div className="flex shrink-0 items-center justify-between gap-4 bg-brand/10 px-6 py-4 md:px-8">
         <p aria-live="polite" className="text-2xl font-bold">
           <span className="sr-only">Total </span>

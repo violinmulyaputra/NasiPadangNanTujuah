@@ -6,8 +6,6 @@ import CartPanel from "./CartPanel";
 import MobileMenu from "./MobileMenu";
 
 export default async function Navbar() {
-  // Zona untuk pop-up checkout di keranjang. Di-cache ("use cache"), jadi Navbar tetap statis.
-  // Gagal dimuat: daftar kosong, createOrder tetap menolak zona yang tidak valid.
   const zones = await getDeliveryZones().catch((e: unknown) => {
     console.error(e);
     return [];
@@ -19,8 +17,6 @@ export default async function Navbar() {
         aria-label="Navigasi utama"
         className="relative mx-auto flex h-16 max-w-(--container) items-center justify-between gap-4 px-4 md:px-8"
       >
-        {/* Logo hitam ke merah saat hover/fokus, mengikuti tautan teks (hover:text-brand, tanpa transisi).
-            group-hover Tailwind v4 hanya aktif di perangkat hover: hover, jadi tidak menempel di HP. */}
         <Link href="/" className="group relative shrink-0">
           <Image
             src="/images/logo/logo.png"
@@ -30,7 +26,6 @@ export default async function Navbar() {
             priority
             className="h-12 w-auto group-hover:opacity-0 group-focus-visible:opacity-0"
           />
-          {/* Kanvas sama 480x344, dimuat eager agar hover pertama tidak berkedip */}
           <Image
             src="/images/logo/logo-red.webp"
             alt=""

@@ -11,22 +11,16 @@ import type {
   PaymentMethod,
 } from "@/types/order";
 
-// Data dashboard admin (F5) lewat service role. Setiap fungsi memanggil requireAdmin()
-// lebih dulu, jadi tidak ada jalan membaca data pemesan tanpa sesi admin.
 
 export const ORDERS_PER_PAGE = 20;
 export const PROOF_BUCKET = "payment-proofs";
-// Signed URL bukti bayar dibuat ulang setiap halaman detail dibuka.
 const PROOF_URL_TTL_SECONDS = 60;
 const MAX_PAGE = 10_000;
-// Panjang kode pesanan (NPT-XXXXXXXX).
 export const MAX_QUERY_LENGTH = 12;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-// Asia/Jakarta selalu UTC+7 (tanpa musim panas).
 const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
 
-// Awal hari ini menurut Asia/Jakarta, dalam ISO UTC.
 const startOfTodayJakarta = () =>
   new Date(Math.floor((Date.now() + JAKARTA_OFFSET_MS) / DAY_MS) * DAY_MS - JAKARTA_OFFSET_MS).toISOString();
 
@@ -35,14 +29,11 @@ export const first = (value: SearchParamValue) => (Array.isArray(value) ? value[
 
 export type OrderListParams = {
   filter: AdminOrderFilter;
-  // Teks pencarian yang ditampilkan lagi di kolom (sudah dipotong).
   query: string;
-  // false bila pencarian berisi karakter yang tidak mungkin ada di kode pesanan.
   queryValid: boolean;
   page: number;
 };
 
-// Validasi searchParams daftar pesanan. Nilai tak dikenal jatuh ke bawaan.
 export function parseOrderListParams(params: Record<string, SearchParamValue>): OrderListParams {
   const status = first(params.status);
   const filter: AdminOrderFilter =
@@ -57,14 +48,12 @@ export function parseOrderListParams(params: Record<string, SearchParamValue>): 
   };
 }
 
-// Bentuk minimal builder supabase-js yang dipakai filter (tipe aslinya terlalu dalam untuk generik).
 type Filterable = {
   eq(column: string, value: string): Filterable;
   not(column: string, operator: string, value: null): Filterable;
   gte(column: string, value: string): Filterable;
 };
 
-// Tanpa batasan generik: membandingkan builder asli dengan Filterable membuat tsc kehabisan kedalaman.
 function applyFilter<T>(query: T, filter: AdminOrderFilter): T {
   const q = query as unknown as Filterable;
   const filtered =
@@ -89,11 +78,9 @@ export async function listOrders({ filter, query, queryValid, page }: OrderListP
     .order("created_at", { ascending: false })
     .range(from, from + ORDERS_PER_PAGE - 1);
   request = applyFilter(request, filter);
-  // Aman untuk ilike: query hanya huruf besar, angka, dan "-" (tanpa % atau _).
   if (query) request = request.ilike("code", `%${query}%`);
 
   const { data, count, error } = await request;
-  // PGRST103: halaman melewati jumlah data. Tampilkan kosong, bukan galat.
   if (error?.code === "PGRST103") return { rows: [] as AdminOrderRow[], total: count ?? 0 };
   if (error) {
     console.error("Gagal membaca daftar pesanan admin:", error);
@@ -110,7 +97,6 @@ export async function listOrders({ filter, query, queryValid, page }: OrderListP
   return { rows, total: count ?? 0 };
 }
 
-// Hitungan ringkasan admin. Tanpa omzet atau angka keuangan.
 export async function getDashboardCounts() {
   await requireAdmin();
   const supabase = createAdminClient();
@@ -150,8 +136,6 @@ export async function getDashboardCounts() {
   return { verifikasi, menungguBayar, diproses, diantar, hariIni, ulasanBaru, menuHabis };
 }
 
-// Detail lengkap satu pesanan untuk admin. null bila kode salah bentuk atau tidak ada.
-// Jalur berkas bukti tidak keluar dari fungsi ini; yang dikirim hanya signed URL 60 detik.
 export async function getAdminOrder(rawCode: string): Promise<AdminOrderDetail | null> {
   await requireAdmin();
   const code = normalizeOrderCode(rawCode);

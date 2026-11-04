@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
-// Inline Icons (Zero external dependencies)
 const ChevronLeftIcon = () => (
   <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -155,7 +154,7 @@ export function CoverFlowCarousel({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Background Ambience */}
+      {/* Latar */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <img
           src={items[currentIndex]?.img}
@@ -178,7 +177,7 @@ export function CoverFlowCarousel({
       </div>
 
       <div className="relative w-full max-w-6xl mx-auto px-4 z-10 flex flex-col items-center">
-        {/* Eyebrow */}
+        {/* Label atas */}
         {sectionLabel && (
           <div className="flex items-center gap-3 mb-8">
             <span style={{ width: "36px", height: "1px", background: "linear-gradient(90deg, transparent, #c5a880)" }} />
@@ -198,7 +197,7 @@ export function CoverFlowCarousel({
           </div>
         )}
 
-        {/* 3D Coverflow Stage */}
+        {/* Panggung coverflow */}
         <div
           className="relative w-full h-[520px] flex justify-center items-center mb-8"
           style={{ perspective: "1400px" }}
@@ -264,7 +263,7 @@ export function CoverFlowCarousel({
                   cursor: isCenter ? "default" : "pointer",
                 }}
               >
-                {/* Photo */}
+                {/* Foto */}
                 <img
                   src={item.img}
                   alt={item.titleLine1}
@@ -277,7 +276,7 @@ export function CoverFlowCarousel({
                   }}
                 />
 
-                {/* Dark Vignette Overlay */}
+                {/* Vinyet gelap */}
                 <div
                   style={{
                     position: "absolute",
@@ -289,7 +288,7 @@ export function CoverFlowCarousel({
                   }}
                 />
 
-                {/* Content Overlay */}
+                {/* Lapisan isi */}
                 <div
                   style={{
                     position: "relative",
@@ -307,7 +306,7 @@ export function CoverFlowCarousel({
                     pointerEvents: isCenter ? "auto" : "none",
                   }}
                 >
-                  {/* Tag */}
+                  {/* Label */}
                   <div style={{ textAlign: "right", width: "100%", paddingRight: "4px" }}>
                     <span
                       style={{
@@ -323,7 +322,7 @@ export function CoverFlowCarousel({
                     </span>
                   </div>
 
-                  {/* Body Content */}
+                  {/* Isi utama */}
                   <div
                     style={{
                       display: "flex",
@@ -428,7 +427,7 @@ export function CoverFlowCarousel({
           })}
         </div>
 
-        {/* Navigation Arrows */}
+        {/* Tombol panah */}
         <button
           onClick={prevSlide}
           aria-label="Previous dish"
@@ -483,7 +482,7 @@ export function CoverFlowCarousel({
           <ChevronRightIcon />
         </button>
 
-        {/* Pagination Dots */}
+        {/* Titik halaman */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", zIndex: 30 }}>
           {items.map((_, idx) => (
             <button

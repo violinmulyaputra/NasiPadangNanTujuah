@@ -19,7 +19,6 @@ const FILTERS: { label: string; category: MenuCategory | null }[] = [
   { label: "Buah", category: "Buah" },
 ];
 
-// Filter, pop-up, dan pesan "ditambahkan" untuk halaman Menu. Data datang dari server.
 export default function MenuBrowser({ items }: { items: MenuItem[] }) {
   const [category, setCategory] = useState<MenuCategory | null>(null);
   const [selected, setSelected] = useState<MenuItem | null>(null);
@@ -30,7 +29,6 @@ export default function MenuBrowser({ items }: { items: MenuItem[] }) {
 
   const visibleCount = category ? items.filter((i) => i.category === category).length : items.length;
 
-  // Pesan status hilang sendiri setelah 6 detik.
   useEffect(() => {
     if (!status) return;
     const t = setTimeout(() => setStatus(null), 6000);
@@ -40,7 +38,6 @@ export default function MenuBrowser({ items }: { items: MenuItem[] }) {
   const choose = (next: MenuCategory | null) => {
     if (next === category) return;
     setCategory(next);
-    // Fade 200 ms (opacity saja). Kartu tidak dipasang ulang, jadi Reveal tidak berulang.
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gridRef.current?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease-out" });
     }
@@ -89,8 +86,6 @@ export default function MenuBrowser({ items }: { items: MenuItem[] }) {
         Menampilkan {visibleCount} hidangan
       </p>
 
-      {/* pt-16 + mt-8: foto baris pertama (menimpa tepi atas kartu 56 sampai 64 px) berjarak 32 px dari filter.
-          isolate: cahaya hover (-z-10) dilukis di bawah semua kartu, sama dengan Ulasan Terkini. */}
       <ul
         ref={gridRef}
         className="isolate mt-8 grid grid-cols-1 gap-x-8 gap-y-24 pt-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10"

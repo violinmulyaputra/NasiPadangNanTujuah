@@ -1,6 +1,5 @@
 "use client";
 
-// Database bermasalah saat memuat pesanan. Detail galat hanya di log server.
 export default function OrderError({ retry }: { retry: () => void }) {
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-4 py-12 md:py-20">

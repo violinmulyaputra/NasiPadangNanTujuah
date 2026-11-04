@@ -29,7 +29,6 @@ function listHref(filter: MenuFilter, query: string) {
 
 async function MenuManager({ searchParams }: { searchParams: PageProps<"/admin/menu">["searchParams"] }) {
   const params = parseMenuListParams(await searchParams);
-  // listMenuForAdmin memanggil requireAdmin() sebelum menyentuh data.
   const items = await listMenuForAdmin(params);
 
   return (
@@ -125,8 +124,6 @@ async function MenuManager({ searchParams }: { searchParams: PageProps<"/admin/m
   );
 }
 
-// F5: kelola menu. Ubah ketersediaan, Hidangan Andalan, nama, deskripsi, dan harga.
-// Tidak ada tambah atau hapus menu di sini: menu baru ditambahkan lewat SQL.
 export default function AdminMenuPage({ searchParams }: PageProps<"/admin/menu">) {
   return (
     <main>

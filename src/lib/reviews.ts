@@ -2,10 +2,6 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { Review, ReviewStats } from "@/types/review";
 
-// Query baca ulasan memakai klien server anon (patuh RLS: hanya is_visible).
-// Klien ini membaca cookies(), jadi pemanggilnya dirender per permintaan dan
-// perlu dibungkus <Suspense>, sama seperti BestSeller.
-
 export async function getReviewStats(): Promise<ReviewStats> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -17,7 +13,6 @@ export async function getReviewStats(): Promise<ReviewStats> {
     console.error("Gagal memuat statistik ulasan:", error.message);
     return { average_rating: 0, review_count: 0 };
   }
-  // numeric dari PostgREST bisa berupa string, jadi dikonversi ke number.
   return {
     average_rating: Number(data.average_rating),
     review_count: Number(data.review_count),

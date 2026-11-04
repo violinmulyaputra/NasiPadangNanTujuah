@@ -1,4 +1,3 @@
-// 7 Nilai di halaman Tentang. Foto polos 1:1 (1200x1200) tanpa teks; teks tampil lewat kode.
 export type AboutValue = { id: number; title: string; description: string; image: string };
 
 export const aboutValues: AboutValue[] = [

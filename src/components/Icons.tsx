@@ -1,6 +1,5 @@
 import type { SVGProps } from "react";
 
-// Satu gaya garis untuk semua ikon: stroke 1.75, ujung membulat.
 function Icon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

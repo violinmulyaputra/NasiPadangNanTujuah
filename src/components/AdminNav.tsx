@@ -11,7 +11,6 @@ const LINKS = [
   { href: "/admin/menu", label: "Menu" },
 ];
 
-// Tab navigasi admin. Membungkus ke baris baru di HP (tanpa scroll horizontal).
 export default function AdminNav() {
   const pathname = usePathname();
   return (

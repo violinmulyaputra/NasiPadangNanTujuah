@@ -1,8 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-// Klien Supabase untuk Server Components, Server Actions, dan Route Handlers.
-// Memakai anon key, jadi tetap tunduk pada RLS.
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -20,8 +18,6 @@ export async function createClient() {
               cookieStore.set(name, value, options),
             );
           } catch {
-            // Dipanggil dari Server Component (cookie tidak bisa ditulis).
-            // Aman diabaikan selama sesi diperbarui di tempat lain.
           }
         },
       },

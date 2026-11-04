@@ -22,8 +22,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const card = "rounded-card border border-line bg-card p-4 md:p-6";
 
-// Data pesanan dibaca per permintaan (tanpa cache) di dalam Suspense. Proxy sudah
-// menjawab 404 untuk kode yang tidak ada; notFound() di sini hanya cadangan.
 async function OrderDetail({ params }: { params: Props["params"] }) {
   const { kode } = await params;
   const order = await getOrderTracking(kode);
@@ -58,8 +56,6 @@ async function OrderDetail({ params }: { params: Props["params"] }) {
         </div>
       </section>
 
-      {/* Pembayaran hanya selama menunggu_bayar. Panel sendiri menampilkan "Bukti bayar
-          terkirim" bila proofUploadedAt ada, dengan pilihan ganti bukti. */}
       {order.status === "menunggu_bayar" && (
         <div className="mt-6">
           <PaymentPanel
@@ -132,7 +128,6 @@ function OrderSkeleton() {
   );
 }
 
-// F4: halaman lacak. Tidak diindeks (metadata robots dan header X-Robots-Tag dari Proxy).
 export default function OrderPage({ params }: Props) {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 md:px-8 md:py-16">

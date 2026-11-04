@@ -1,7 +1,3 @@
-// Diadaptasi dari komponen 21st.dev "Testimonials with Marquee". Gradien lembut kartu, border-t,
-// avatar shadcn, dan gerak marquee dipertahankan (lihat "Pengecualian komponen 21st.dev" di
-// docs/DESIGN.md). Komponen server: marquee murni CSS (animate-marquee dari globals.css).
-// Isi: ulasan sungguhan dari pengunjung (is_visible lewat RLS, terbaru dulu, maksimal 6).
 import Link from "next/link";
 import { Suspense } from "react";
 import { Avatar, AvatarFallback } from "./Avatar";
@@ -12,8 +8,6 @@ import { getLatestReviews } from "@/lib/reviews";
 import type { Review } from "@/types/review";
 
 const MAX_REVIEWS = 6;
-// Di bawah jumlah ini satu salinan daftar tidak memenuhi lebar layar, jadi marquee berlubang.
-// Kartu ditampilkan diam dan rata tengah.
 const MIN_FOR_MARQUEE = 4;
 
 const initials = (name: string) =>
@@ -27,7 +21,6 @@ const initials = (name: string) =>
 
 function TestimonialCard({ review }: { review: Review }) {
   return (
-    // Lebar tetap agar semua kartu sejajar; tinggi ikut kartu tertinggi (flex stretch).
     <li className="flex w-[272px] shrink-0 flex-col rounded-lg border-t border-line bg-linear-to-b from-surface/50 to-surface/10 p-4 text-start transition-colors duration-300 hover:from-surface/60 hover:to-surface/20 md:w-[320px] md:p-6">
       <div className="flex items-center gap-3">
         <Avatar className="size-12">
@@ -40,7 +33,6 @@ function TestimonialCard({ review }: { review: Review }) {
           </time>
         </div>
       </div>
-      {/* Teks biasa (React meng-escape); dipotong 5 baris agar kartu tetap rapi */}
       <p className="mt-4 line-clamp-5 text-sm break-words whitespace-pre-line text-muted md:text-base">
         {review.comment}
       </p>
@@ -48,7 +40,6 @@ function TestimonialCard({ review }: { review: Review }) {
   );
 }
 
-// Dibaca per permintaan (klien Supabase membaca cookies), jadi dibungkus <Suspense>.
 async function ReviewMarquee() {
   const reviews = await getLatestReviews(MAX_REVIEWS);
 
@@ -80,10 +71,6 @@ async function ReviewMarquee() {
 
   return (
     <div className="relative w-full">
-      {/* Dua salinan daftar berjalan berurutan; salinan kedua hanya untuk efek bersambung
-          (aria-hidden). Berhenti saat hover atau saat fokus di dalamnya. Untuk
-          prefers-reduced-motion animasi mati (globals.css), salinan kedua disembunyikan,
-          dan daftar bisa digulir horizontal. */}
       <div
         tabIndex={0}
         role="region"

@@ -8,8 +8,6 @@ import type { AdminActionResult } from "@/types/order";
 const button =
   "min-h-10 rounded-full border px-4 text-sm font-semibold transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-paper focus-visible:outline-none disabled:cursor-wait disabled:opacity-60";
 
-// Aksi moderasi satu ulasan. Sembunyikan dan tampilkan bisa dibalik, jadi tanpa konfirmasi;
-// hapus permanen dikonfirmasi lebih dulu. Hasil dibacakan lewat aria-live.
 export default function AdminReviewActions({ id, name, visible }: { id: string; name: string; visible: boolean }) {
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<AdminActionResult | null>(null);

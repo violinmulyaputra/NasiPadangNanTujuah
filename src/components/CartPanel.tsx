@@ -13,7 +13,6 @@ import MenuPhoto from "./MenuPhoto";
 
 const PANEL_ID = "panel-keranjang";
 
-// Dibuka dari luar Navbar (pesan "Lihat keranjang" di halaman Menu).
 export function openCartPanel() {
   (document.getElementById(PANEL_ID) as HTMLDialogElement | null)?.showModal();
 }
@@ -24,9 +23,6 @@ const stepperClass =
 const primaryButton =
   "flex min-h-12 w-full items-center justify-center rounded-full px-6 text-sm font-semibold";
 
-// Isi dari store localStorage (src/lib/cart.ts). Render server dan hidrasi pertama
-// memakai keranjang kosong (getServerSnapshot), lalu isi asli tampil, jadi tanpa hydration mismatch.
-// <dialog> modal bawaan: focus trap, Escape menutup, aria-modal, dan fokus kembali ke ikon keranjang.
 export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -36,7 +32,6 @@ export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
   const lines = useCart();
   const count = lines.reduce((sum, l) => sum + l.quantity, 0);
   const subtotal = lines.reduce((sum, l) => sum + calculateLineTotal(l.unitPrice, l.quantity), 0);
-  // Ongkir tetap per zona dipilih saat checkout (PRD F2), jadi total sementara = subtotal.
   const total = subtotal;
 
   return (
@@ -50,7 +45,6 @@ export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
       >
         <CartIcon />
         {count > 0 && (
-          // key berubah tiap jumlah berubah, jadi animasi bump diputar ulang
           <span
             key={count}
             aria-hidden
@@ -148,7 +142,6 @@ export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
             </ul>
           )}
 
-          {/* Ringkasan menempel di dasar panel; daftar di atasnya yang discroll */}
           <div className="shrink-0 border-t border-line px-6 py-4">
             <div className="space-y-1">
               <div className="flex items-center justify-between">
@@ -163,7 +156,6 @@ export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
                 </p>
               </div>
             </div>
-            {/* Membuka pop-up checkout di atas panel (keputusan 2026-11-04), nonaktif bila kosong */}
             <button
               ref={checkoutRef}
               type="button"
@@ -178,14 +170,11 @@ export default function CartPanel({ zones }: { zones: DeliveryZone[] }) {
         </div>
       </dialog>
 
-      {/* Saudara panel (bukan anak), jadi klik di pop-up tidak dianggap klik overlay panel */}
       <CheckoutDialog
         lines={lines}
         zones={zones}
         openKey={checkoutKey}
         onClose={() => {
-          // Fokus kembali ke tombol pemicu; setelah sukses keranjang kosong dan tombol
-          // nonaktif, jadi fokus pindah ke tombol tutup panel.
           (checkoutRef.current?.disabled ? closeRef.current : checkoutRef.current)?.focus();
         }}
       />

@@ -2,9 +2,6 @@ import { isValidQuantity } from "@/lib/pricing";
 import { charLength, CONTROL_CHARS } from "@/lib/review-validation";
 import type { OrderField, OrderItemInput } from "@/types/order";
 
-// Validasi bentuk input checkout. Modul murni (tanpa DB): zona dan menu dicek
-// terhadap database di Server Action. Semua input dianggap tidak tepercaya.
-
 export const MAX_ORDER_LINES = 30;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -13,7 +10,6 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export type CustomerData = {
   customerName: string;
   customerEmail: string;
-  // Ternormalisasi 62xxxxxxxxxx (tanpa +), sesuai check di tabel orders.
   customerPhone: string;
   deliveryAddress: string;
   deliveryZone: string;
@@ -25,11 +21,8 @@ export type OrderValidation =
   | { ok: false; fieldErrors: Partial<Record<OrderField, string>> };
 
 const str = (v: unknown) => (typeof v === "string" ? v : "");
-// Satu baris: semua spasi beruntun (termasuk baris baru) jadi satu spasi.
 const oneLine = (s: string) => s.replace(/\s+/g, " ").trim();
 
-// "0812-3456 789", "+62 812 3456 789", "62812..." -> "628123456789".
-// Bentuk lokal sesudah normalisasi 08 + 7 sampai 12 digit (9 sampai 14 digit).
 export function normalizePhone(raw: string): string | null {
   const compact = raw.replace(/[\s.()-]/g, "");
   const local = compact.startsWith("+62") ? `0${compact.slice(3)}` : compact.startsWith("62") ? `0${compact.slice(2)}` : compact;
@@ -93,7 +86,6 @@ export function validateOrderInput(raw: unknown): OrderValidation {
         fieldErrors.items = "Isi keranjang tidak valid. Perbarui keranjang Anda.";
         break;
       }
-      // Pilihan divalidasi terhadap kelompok menu di Server Action (validateSelections).
       items.push({ menuItemId: item.menuItemId, quantity: item.quantity, selections: sel as Record<string, string> });
     }
   }

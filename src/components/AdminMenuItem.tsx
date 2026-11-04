@@ -16,15 +16,11 @@ const INITIAL: MenuEditState = { status: "idle", message: "", fieldErrors: {} };
 
 type Field = "name" | "description" | "price";
 
-// Satu menu di /admin/menu. Ketersediaan dan Hidangan Andalan berubah dengan satu klik
-// (bisa dibalik, jadi tanpa konfirmasi). Nama, deskripsi, dan harga lewat form; server
-// memvalidasi ulang. Slug, kategori, gambar, dan urutan tidak bisa diubah di sini.
 export default function AdminMenuItem({ item }: { item: MenuItem }) {
   const uid = useId();
   const [pending, startTransition] = useTransition();
   const [flagResult, setFlagResult] = useState<AdminActionResult | null>(null);
   const [state, formAction, saving] = useActionState(updateMenuItem, INITIAL);
-  // Kolom dikendalikan state agar isian tidak hilang saat validasi gagal.
   const [values, setValues] = useState({ name: item.name, description: item.description, price: String(item.price) });
 
   const toggle = (action: () => Promise<AdminActionResult>) => {
@@ -141,7 +137,6 @@ export default function AdminMenuItem({ item }: { item: MenuItem }) {
             <label htmlFor={`${uid}-price`} className="text-sm font-semibold">
               Harga per porsi (Rupiah)
             </label>
-            {/* type="text" + inputMode numeric: input number menerima desimal dan "e". */}
             <input {...field("price")} type="text" inputMode="numeric" autoComplete="off" maxLength={7} />
             <p className="mt-1 text-xs text-muted">Angka bulat tanpa titik, contoh 25000.</p>
             {fieldError("price")}

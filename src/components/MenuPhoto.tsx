@@ -10,12 +10,10 @@ type Props = {
   className?: string;
 };
 
-// Foto piring menu (kartu dan pop-up). Tanpa image_url: piring netral, bukan gambar rusak.
 export default function MenuPhoto({ src, alt, sizes, eager, className }: Props) {
   if (!src) {
     return (
       <div
-        // alt kosong = dekoratif (mis. di keranjang, nama sudah tertulis di sebelahnya)
         {...(alt ? { role: "img", "aria-label": alt } : { "aria-hidden": true })}
         className={cn("flex items-center justify-center rounded-full border border-line bg-surface text-muted", className)}
       >

@@ -7,9 +7,6 @@ import { createPortal } from "react-dom";
 import { aboutValues, type AboutValue } from "@/lib/about-values";
 import { CloseIcon } from "./Icons";
 
-// Adaptasi gallery-modal-accordion 21st.dev: strip foto yang melebar, lalu modal dengan transisi layoutId.
-
-// panel: teks di atas foto (jarak rapat, judul brand sama dengan garis, halo paper); modal memakai gaya normal.
 function ValueText({ value, panel }: { value: AboutValue; panel?: boolean }) {
   const gap = panel ? "mt-1.5" : "mt-2";
   const halo = panel ? "text-halo-paper" : "";
@@ -32,7 +29,6 @@ export default function ValuesAccordion() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(3);
   const [modal, setModal] = useState<AboutValue | null>(null);
-  // Panel awal tampil tanpa fade agar langsung terbaca saat halaman dimuat.
   const [interacted, setInteracted] = useState(false);
   const triggers = useRef<(HTMLButtonElement | null)[]>([]);
   const lastPointer = useRef("");
@@ -60,13 +56,11 @@ export default function ValuesAccordion() {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-    // close hanya bergantung pada modal
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal]);
 
   return (
     <>
-      {/* Di HP 300 px dengan strip 12 px agar kartu terbuka cukup lebar (sekitar 230 px di layar 360 px) */}
       <ul className="mx-auto flex h-[300px] w-full max-w-[960px] gap-1 sm:h-80 md:h-[340px] md:gap-2 lg:h-[380px]">
         {aboutValues.map((value, i) => {
           const isOpen = i === active;
@@ -85,7 +79,6 @@ export default function ValuesAccordion() {
                 aria-label={value.title}
                 aria-expanded={isOpen}
                 onPointerMove={(e) => {
-                  // Abaikan event saat tata letak bergeser di bawah kursor diam (misal saat navigasi Tab)
                   const pos = `${e.clientX},${e.clientY}`;
                   if (e.pointerType !== "mouse" || pos === lastPointer.current) return;
                   lastPointer.current = pos;
@@ -104,8 +97,6 @@ export default function ValuesAccordion() {
                     alt={`Foto untuk nilai ${value.title}`}
                     fill
                     sizes="(min-width: 1024px) 600px, (min-width: 768px) 60vw, 70vw"
-                    // Tepi bawah foto memudar ke putih murni (selisih 6 dari paper); mask tipis
-                    // membuatnya pudar ke latar halaman agar tepi kartu menyatu.
                     className="object-cover mask-b-from-96%"
                   />
                 </motion.div>

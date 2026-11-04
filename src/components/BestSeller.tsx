@@ -2,9 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import Reveal from "./Reveal";
 import CoverFlowCarousel, { type CarouselItem } from "./CoverFlowCarousel";
 import SectionHeading from "./SectionHeading";
-// Komponen server: mengambil menu populer dari Supabase lalu mengirimnya ke carousel (client).
-// Klien server membaca cookies(), jadi seksi ini dirender per permintaan dan dibungkus
-// <Suspense> di page.tsx.
 export default async function BestSeller() {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -19,7 +16,6 @@ export default async function BestSeller() {
   }
 
   const items: CarouselItem[] = (data ?? [])
-    // Menu tanpa foto dilewati: next/image butuh src
     .filter((row) => row.image_url)
     .map((row) => ({
       tag: `#${row.category}`,

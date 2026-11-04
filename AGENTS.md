@@ -39,6 +39,7 @@ src/
 
 ## Konvensi kode
 - Identifier dan nama file dalam bahasa Inggris. Teks UI dan komentar dalam bahasa Indonesia.
+- Komentar di kode hanya penanda bagian satu baris; penjelasan ditulis di docs/.
 - Komponen: `PascalCase.tsx`. File lain dan folder rute: `kebab-case`. Tabel DB: `snake_case` jamak.
 - Komponen server secara default. `"use client"` hanya untuk interaksi dan animasi Framer Motion.
 - Semua penulisan data lewat Server Actions. Validasi input di server sebelum menulis ke DB.

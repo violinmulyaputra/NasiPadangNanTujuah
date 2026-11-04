@@ -31,7 +31,6 @@ const pagerLink = cn(
   focusRing,
 );
 
-// URL daftar hanya berisi filter, kode yang dicari, dan halaman; tanpa data pemesan.
 function listHref(params: Partial<OrderListParams>) {
   const search = new URLSearchParams();
   if (params.filter && params.filter !== "semua") search.set("status", params.filter);
@@ -43,7 +42,6 @@ function listHref(params: Partial<OrderListParams>) {
 
 async function OrderList({ searchParams }: { searchParams: PageProps<"/admin/pesanan">["searchParams"] }) {
   const params = parseOrderListParams(await searchParams);
-  // listOrders memanggil requireAdmin() sebelum menyentuh data.
   const { rows, total } = await listOrders(params);
   const pages = Math.max(1, Math.ceil(total / ORDERS_PER_PAGE));
   const filterLabel = FILTERS.find((f) => f.value === params.filter)?.label ?? "Semua";
@@ -124,7 +122,6 @@ async function OrderList({ searchParams }: { searchParams: PageProps<"/admin/pes
         <ul className="mt-3 divide-y divide-line overflow-hidden rounded-card border border-line">
           {rows.map((order) => (
             <li key={order.code}>
-              {/* HP: kartu dua kolom. Mulai md: satu baris berkolom seperti tabel. */}
               <Link
                 href={`/admin/pesanan/${order.code}`}
                 className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 bg-paper p-4 transition-colors duration-150 hover:bg-card focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none focus-visible:ring-inset md:grid-cols-[9.5rem_15rem_minmax(0,1fr)_7rem_13rem] md:items-center"
@@ -172,7 +169,6 @@ async function OrderList({ searchParams }: { searchParams: PageProps<"/admin/pes
   );
 }
 
-// F5: daftar pesanan, terbaru di atas, 20 per halaman.
 export default function AdminOrdersPage({ searchParams }: PageProps<"/admin/pesanan">) {
   return (
     <main>

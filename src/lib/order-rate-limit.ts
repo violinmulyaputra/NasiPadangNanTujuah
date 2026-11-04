@@ -3,11 +3,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type AttemptKind = "order" | "proof";
 
-// Batas laju per hash IP di tabel order_attempts, dipisah per jenis percobaan.
-// Mengembalikan false bila batas terlampaui; bila lolos, percobaan langsung dicatat,
-// jadi kiriman berulang dengan data salah ikut terhitung.
-// shortcut: cek lalu tulis tidak atomik, kiriman serentak bisa lolos sedikit di atas
-// batas; pindah ke fungsi SQL bila spam serentak jadi masalah (sama dengan ulasan).
 export async function takeAttempt(
   supabase: SupabaseClient,
   ipHash: string,

@@ -12,17 +12,11 @@ type Props = {
   onAdd: (item: MenuItem, trigger: HTMLButtonElement) => void;
 };
 
-// Kartu menu: foto piring menimpa tepi atas kartu (garis tengah foto = tepi atas kartu).
 export default function MenuCard({ item, eager, onAdd }: Props) {
   const soldOut = !item.is_available;
 
   return (
-    // Hover sama dengan kartu Ulasan Terkini: HoverGlow + hover-lift (kecuali menu habis).
-    // Scale dipasang di dalam pembungkus Reveal, jadi tidak bentrok dengan transform Reveal;
-    // foto ikut membesar karena berada di dalam elemen yang di-scale.
     <div className="group relative mx-auto h-full w-full max-w-md sm:max-w-none">
-      {/* -top-20: cahaya juga mencakup foto yang menimpa tepi atas kartu (56 sampai 64 px).
-          bg-cream-glow/40: khusus kartu menu, setengah dari bawaan HoverGlow (/80) yang dipakai Ulasan Terkini. */}
       {!soldOut && <HoverGlow className="-top-20 -z-10 bg-cream-glow/40" />}
       <article
         className={cn(

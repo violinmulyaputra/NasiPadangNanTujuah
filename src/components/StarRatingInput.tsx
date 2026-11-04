@@ -5,7 +5,7 @@ import { StarIcon } from "./StarIcon";
 import { formatRating } from "@/lib/format";
 
 type Props = {
-  value: number; // 0 = belum dipilih
+  value: number;
   onChange: (value: number) => void;
   name: string;
   labelId: string;
@@ -13,8 +13,6 @@ type Props = {
   invalid?: boolean;
 };
 
-// Bintang tanpa jarak antarikon, jadi posisi x dipetakan lurus ke 0 sampai 5:
-// separuh kiri bintang = .5, separuh kanan = penuh.
 function valueAt(el: HTMLElement, clientX: number) {
   const { left, width } = el.getBoundingClientRect();
   const raw = ((clientX - left) / width) * 5;
@@ -38,7 +36,6 @@ export default function StarRatingInput({ value, onChange, name, labelId, descri
     if (!starsRef.current) return;
     const v = valueAt(starsRef.current, e.clientX);
     if (dragging.current) onChange(v);
-    // Pratinjau hanya untuk kursor, bukan sentuhan.
     else if (e.pointerType === "mouse") setHover(v);
   }
 
@@ -76,14 +73,12 @@ export default function StarRatingInput({ value, onChange, name, labelId, descri
         aria-valuemax={5}
         aria-valuenow={value || undefined}
         aria-valuetext={valueText}
-        // aria-valuestep belum ada di ARIA; langkah 0,5 dijelaskan lewat valuetext dan keyboard.
         onKeyDown={onKeyDown}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onPointerLeave={() => setHover(null)}
-        // touch-pan-y: geser vertikal tetap menggulir halaman, geser horizontal mengubah nilai.
         className="cursor-pointer touch-pan-y rounded-lg p-1 outline-none select-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-card"
       >
         <div ref={starsRef} className="flex">
@@ -93,7 +88,6 @@ export default function StarRatingInput({ value, onChange, name, labelId, descri
         </div>
       </div>
       <span aria-hidden className="min-w-[5.5rem] text-sm text-muted tabular-nums md:text-base">
-        {/* Teks ikut pratinjau hover; pembaca layar tetap mendapat nilai terpilih */}
         {text(shown)}
       </span>
       <input type="hidden" name={name} value={value || ""} />

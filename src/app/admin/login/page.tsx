@@ -3,8 +3,6 @@ import AdminLoginForm from "@/components/AdminLoginForm";
 
 export const metadata: Metadata = { title: "Masuk" };
 
-// F5: login admin. Di luar layout panel admin. Tidak ada pendaftaran: akun dibuat
-// manual di Supabase Auth lalu didaftarkan di tabel admin_users.
 export default function AdminLoginPage() {
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-4 py-12 md:py-20">

@@ -9,8 +9,6 @@ export const metadata: Metadata = {
     "Lihat 44 hidangan Nasi Padang Nan Tujuah, dari rendang dan ayam pop hingga es campur, lalu pesan langsung dari dapur kami.",
 };
 
-// getMenuItems memakai "use cache", jadi daftar menu ikut shell statis; Suspense
-// menampilkan kerangka hanya saat cache kosong atau sedang diisi ulang.
 async function MenuList() {
   const items = await getMenuItems().catch((e: unknown) => {
     console.error(e);

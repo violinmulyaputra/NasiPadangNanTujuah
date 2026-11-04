@@ -1,12 +1,9 @@
 import type { ReviewField } from "@/types/review";
 
-// Karakter kontrol selain tab, baris baru, dan carriage return.
 export const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/;
-// Tautan: http(s)://, www., atau pola domain seperti contoh.com dan toko.co.id.
 const URL_PATTERN =
   /(https?:\/\/|www\.|[a-z0-9-]+\.(com|id|net|org|co|io|me|xyz|info|biz|site|online|store|shop|link|ly|app|dev)\b)/i;
 
-// Panjang dihitung per karakter Unicode, sama seperti char_length di PostgreSQL.
 export const charLength = (s: string) => [...s].length;
 
 export type ReviewInput = { author_name: string; rating: number; comment: string };
@@ -26,16 +23,13 @@ export function validateReview(raw: {
   const commentRaw = typeof raw.comment === "string" ? raw.comment : "";
   const ratingRaw = typeof raw.rating === "string" ? raw.rating.trim() : "";
 
-  // Nama satu baris: semua spasi beruntun jadi satu spasi.
   const author_name = nameRaw.replace(/\s+/g, " ").trim();
-  // Komentar boleh beberapa paragraf: rapikan spasi per baris, maksimal satu baris kosong.
   const comment = commentRaw
     .replace(/\r\n?/g, "\n")
     .replace(/[ \t]+/g, " ")
     .replace(/ ?\n ?/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-  // Terima koma desimal ala Indonesia (4,5).
   const rating = ratingRaw === "" ? NaN : Number(ratingRaw.replace(",", "."));
 
   if (CONTROL_CHARS.test(nameRaw)) {
