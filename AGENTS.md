@@ -27,7 +27,7 @@ src/
     checkout/            # TIDAK dipakai: checkout berupa pop-up di keranjang (keputusan 2026-11-04)
     pesanan/             # F4: form kode pesanan (/pesanan)
     pesanan/[kode]/      # F4: status pesanan lewat kode (kode dicek dulu di src/proxy.ts)
-    admin/               # F5: wajib login
+    admin/               # F5: login/ di luar layout panel; (panel)/ = Ringkasan, Pesanan, Ulasan, Menu (wajib requireAdmin)
     api/health/          # cek DB, dipanggil UptimeRobot
   components/            # UI bersama (PascalCase.tsx)
   lib/
@@ -45,7 +45,7 @@ src/
 - Harga disimpan sebagai integer Rupiah (tanpa desimal). Tampilkan dengan `Intl.NumberFormat("id-ID")`.
 - Status pesanan hanya: `menunggu_bayar`, `diproses`, `diantar`, `selesai`.
 - Gambar lewat `next/image` (target LCP 2,5 detik, halaman menu maksimal 1 MB).
-- Semua halaman admin dan aksi admin cek sesi Supabase Auth di server. Aktifkan RLS di tabel.
+- Semua halaman admin dan aksi admin cek sesi Supabase Auth (`getUser`, bukan `getSession`) dan `admin_users` di server. Aktifkan RLS di tabel.
 - Rahasia hanya di `.env.local`. Awalan `NEXT_PUBLIC_` hanya untuk kunci publik. Service role key hanya di server.
 - Tampilan mobile-first, teks Indonesia.
 - Satu branch per fitur (`f1-etalase`, `f2-checkout`, dst.). Commit kecil dan jelas.
@@ -79,6 +79,7 @@ Diturunkan dari bagian "Di luar scope" di PRD. Jangan membuat atau menambahkan:
 ## Keputusan cakupan
 - 2026-11-03: fitur kirim ulasan disetujui sebagai perluasan F1. Ulasan hanya berisi nama, rating, dan teks; tanpa akun pelanggan dan tanpa email; tampil langsung; dimoderasi nanti lewat dashboard admin (F5) dengan menyembunyikan ulasan. Ulasan di etalase beranda tetap data contoh. Larangan lain tetap berlaku.
 - 2026-11-04: pemilik proyek (Violin) memutuskan checkout berupa pop-up di panel keranjang; tidak ada halaman /checkout dan folder rute `checkout/` tidak dipakai. Form checkout mengumpulkan nama, email, nomor telepon, dan alamat pengiriman (ditambah zona antar dan catatan). Tanpa nomor kartu dan tanpa pembayaran uang sungguhan. Data pemesan hanya ditulis dan dibaca lewat server (service role), tidak pernah lewat kebijakan publik. Zona dan ongkir: lihat PRD "Zona antar dan ongkir".
+- 2026-11-04: admin tunggal untuk F5. Akun dibuat manual di Supabase Auth, tidak ada pendaftaran, dan akses ditentukan tabel `admin_users` (`supabase/schema-admin.sql`). Halaman admin memanggil `requireAdmin()` dan aksi admin memanggil `getAdmin()` (`src/lib/admin-auth.ts`, `getUser` lalu cek `admin_users`); Proxy bukan satu-satunya penjaga.
 
 <!-- BEGIN:nextjs-agent-feedback -->
 
