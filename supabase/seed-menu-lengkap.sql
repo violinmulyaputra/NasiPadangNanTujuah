@@ -1,17 +1,4 @@
--- =============================================================================
--- Data menu lengkap: deskripsi, harga, dan urutan tampil untuk 44 menu.
--- Sumber: docs/referensi/menu-44.md (harga per porsi, integer Rupiah, data contoh
--- restoran fiktif). Hanya UPDATE berdasarkan slug yang sudah ada di schema.sql:
--- tanpa DELETE, DROP, atau perubahan skema. slug, category, image_url,
--- is_popular, dan is_available tidak disentuh. Aman dijalankan ulang.
---
--- sort_order = indeks kategori x 100 + nomor urut dalam kategori:
---   Ayam 1, Sapi 2, Seafood 3, Sayuran 4, Minuman 5, Buah 6.
---
--- Cara pakai: tempel ke Supabase SQL Editor lalu jalankan, setelah schema.sql
--- dan seed-populer.sql. Catatan: deskripsi 6 menu populer dari seed-populer.sql
--- ikut diganti dengan teks dari menu-44.md.
--- =============================================================================
+-- Data menu lengkap
 
 begin;
 
@@ -281,9 +268,3 @@ where slug = 'buah-melon-potong';
 
 commit;
 
--- Semua 44 menu di menu-44.md punya baris di database, jadi tidak ada blok
--- INSERT tambahan.
-
--- Cek setelah dijalankan: hasilnya harus 0 baris. Baris yang muncul berarti
--- menu di database yang tidak ikut diperbarui oleh berkas ini.
--- select slug, name, price, sort_order from public.menu_items where sort_order < 100;

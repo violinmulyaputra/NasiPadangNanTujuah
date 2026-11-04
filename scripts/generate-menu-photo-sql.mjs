@@ -1,6 +1,3 @@
-// Memindai public/images/menu/*.webp lalu menulis supabase/seed-foto-menu.sql
-// berisi UPDATE image_url hanya untuk foto yang ada. Tanpa dependensi.
-// Jalankan dari root proyek: node scripts/generate-menu-photo-sql.mjs
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,7 +5,6 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const photoDir = path.join(root, "public", "images", "menu");
 const outFile = path.join(root, "supabase", "seed-foto-menu.sql");
-// Sama dengan check slug di supabase/schema.sql; nama berkas lain dilewati.
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 const slugs = [];

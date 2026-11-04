@@ -9,19 +9,16 @@ const initialState: ReviewFormState = { status: "idle", message: "", fieldErrors
 const COMMENT_MAX = 500;
 
 const labelClass = "text-sm font-semibold text-ink md:text-base";
-// text-base (16 px) di HP mencegah zoom otomatis iOS saat fokus.
 const inputClass =
   "w-full rounded-xl border border-line bg-paper px-4 py-3 text-base text-ink placeholder:text-muted outline-none transition-colors focus-visible:border-brand focus-visible:ring-2 focus-visible:ring-brand/40 aria-invalid:border-brand-strong";
 const errorClass = "text-sm text-brand-strong";
 
 export default function ReviewForm() {
   const [state, formAction, pending] = useActionState(submitReview, initialState);
-  // Kolom dikendalikan state, jadi nilai tetap ada saat kiriman gagal.
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
-  // Reset kolom sekali setiap ada hasil sukses baru (pola "sesuaikan state saat input berubah").
   const [handled, setHandled] = useState(state);
   if (state !== handled) {
     setHandled(state);
@@ -32,8 +29,6 @@ export default function ReviewForm() {
     }
   }
 
-  // Kirim manual agar React tidak mengosongkan form otomatis (nilai dipertahankan bila gagal).
-  // Atribut action tetap ada sebagai cadangan tanpa JavaScript.
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -125,7 +120,6 @@ export default function ReviewForm() {
         </div>
       </div>
 
-      {/* Kolom jebakan untuk bot: tidak terlihat, tidak bisa difokus, diabaikan pembaca layar */}
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label htmlFor="review-website">Situs web</label>
         <input id="review-website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />

@@ -4,15 +4,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useId, useState, type FormEvent } from "react";
 import { normalizeOrderCode, TRACK_NOT_FOUND } from "@/lib/order-code-format";
 
-// Form kode pesanan (F4) di /pesanan dan di tampilan "tidak ditemukan". Kode tidak
-// disimpan di perangkat. Server (Proxy) memeriksa ulang bentuk dan keberadaan kode.
 export default function TrackOrderSearch({ message = "" }: { message?: string }) {
   const id = useId();
   const router = useRouter();
   const [value, setValue] = useState("");
-  // null = tampilkan pesan dari server (message); string = hasil cek di klien.
   const [error, setError] = useState<string | null>(null);
-  // URL berganti (pencarian baru): pesan server yang baru berlaku lagi.
   const pathname = usePathname();
   const [seenPath, setSeenPath] = useState(pathname);
   if (pathname !== seenPath) {
@@ -24,9 +20,8 @@ export default function TrackOrderSearch({ message = "" }: { message?: string })
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const code = normalizeOrderCode(value);
-    // Pesan yang sama dengan kode yang tidak ada di database.
     if (!code) return setError(TRACK_NOT_FOUND);
-    setError(""); // sembunyikan pesan lama selama berpindah halaman
+    setError("");
     router.push(`/pesanan/${code}`);
   };
 

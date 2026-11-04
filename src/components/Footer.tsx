@@ -4,7 +4,6 @@ import { RESTAURANT_PHONE, RESTAURANT_PHONE_DISPLAY } from "@/lib/contact-info";
 import { navLinks } from "@/lib/nav-links";
 import { FacebookIcon, InstagramIcon, LinkedInIcon, XIcon } from "./Icons";
 
-// Restoran fiktif: akun media sosial belum ada, tautan sengaja kosong.
 const socials = [
   { label: "Facebook", Icon: FacebookIcon },
   { label: "X", Icon: XIcon },
@@ -63,7 +62,6 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4">
           <h2 className={headingClass}>Contact</h2>
-          {/* Pengaman: email panjang boleh patah agar kolom grid tidak melebar */}
           <address className="flex flex-col gap-2 not-italic text-muted [overflow-wrap:anywhere]">
             <a href={`tel:+${RESTAURANT_PHONE}`} className={linkClass}>
               {RESTAURANT_PHONE_DISPLAY}

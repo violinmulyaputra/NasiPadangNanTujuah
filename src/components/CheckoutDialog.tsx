@@ -16,7 +16,6 @@ const NO_PAYMENT_YET: PaymentInitialState = { paymentMethod: null, proofUploaded
 type Props = {
   lines: CartLine[];
   zones: DeliveryZone[];
-  // Naik setiap kali pop-up dibuka (showModal dipanggil di efek).
   openKey: number;
   onClose: () => void;
 };
@@ -36,12 +35,8 @@ const EMPTY_FORM: FormValues = {
 const inputClass =
   "mt-1.5 w-full rounded-xl border border-line bg-paper px-4 py-3 text-base text-ink placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none aria-invalid:border-brand-strong";
 
-// Pop-up checkout di atas panel keranjang (keputusan 2026-11-04). <dialog> modal bawaan
-// (sama dengan pop-up menu): focus trap, Escape, aria-modal; kunci scroll lewat
-// html:has(dialog[open]). Menutup hanya menutup pop-up ini, panel dan isi keranjang tetap.
 export default function CheckoutDialog({ lines, zones, openKey, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
-  // Isian dipertahankan saat pop-up ditutup lalu dibuka lagi; direset hanya setelah sukses.
   const [values, setValues] = useState(EMPTY_FORM);
   const [success, setSuccess] = useState<Success | null>(null);
 
@@ -86,7 +81,6 @@ export default function CheckoutDialog({ lines, zones, openKey, onClose }: Props
             setValues={setValues}
             onCancel={close}
             onSuccess={(result) => {
-              // Keranjang dikosongkan hanya setelah pesanan benar-benar tersimpan.
               clear();
               setSuccess(result);
             }}
@@ -118,7 +112,6 @@ function CheckoutForm({
   const honeypotRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLDivElement>(null);
 
-  // Hanya tampilan; createOrder menghitung ulang dari database.
   const subtotal = lines.reduce((sum, l) => sum + calculateLineTotal(l.unitPrice, l.quantity), 0);
   const zone = zones.find((z) => z.code === values.deliveryZone);
 
@@ -127,19 +120,17 @@ function CheckoutForm({
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (pending) return; // tanpa kirim ganda
+    if (pending) return;
     setPending(true);
     setMessage("");
     try {
       const result = await createOrder({
         ...values,
         website: honeypotRef.current?.value ?? "",
-        // Harga TIDAK dikirim: server membaca harga dari database.
         items: lines.map((l) => ({ menuItemId: l.menuItemId, selections: l.selections, quantity: l.quantity })),
       });
       if (result.status === "success") return onSuccess(result);
       setErrors(result.fieldErrors);
-      // Kesalahan keranjang (menu habis atau tidak ada) ditampilkan di atas form.
       setMessage(result.fieldErrors.items ?? result.message);
     } catch {
       setErrors({});
@@ -149,7 +140,6 @@ function CheckoutForm({
     }
   };
 
-  // Gulir ke pesan galat agar terlihat di HP.
   useEffect(() => {
     if (message) messageRef.current?.scrollIntoView({ block: "nearest" });
   }, [message]);
@@ -224,7 +214,6 @@ function CheckoutForm({
         {field("notes", "Catatan (opsional)", (p) => (
           <input {...p} type="text" maxLength={200} placeholder="Masukkan catatan Anda (opsional)" />
         ))}
-        {/* Kolom jebakan: tersembunyi dari manusia, bot biasanya mengisinya */}
         <div aria-hidden className="sr-only">
           <input ref={honeypotRef} type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
         </div>
@@ -333,10 +322,7 @@ function SuccessView({ order, onClose }: { order: Success; onClose: () => void }
         <PaymentPanel code={order.code} total={order.total} initialState={NO_PAYMENT_YET} />
       </div>
 
-      {/* Bilah tombol menempel di dasar area gulir pop-up, jadi tidak ikut bergeser. */}
       <div className="sticky bottom-0 -mx-6 mt-6 -mb-6 flex flex-col gap-3 border-t border-line bg-paper px-6 py-4 md:-mx-8 md:-mb-8 md:px-8">
-        {/* Menutup semua pop-up (checkout dan panel keranjang) lalu pindah halaman;
-            pesanan tetap tersimpan. */}
         <Link
           href={`/pesanan/${order.code}`}
           onClick={() => document.querySelectorAll("dialog[open]").forEach((d) => (d as HTMLDialogElement).close())}

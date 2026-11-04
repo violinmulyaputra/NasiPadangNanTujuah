@@ -7,16 +7,12 @@ import { cn } from "@/lib/utils";
 
 const AUTO_REFRESH_MS = 30_000;
 
-// Tombol "Perbarui status" dan penyegaran otomatis tiap 30 detik selama pesanan belum
-// selesai, hanya saat tab terlihat. Hanya membaca ulang status dari database lewat
-// router.refresh(); bukan pelacakan kurir. Perubahan status diumumkan lewat aria-live.
 export default function OrderStatusRefresher({ label, auto }: { label: string; auto: boolean }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [seenLabel, setSeenLabel] = useState(label);
   const [message, setMessage] = useState("");
 
-  // Status berubah setelah refresh: umumkan (pola menyesuaikan state saat props berubah).
   if (label !== seenLabel) {
     setSeenLabel(label);
     setMessage(`Status diperbarui: ${label}.`);
@@ -32,7 +28,7 @@ export default function OrderStatusRefresher({ label, auto }: { label: string; a
     };
     const onVisibility = () => {
       if (document.visibilityState !== "visible") return stop();
-      router.refresh(); // kembali ke tab: langsung ambil status terbaru
+      router.refresh();
       start();
     };
     if (document.visibilityState === "visible") start();

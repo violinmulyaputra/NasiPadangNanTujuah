@@ -5,12 +5,9 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import ValuesAccordion from "@/components/ValuesAccordion";
 
-// Foto cerita 3:2 (1200x800).
 const STORY_PHOTO_1 = "/images/tentang/story-1.webp";
 const STORY_PHOTO_2 = "/images/tentang/story-2.webp";
-// Rasio tampil sama di semua lebar layar.
 const PHOTO_ASPECT = "aspect-[3/2]";
-// Lebar tampil: 4/9 kolom di HP, 320 px mulai md, 400 px mulai lg.
 const PHOTO_SIZES = "(min-width: 1024px) 400px, (min-width: 768px) 320px, calc((100vw - 48px) * 4 / 9)";
 
 export const metadata: Metadata = {
@@ -19,19 +16,14 @@ export const metadata: Metadata = {
     "Kisah Nasi Padang Nan Tujuah, dari perjalanan belajar masakan Minangkabau di Sumatera Barat hingga hadir di Semarang.",
 };
 
-// HP: foto 4fr, teks 5fr. Mulai md tiap baris satu kelompok di tengah: foto lebar tetap dan teks
-// maksimal 30rem. Kedua baris memakai lebar trek yang sama, jadi tepi kiri dan kanannya sejajar.
 const rowClass = "grid items-center gap-4 md:justify-center md:gap-12 lg:gap-16";
 const row1Cols =
   "grid-cols-[4fr_5fr] md:grid-cols-[320px_minmax(0,30rem)] lg:grid-cols-[400px_minmax(0,30rem)]";
 const row2Cols =
   "grid-cols-[5fr_4fr] md:grid-cols-[minmax(0,30rem)_320px] lg:grid-cols-[minmax(0,30rem)_400px]";
-// relative: teks dilukis di atas cahaya hover foto di sebelahnya.
 const textClass = "relative text-sm leading-relaxed text-ink md:text-lg lg:text-xl";
 const accentClass = "font-semibold text-brand-strong";
 
-// Hover hanya di perangkat dengan kursor: foto membesar dan cahaya krem muncul di belakangnya.
-// Yang dianimasikan hanya opacity dan scale.
 function StoryPhoto({ src, alt, preload }: { src: string; alt: string; preload?: boolean }) {
   return (
     <div className="group relative">
@@ -55,7 +47,6 @@ export default function AboutPage() {
         </h1>
 
         <div className="mt-12 flex flex-col gap-12 md:mt-16 md:gap-16">
-          {/* Baris 1: foto kiri, teks kanan */}
           <div className={`${rowClass} ${row1Cols}`}>
             <Reveal index={0}>
               <StoryPhoto
@@ -76,7 +67,6 @@ export default function AboutPage() {
             </Reveal>
           </div>
 
-          {/* Baris 2: teks kiri, foto kanan (juga di HP) */}
           <div className={`${rowClass} ${row2Cols}`}>
             <Reveal index={0} className="order-2">
               <StoryPhoto
@@ -108,7 +98,6 @@ export default function AboutPage() {
             }
           />
         </Reveal>
-        {/* Modal dirender lewat portal ke body, jadi tidak terkena transform Reveal */}
         <Reveal index={1} className="mt-8 md:mt-12">
           <ValuesAccordion />
         </Reveal>

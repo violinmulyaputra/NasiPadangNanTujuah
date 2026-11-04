@@ -1,10 +1,4 @@
--- =============================================================================
--- Data menu populer untuk seksi "Our Best Seller Menu" di beranda.
--- Mengisi description dan image_url untuk 6 menu, lalu menjadikan es campur menu
--- populer menggantikan es teh manis. Hanya UPDATE: tanpa DELETE,
--- DROP, atau perubahan skema. Aman dijalankan ulang.
--- Cara pakai: tempel ke Supabase SQL Editor lalu jalankan, setelah schema.sql.
--- =============================================================================
+-- Data menu populer
 
 update public.menu_items
 set description = 'Potongan daging sapi berbalut bumbu pekat yang kaya rempah, dengan rasa gurih santan dan pedas hangat di setiap suapan.',
@@ -36,7 +30,6 @@ set description = 'Es serut dengan alpukat lembut, kelapa muda, dan butiran muti
     image_url   = '/images/menu/es-campur.webp'
 where slug = 'es-campur';
 
--- Menu populer: es campur masuk, es teh manis keluar (belum punya foto dan deskripsi).
 update public.menu_items
 set is_popular = true
 where slug = 'es-campur';

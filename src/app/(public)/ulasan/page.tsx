@@ -14,10 +14,8 @@ export const metadata: Metadata = {
     "Baca ulasan pelanggan Nasi Padang Nan Tujuah dan bagikan pengalaman bersantap Anda, dari rendang hingga es campur.",
 };
 
-// Foto hero 16:9 (1920x1080), memudar sendiri ke paper di sisi kiri dan bawah.
 const HERO_PHOTO = "/images/ulasan/hero.webp";
 
-// Ringkasan dibaca per permintaan (klien Supabase membaca cookies), jadi di dalam <Suspense>.
 async function Summary() {
   const stats = await getReviewStats();
   return <ReviewSummaryCard align="left" rating={stats.average_rating} reviewCount={stats.review_count} />;
@@ -26,10 +24,7 @@ async function Summary() {
 export default function ReviewsPage() {
   return (
     <main className="flex-1">
-      {/* Band atas: foto 16:9 sebagai latar penuh, teks dan kartu menimpa foto.
-          overflow-hidden mencegah scroll horizontal. */}
       <section className="relative flex min-h-[380px] items-center overflow-hidden md:min-h-[460px]">
-        {/* Foto dekoratif tanpa animasi (elemen LCP) */}
         <Image
           src={HERO_PHOTO}
           alt=""
@@ -39,15 +34,10 @@ export default function ReviewsPage() {
           sizes="100vw"
           className="object-cover object-center"
         />
-        {/* Scrim paper di atas foto dan di bawah teks. Kepekatan terendah yang lolos pengukuran
-            kontras (piksel foto asli, rata-rata dan persentil 10): di HP 25% hampir merata
-            (15% di tepi kanan); mulai md tidak perlu karena judul jatuh di sisi kiri foto yang
-            sudah memudar sendiri. */}
         <div
           aria-hidden
           className="absolute inset-0 bg-linear-to-r from-paper/25 via-paper/25 via-60% to-paper/15 md:bg-none"
         />
-        {/* Mulai lg tepi bawah foto (yang sudah pudar) terpotong object-cover, jadi dipudarkan ke paper */}
         <div aria-hidden className="absolute inset-x-0 bottom-0 hidden h-1/3 bg-linear-to-b from-paper/0 to-paper lg:block" />
         <div className="relative z-10 mx-auto w-full max-w-(--container) px-4 py-12 md:px-8 md:py-16">
           <h1 className="font-display text-title-mobile leading-[1.15] font-bold text-balance text-ink md:text-[clamp(2rem,4vw,3.25rem)]">

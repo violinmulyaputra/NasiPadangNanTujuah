@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 
-// Judul dan subjudul seksi beranda. Di HP judul memakai token yang sama dengan judul Hero
-// (text-title-mobile) dan boleh membungkus ke dua baris (text-balance), mulai md clamp(1.75rem, 4vw, 3rem).
 export default function SectionHeading({
   title,
   subtitle,

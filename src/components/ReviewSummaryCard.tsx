@@ -1,9 +1,5 @@
 "use client";
 
-// Diadaptasi dari komponen 21st.dev "card-2" (ReviewSummaryCard). Animasi asli dipertahankan
-// (kartu naik dan memudar, bintang bertingkat, angka menghitung naik 1,5 detik), tetapi dipicu
-// saat kartu masuk layar (sekali), bukan saat mount. Token proyek menggantikan token shadcn,
-// format angka id-ID, teks bahasa Indonesia, dan bintang mendukung setengah.
 import { animate, motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { StarIcon } from "./StarIcon";
@@ -47,10 +43,8 @@ export default function ReviewSummaryCard({ rating, reviewCount, align = "center
   const inView = useInView(cardRef, { once: true, amount: 0.3 });
   const reduce = useReducedMotion();
   const empty = reviewCount === 0;
-  // Bulatkan ke satu desimal agar bintang, angka, dan predikat konsisten.
   const shown = Math.round(rating * 10) / 10;
 
-  // Angka awal sudah final (HTML server); saat masuk layar diulang dari 0 bila gerak diizinkan.
   useEffect(() => {
     if (!inView || reduce || empty) return;
     const ratingControl = animate(0, shown, {
@@ -88,7 +82,6 @@ export default function ReviewSummaryCard({ rating, reviewCount, align = "center
         className,
       )}
     >
-      {/* Varian bintang mengikuti state kartu induk */}
       <div className="flex items-center gap-1" aria-hidden>
         {[0, 1, 2, 3, 4].map((i) => (
           <motion.span key={i} custom={i} variants={reduce ? instant : starVariants}>
@@ -101,7 +94,6 @@ export default function ReviewSummaryCard({ rating, reviewCount, align = "center
         <p className="mt-3 text-lg font-semibold text-ink md:mt-4 md:text-2xl">Belum ada ulasan</p>
       ) : (
         <>
-          {/* Angka beranimasi disembunyikan dari pembaca layar; kalimat di bawahnya statis */}
           <p aria-hidden className="mt-3 font-display text-2xl font-bold tracking-tight text-ink tabular-nums md:mt-4 md:text-4xl">
             <span ref={ratingRef}>{formatRating(shown)}</span>
             <span className="text-lg font-semibold md:text-3xl">

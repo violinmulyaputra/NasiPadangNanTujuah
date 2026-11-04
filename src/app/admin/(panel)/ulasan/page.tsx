@@ -34,7 +34,6 @@ function listHref({ filter, page }: Partial<ReviewListParams>) {
 
 async function ReviewModeration({ searchParams }: { searchParams: PageProps<"/admin/ulasan">["searchParams"] }) {
   const params = parseReviewListParams(await searchParams);
-  // listReviews memanggil requireAdmin() sebelum menyentuh data.
   const { reviews, total } = await listReviews(params);
   const pages = Math.max(1, Math.ceil(total / REVIEWS_PER_PAGE));
 
@@ -122,7 +121,6 @@ async function ReviewModeration({ searchParams }: { searchParams: PageProps<"/ad
   );
 }
 
-// F5: moderasi ulasan. Semua ulasan termasuk yang disembunyikan, terbaru di atas, 20 per halaman.
 export default function AdminReviewsPage({ searchParams }: PageProps<"/admin/ulasan">) {
   return (
     <main>

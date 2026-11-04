@@ -2,7 +2,6 @@ import { statusLabel } from "@/components/OrderTimeline";
 import { cn } from "@/lib/utils";
 import type { OrderStatus } from "@/types/order";
 
-// Label status untuk admin. Dibedakan lewat teks; warna hanya penegas.
 export default function OrderStatusBadge({ status }: { status: OrderStatus }) {
   return (
     <span

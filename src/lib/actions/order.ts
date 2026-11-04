@@ -20,11 +20,7 @@ const CHECK_FIELDS = "Periksa lagi isian yang ditandai.";
 const fail = (message: string, fieldErrors: Extract<CreateOrderResult, { status: "error" }>["fieldErrors"] = {}) =>
   ({ status: "error", message, fieldErrors }) as const;
 
-// Membuat pesanan dari form checkout (pop-up keranjang). Input objek JSON dari klien.
-// Harga dari klien TIDAK dipakai: harga, ketersediaan, dan ongkir dibaca dari database,
-// lalu dihitung ulang dengan pricing.ts. Status awal selalu menunggu_bayar (default DB).
 export async function createOrder(input: unknown): Promise<CreateOrderResult> {
-  // Kolom jebakan terisi: pura-pura sukses tanpa menyimpan apa pun.
   const honeypot = (input as { website?: unknown } | null)?.website;
   if (typeof honeypot === "string" && honeypot.trim() !== "") {
     return { status: "success", code: generateOrderCode(), items: [], subtotal: 0, deliveryFee: 0, total: 0 };
@@ -38,7 +34,6 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
     const supabase = createAdminClient();
     const ipHash = await getIpHash();
 
-    // Dicatat sebelum menu dan zona dicek, jadi kiriman berulang dengan data salah ikut terhitung.
     const allowed = await takeAttempt(supabase, ipHash, "order", { maxPerHour: MAX_PER_HOUR, minGapMs: MIN_GAP_MS });
     if (!allowed) return fail(RATE_LIMIT_MESSAGE);
 
@@ -59,7 +54,6 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
     if (menuError) throw menuError;
     const menu = new Map(menuRows.map((m) => [m.id as string, m]));
 
-    // line_total dan total adalah kolom generated di DB, jadi tidak dikirim.
     const lines = [];
     const summary: OrderSummaryLine[] = [];
     let subtotal = 0;
@@ -101,7 +95,6 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
       notes: customer.notes,
       subtotal,
     };
-    // Satu rpc = satu transaksi: orders dan order_items tersimpan bersama atau tidak sama sekali.
     for (let i = 0; i < MAX_CODE_TRIES; i++) {
       const code = generateOrderCode();
       const { data: orderId, error } = await supabase.rpc("create_order", {
@@ -110,12 +103,10 @@ export async function createOrder(input: unknown): Promise<CreateOrderResult> {
         p_items: lines,
       });
       if (error) throw error;
-      // null = kode bentrok dengan pesanan lain, coba kode baru.
       if (orderId) return { status: "success", code, items: summary, subtotal, deliveryFee, total };
     }
     throw new Error(`Kode pesanan bentrok ${MAX_CODE_TRIES} kali`);
   } catch (error) {
-    // Detail error hanya di log server, tidak dikirim ke klien.
     console.error("Gagal membuat pesanan:", error);
     return fail(GENERIC_ERROR);
   }

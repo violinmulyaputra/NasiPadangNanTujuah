@@ -2,7 +2,6 @@ import CardDeckCarousel, { type Slide } from "./CardDeckCarousel";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
-// Foto suasana 354 x 472 px (3:4), urut sesuai docs/DESIGN.md
 const slides: Slide[] = [
   {
     image: "/images/suasana/restoran-minang.webp",
@@ -41,7 +40,6 @@ const slides: Slide[] = [
   },
 ];
 
-// Alamat cabang: data contoh fiktif
 const branches = [
   { city: "Semarang", addresses: ["Jl. Ahmad Yani No. 115", "Jl. Pandanaran No. 107"] },
   { city: "Yogyakarta", addresses: ["Jl. Jend. Sudirman No. 42", "Jl. Kaliurang No. 5"] },
@@ -52,7 +50,6 @@ export default function VisitUs() {
     <section className="bg-paper py-16 md:py-24">
       <div className="mx-auto max-w-container px-6 md:px-8">
         <div className="grid gap-8 md:grid-cols-[3fr_2fr] md:gap-12">
-          {/* Lebar kartu 260 px di HP, 320 px mulai md; rasio 3:4 */}
           <Reveal index={1}>
             <CardDeckCarousel
               slides={slides}
@@ -62,8 +59,6 @@ export default function VisitUs() {
             />
           </Reveal>
 
-          {/* Judul seksi rata kiri di atas daftar cabang (sesuai sketsa). Mulai md kolom ini
-              setinggi padding carousel + kartu 320 x 427 px, jadi isinya sejajar di tengah kartu. */}
           <div className="flex flex-col md:h-[calc(48px_+_320px_*_4_/_3)] md:justify-center">
             <Reveal index={0}>
               <SectionHeading

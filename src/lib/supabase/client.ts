@@ -1,6 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
 
-// Klien Supabase untuk Client Components (browser). Hanya kunci publik.
 export function createClient() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

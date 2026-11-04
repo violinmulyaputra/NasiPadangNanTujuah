@@ -14,7 +14,6 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-// Komponen server: membaca ulasan per permintaan, jadi dibungkus <Suspense> di page.tsx.
 export default async function ReviewList() {
   const reviews = await getLatestReviews(10);
 
@@ -27,8 +26,6 @@ export default async function ReviewList() {
   }
 
   return (
-    // isolate + cahaya -z-10: cahaya kartu yang di-hover dilukis di bawah semua kartu,
-    // jadi hanya tampak di celah dan tidak menutupi kartu di sebelahnya.
     <ul className="isolate mx-auto flex w-full max-w-4xl flex-col gap-6">
       {reviews.map((review, i) => (
         <li key={review.id}>
@@ -55,7 +52,6 @@ export default async function ReviewList() {
                   <StarRow value={review.rating} starClassName="size-5" />
                   <span className="sr-only">Rating {formatRating(review.rating)} dari 5</span>
                 </div>
-                {/* Teks biasa (React meng-escape), baris baru dipertahankan */}
                 <p className="mt-3 text-sm leading-relaxed whitespace-pre-line break-words text-ink md:text-base">
                   {review.comment}
                 </p>

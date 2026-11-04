@@ -4,8 +4,6 @@ import { first, type SearchParamValue } from "@/lib/admin-orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { MenuItem } from "@/types/menu";
 
-// Data pengelolaan menu (F5) lewat service role, tanpa cache: admin selalu melihat data terbaru.
-
 export const MAX_MENU_QUERY = 40;
 export type MenuFilter = "semua" | "habis" | "populer";
 export type MenuListParams = { filter: MenuFilter; query: string };
@@ -28,7 +26,6 @@ export async function listMenuForAdmin({ filter, query }: MenuListParams): Promi
     console.error("Gagal membaca menu admin:", error);
     throw new Error("Menu gagal dimuat.");
   }
-  // shortcut: filter di memori; cukup untuk sekitar 44 menu. Pindah ke query bila menu ratusan.
   const needle = query.toLocaleLowerCase("id-ID");
   return (data as MenuItem[]).filter(
     (item) =>

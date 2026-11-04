@@ -1,14 +1,9 @@
 import type { MenuCategory } from "@/types/menu";
 
-// Opsi pesanan per menu. Modul murni: dipakai klien (form pilihan, keranjang)
-// dan server (validasi ulang saat checkout F2). Setiap kelompok pilih SATU.
-
 export type OptionChoice = {
   id: string;
   label: string;
-  // Tambahan harga per porsi, integer Rupiah.
   price: number;
-  // Teks ringkas untuk baris keranjang bila label saja kurang jelas ("Sedikit" -> "Gula sedikit").
   summary?: string;
 };
 
@@ -19,10 +14,8 @@ export type OptionGroup = {
   defaultChoiceId: string;
 };
 
-// id kelompok -> id pilihan.
 export type Selections = Record<string, string>;
 
-// Lauk (ayam, sapi, seafood): bawaan "Tidak pakai".
 const SIDE_DISH_GROUPS: OptionGroup[] = [
   {
     id: "rice",
@@ -89,8 +82,6 @@ const ICE_GROUP: OptionGroup = {
 
 const DRINK_GROUPS: OptionGroup[] = [SUGAR_GROUP, ICE_GROUP];
 
-// Pengecualian minuman, dicocokkan dengan nama menu (huruf besar kecil dan spasi diabaikan).
-// Ubah di sini bila daftar minuman berubah.
 export const DRINK_OPTION_EXCEPTIONS: Record<string, OptionGroup[]> = {
   "air mineral botol 330 ml": [],
   "es teh tawar": [ICE_GROUP],
@@ -107,7 +98,6 @@ export function getOptionGroups(item: { name: string; category: MenuCategory }):
     case "Minuman":
       return DRINK_OPTION_EXCEPTIONS[normalizeName(item.name)] ?? DRINK_GROUPS;
     default:
-      // Sayuran dan buah: hanya jumlah.
       return [];
   }
 }
@@ -120,8 +110,6 @@ export type SelectionsValidation =
   | { ok: true; selections: Selections }
   | { ok: false; error: string };
 
-// Input dari klien tidak dipercaya: tolak kelompok atau pilihan yang tidak dikenal,
-// lalu lengkapi kelompok yang kosong dengan pilihan bawaan.
 export function validateSelections(groups: OptionGroup[], selections: unknown): SelectionsValidation {
   const raw = selections ?? {};
   if (typeof raw !== "object" || Array.isArray(raw)) {
@@ -141,8 +129,6 @@ export function validateSelections(groups: OptionGroup[], selections: unknown): 
   return { ok: true, selections: result };
 }
 
-// Label pilihan untuk baris keranjang: hanya pilihan yang berbeda dari bawaan,
-// jadi "Tidak pakai ..." di lauk dan "Pakai" di minuman tidak ditampilkan.
 export function selectionLabels(groups: OptionGroup[], selections: Selections): string[] {
   return groups.flatMap((g) => {
     const choiceId = selections[g.id];

@@ -1,17 +1,9 @@
 import Link from "next/link";
 import SpinPlate from "./SpinPlate";
 
-// Komponen server: judul dan teks tampil langsung tanpa menunggu animasi.
 export default function Hero() {
   return (
-    // Satu h1, posisinya diatur lewat grid-template-areas. Di semua lebar: judul lalu paragraf +
-    // tombol di kolom kiri, piring di kanan. Baris 1fr di atas dan bawah menjaga blok kiri
-    // sejajar vertikal di tengah piring tanpa melebarkan jarak judul ke paragraf.
-    // HP: kolom kiri 60% layar, piring 48vw dengan jarak 2vw, jadi sekitar 20% diameternya
-    //   keluar di kanan; overflow-x-clip supaya bagian itu tidak memunculkan scroll horizontal.
     <section className="mx-auto grid max-w-(--container) grid-cols-[minmax(0,calc(60vw_-_24px))_minmax(0,1fr)] grid-rows-[1fr_auto_auto_1fr] items-center gap-x-[2vw] overflow-x-clip py-12 pl-6 [grid-template-areas:'._plate'_'title_plate'_'text_plate'_'._plate'] md:grid-cols-[minmax(min-content,1fr)_minmax(0,1fr)] md:gap-x-12 md:px-8 md:py-24">
-      {/* HP: kalimat mengalir alami (text-pretty menghindari kata tunggal di baris akhir).
-          md ke atas: 4 baris lewat span block, tanpa membungkus; kolom kiri minimal min-content. */}
       <h1 className="font-display text-title-mobile leading-[1.15] font-bold text-pretty text-ink [grid-area:title] md:text-[clamp(2rem,4vw,3.25rem)]">
         <span className="md:block md:whitespace-nowrap">Dengan beberapa</span>{" "}
         <span className="md:block md:whitespace-nowrap">

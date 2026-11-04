@@ -16,8 +16,6 @@ export async function submitReview(
   _prevState: ReviewFormState,
   formData: FormData,
 ): Promise<ReviewFormState> {
-  // Kolom jebakan: manusia tidak melihatnya, bot biasanya mengisinya.
-  // Pura-pura sukses tanpa menyimpan apa pun.
   const honeypot = formData.get("website");
   if (typeof honeypot === "string" && honeypot.trim() !== "") {
     return { status: "success", message: SUCCESS_MESSAGE, fieldErrors: {} };
@@ -40,8 +38,6 @@ export async function submitReview(
     const ipHash = await getIpHash();
     const supabase = createAdminClient();
 
-    // shortcut: cek lalu tulis tidak atomik, kiriman serentak bisa lolos sedikit
-    // di atas batas; pindah ke fungsi SQL bila spam serentak jadi masalah.
     const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { data: attempts, error: attemptsError } = await supabase
       .from("review_attempts")
@@ -59,18 +55,15 @@ export async function submitReview(
     const { error: insertError } = await supabase.from("reviews").insert(result.data);
     if (insertError) throw insertError;
 
-    // Dicatat hanya setelah ulasan tersimpan, jadi batas per jam = ulasan berhasil.
     const { error: logError } = await supabase
       .from("review_attempts")
       .insert({ ip_hash: ipHash });
     if (logError) console.error("Gagal mencatat percobaan ulasan:", logError);
   } catch (error) {
-    // Detail error hanya di log server, tidak dikirim ke klien.
     console.error("Gagal menyimpan ulasan:", error);
     return { status: "error", message: GENERIC_ERROR, fieldErrors: {} };
   }
 
-  // Data ulasan dibaca per permintaan (klien cookies), jadi cukup segarkan rute /ulasan.
   revalidatePath("/ulasan");
   return { status: "success", message: SUCCESS_MESSAGE, fieldErrors: {} };
 }

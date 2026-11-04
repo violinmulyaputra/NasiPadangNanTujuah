@@ -14,15 +14,12 @@ export type ReviewStats = {
 
 export type ReviewField = "author_name" | "rating" | "comment";
 
-// Bentuk state untuk useActionState di form ulasan.
 export type ReviewFormState = {
   status: "idle" | "success" | "error";
   message: string;
   fieldErrors: Partial<Record<ReviewField, string>>;
 };
 
-// Filter daftar ulasan admin (F5). "baru" = 7 hari terakhir.
 export type AdminReviewFilter = "semua" | "tampil" | "tersembunyi" | "baru";
 
-// Satu baris ulasan untuk admin, termasuk yang disembunyikan.
 export type AdminReview = Review & { is_visible: boolean };

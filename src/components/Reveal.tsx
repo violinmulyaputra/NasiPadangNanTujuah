@@ -3,7 +3,6 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
-// Adaptasi Reveal 21st.dev: tanpa blur, hanya opacity dan geser vertikal, sekali jalan.
 const variants: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: (i: number) => ({
@@ -33,7 +32,6 @@ export default function Reveal({ index = 0, className, children }: Props) {
       viewport={{ once: true, amount: 0.15 }}
       className={className}
     >
-      {/* Tanpa JavaScript konten tetap terlihat */}
       <noscript>
         <style>{"[data-reveal]{opacity:1!important;transform:none!important}"}</style>
       </noscript>

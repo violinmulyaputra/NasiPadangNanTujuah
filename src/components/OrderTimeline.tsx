@@ -11,9 +11,6 @@ export const ORDER_STEPS: { status: OrderStatus; label: string }[] = [
 
 export const statusLabel = (status: OrderStatus) => ORDER_STEPS.find((s) => s.status === status)?.label ?? status;
 
-// Garis waktu empat langkah (F4). Vertikal di HP, horizontal mulai md. Langkah saat ini
-// ditandai bentuk dan teks, bukan hanya warna: lingkaran penuh berisi nomor plus "Saat ini";
-// langkah yang lewat bertanda centang.
 export default function OrderTimeline({ status }: { status: OrderStatus }) {
   const current = ORDER_STEPS.findIndex((s) => s.status === status);
 
@@ -30,7 +27,6 @@ export default function OrderTimeline({ status }: { status: OrderStatus }) {
               aria-current={isCurrent ? "step" : undefined}
               className="relative flex gap-4 pb-6 last:pb-0 md:flex-1 md:flex-col md:items-center md:gap-3 md:pb-0 md:text-center"
             >
-              {/* Garis penghubung ke langkah berikutnya: vertikal di HP, horizontal mulai md. */}
               {i < ORDER_STEPS.length - 1 && (
                 <span
                   aria-hidden

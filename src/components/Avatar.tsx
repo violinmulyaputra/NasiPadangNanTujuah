@@ -1,7 +1,5 @@
 "use client";
 
-// Avatar shadcn (Radix) yang disesuaikan dengan token. Hanya Avatar dan AvatarFallback:
-// testimoni memakai inisial, tanpa foto orang.
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";

@@ -1,7 +1,5 @@
 "use client";
 
-// Diadaptasi dari spotlight-card 21st.dev: hanya garis tepi yang menyala mengikuti kursor,
-// warna brand tetap. Gaya di globals.css (.spotlight-card); di sini cukup posisi kursor.
 import type { PointerEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +7,6 @@ type Props = { className?: string; children: ReactNode };
 
 function onPointerMove(e: PointerEvent<HTMLDivElement>) {
   if (e.pointerType !== "mouse") return;
-  // Relatif ke kartu itu sendiri, jadi geser Reveal di induk tidak memengaruhi posisi.
-  // Dibagi skala (lebar tampil / lebar asli) agar tetap tepat saat kartu membesar (hover-lift).
   const card = e.currentTarget;
   const { left, top, width } = card.getBoundingClientRect();
   const scale = width / card.offsetWidth;

@@ -16,9 +16,6 @@ const secondary = cn(
 
 type Props = { code: string; status: OrderStatus; hasProof: boolean; isPaid: boolean };
 
-// Aksi admin di detail pesanan. Setiap perubahan dikonfirmasi lebih dulu (dialog bawaan
-// browser, bisa dipakai keyboard dan pembaca layar). Hasil dibacakan lewat aria-live.
-// Server tetap memeriksa sesi admin dan transisi; tombol di sini hanya kemudahan.
 export default function AdminOrderActions({ code, status, hasProof, isPaid }: Props) {
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<AdminActionResult | null>(null);

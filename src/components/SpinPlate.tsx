@@ -12,7 +12,7 @@ import {
   type AnimationPlaybackControls,
 } from "framer-motion";
 
-const norm = (d: number) => ((d + 540) % 360) - 180; // sudut ke rentang -180..180
+const norm = (d: number) => ((d + 540) % 360) - 180;
 
 export default function SpinPlate({ src, alt }: { src: string; alt: string }) {
   const box = useRef<HTMLDivElement>(null);
@@ -21,12 +21,10 @@ export default function SpinPlate({ src, alt }: { src: string; alt: string }) {
   const drag = useRef({ active: false, angle: 0, t: 0, v: 0 });
   const reduce = useReducedMotion();
 
-  // Putaran dari scroll (1 putaran per 1440 px) dijumlahkan dengan putaran drag
   const { scrollY } = useScroll();
   const scrollRotate = useTransform(scrollY, (y) => y * 0.25);
   const totalRotate = useTransform([rotate, scrollRotate], ([a, b]: number[]) => a + b);
 
-  // Putaran masuk saat halaman dibuka (dilewati jika pengguna mematikan animasi)
   useEffect(() => {
     if (reduce) return;
     rotate.set(-120);
@@ -53,7 +51,7 @@ export default function SpinPlate({ src, alt }: { src: string; alt: string }) {
     const a = angleOf(e);
     const d = norm(a - drag.current.angle);
     const now = performance.now();
-    drag.current.v = (d / Math.max(now - drag.current.t, 1)) * 1000; // derajat/detik
+    drag.current.v = (d / Math.max(now - drag.current.t, 1)) * 1000;
     drag.current.angle = a;
     drag.current.t = now;
     rotate.set(rotate.get() + d);
@@ -63,12 +61,9 @@ export default function SpinPlate({ src, alt }: { src: string; alt: string }) {
     if (!drag.current.active) return;
     drag.current.active = false;
     const v = Math.max(-1440, Math.min(1440, drag.current.v));
-    // meluncur pelan lalu berhenti
     controls.current = animate(rotate, rotate.get() + v * 0.6, { duration: 1.4, ease: "easeOut" });
   };
 
-  // Bingkai tidak ikut berputar dan dipotong bulat: kotak yang diputar melebar sampai √2 kali
-  // dan memicu scroll horizontal. Piringnya bulat, jadi yang terpotong hanya sudut transparan.
   return (
     <div
       ref={box}

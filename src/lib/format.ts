@@ -1,5 +1,3 @@
-// Format tampilan bersama (Rupiah, tanggal, rating). Aman dipakai di server dan client.
-
 const ratingFormat = new Intl.NumberFormat("id-ID", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
@@ -23,14 +21,10 @@ const dateTimeFormat = new Intl.DateTimeFormat("id-ID", {
 
 const rupiahFormat = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
 
-// 25000 -> "Rp25.000"
 export const formatRupiah = (value: number) => `Rp${rupiahFormat.format(value)}`;
 
-// 4.5 -> "4,5"
 export const formatRating = (value: number) => ratingFormat.format(value);
 
-// "2026-11-02T11:30:00Z" -> "2 November 2026"
 export const formatDate = (iso: string) => dateFormat.format(new Date(iso));
 
-// "2026-11-04T07:30:00Z" -> "4 November 2026 pukul 14.30 WIB"
 export const formatDateTime = (iso: string) => `${dateTimeFormat.format(new Date(iso))} WIB`;

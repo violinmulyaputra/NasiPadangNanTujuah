@@ -6,9 +6,7 @@ import { getDashboardCounts } from "@/lib/admin-orders";
 
 export const metadata: Metadata = { title: "Ringkasan" };
 
-// Ringkasan F5: hanya hitungan, tanpa omzet atau laporan keuangan (di luar scope).
 async function Counts() {
-  // getDashboardCounts memanggil requireAdmin() sebelum menyentuh data.
   const counts = await getDashboardCounts();
   const cards = [
     { label: "Bukti bayar perlu diverifikasi", value: counts.verifikasi, href: "/admin/pesanan?status=verifikasi" },
@@ -20,8 +18,6 @@ async function Counts() {
     { label: "Menu tidak tersedia", value: counts.menuHabis, href: "/admin/menu?filter=habis" },
   ];
   return (
-    // Hover sama dengan kartu Ulasan Terkini: HoverGlow di bawah kartu (isolate + -z-10) dan
-    // scale hover-lift pada elemen dalam, bukan pada tautan.
     <ul className="isolate grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
         <li key={card.href} className="group relative">

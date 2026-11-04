@@ -3,11 +3,6 @@ import { getOptionGroups, selectionLabels, validateSelections, type Selections }
 import { calculateUnitPrice, clampQuantity, MAX_QUANTITY } from "@/lib/pricing";
 import type { MenuItem } from "@/types/menu";
 
-// Store keranjang di browser (tanpa akun), disimpan di localStorage.
-// Hanya untuk komponen klien. Harga di sini hanya untuk tampilan: server
-// menghitung ulang dari database saat checkout (lihat src/lib/pricing.ts).
-
-// Satu baris = satu kombinasi menu dan pilihan.
 export type CartLine = {
   lineKey: string;
   menuItemId: string;
@@ -22,14 +17,12 @@ export type CartLine = {
 };
 
 const STORAGE_KEY = "nasi-padang-cart";
-// Naikkan bila bentuk CartLine berubah: data versi lain dibuang saat dimuat.
 const SCHEMA_VERSION = 1;
 
 const EMPTY: CartLine[] = [];
-let lines: CartLine[] | null = null; // null = belum dibaca dari localStorage
+let lines: CartLine[] | null = null;
 const listeners = new Set<() => void>();
 
-// Kunci baris stabil: id menu + pilihan yang diurutkan per id kelompok.
 export const makeLineKey = (menuItemId: string, selections: Selections) =>
   [menuItemId, ...Object.keys(selections).sort().map((k) => `${k}=${selections[k]}`)].join("|");
 
@@ -57,9 +50,7 @@ function load(): CartLine[] {
       return data.lines.filter(isCartLine);
     }
   } catch {
-    // JSON rusak atau localStorage diblokir: anggap kosong.
   }
-  // Data lama atau tidak kompatibel: buang tanpa error.
   try {
     if (raw !== null) localStorage.removeItem(STORAGE_KEY);
   } catch {}
@@ -78,12 +69,10 @@ function setLines(next: CartLine[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: SCHEMA_VERSION, lines: next }));
   } catch {
-    // Penyimpanan penuh atau diblokir: keranjang tetap jalan di memori.
   }
   listeners.forEach((l) => l());
 }
 
-// Sinkron antartab: tab lain mengubah keranjang.
 function onStorage(e: StorageEvent) {
   if (e.key !== STORAGE_KEY) return;
   lines = load();
@@ -105,7 +94,6 @@ export function useCart(): CartLine[] {
 
 export type AddItemResult = { ok: true } | { ok: false; error: string };
 
-// Baris dengan lineKey sama digabung: jumlah bertambah, maksimal 20.
 export function addItem(menuItem: MenuItem, selections: unknown, quantity = 1): AddItemResult {
   if (!menuItem.is_available) return { ok: false, error: "Menu ini sedang habis." };
 

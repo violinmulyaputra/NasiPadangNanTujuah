@@ -1,16 +1,11 @@
 "use client";
 
-// Diadaptasi dari komponen 21st.dev "3D coverflow carousel". Gerak coverflow 3D, blur pada panah,
-// bayangan, dan transisi bawaan dipertahankan. Warnanya diganti tema terang proyek (latar paper,
-// kartu surface, aksen merah brand), lihat "Pengecualian komponen 21st.dev" di docs/DESIGN.md.
-
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 
-// Ikon inline (tanpa dependensi tambahan)
 const ChevronLeftIcon = () => (
   <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -41,7 +36,6 @@ export interface CarouselItem {
 
 export interface CoverFlowCarouselProps {
   items: CarouselItem[];
-  /** Judul dan subjudul seksi, tampil di atas panggung kartu */
   children?: ReactNode;
   label: string;
   autoplay?: boolean;
@@ -49,7 +43,6 @@ export interface CoverFlowCarouselProps {
   className?: string;
 }
 
-// Tombol panah: paper dengan garis line, hover dan fokus brand (sama dengan panah Visit Us). Blur bawaan dipertahankan.
 const arrowClass =
   "absolute top-[250px] z-40 flex size-[46px] -translate-y-1/2 md:top-[272px] cursor-pointer items-center justify-center rounded-full border border-line bg-paper text-ink shadow-control backdrop-blur-[8px] transition-all duration-150 hover:border-brand hover:bg-brand hover:text-paper focus-visible:border-brand focus-visible:bg-brand focus-visible:text-paper motion-reduce:transition-none";
 
@@ -67,8 +60,6 @@ export default function CoverFlowCarousel({
   const touchStartX = useRef(0);
   const reduce = useReducedMotion();
   const total = items.length;
-  // Putar otomatis berhenti saat kursor atau fokus keyboard ada di carousel, dan mati
-  // sepenuhnya untuk prefers-reduced-motion.
   const playing = autoplay && !reduce && !isHovered && !hasFocus && total > 1;
   const transition = (value: string) => (reduce ? "none" : value);
 
@@ -90,7 +81,6 @@ export default function CoverFlowCarousel({
     return () => clearInterval(interval);
   }, [playing, autoplayDelay, nextSlide]);
 
-  // Panah kiri/kanan hanya saat fokus ada di dalam carousel, bukan di seluruh halaman
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -134,13 +124,7 @@ export default function CoverFlowCarousel({
       <div className="relative w-full max-w-6xl mx-auto px-4 z-10 flex flex-col items-center">
         {children && <div className="mb-8 text-center">{children}</div>}
 
-        {/* Panggung, panah, dan titik muncul bersama saat digulir. Pembungkus selalu relative,
-            jadi posisi panah tidak melompat saat transform Reveal berakhir. */}
         <Reveal index={1} className="relative w-full">
-          {/* Panggung coverflow 3D. Jarak geser kartu samping (--cf-1, --cf-2) mengikuti lebar
-              kartu: 290 px di HP, 350 px mulai md. Di HP kartu 290 x 480 px: foto persegi 240 px (83% lebar
-              kartu) di atas, teks lebih kecil di bawah. Di 1280 px tampil tiga kartu penuh dan dua
-              kartu terluar terpotong di tepi. */}
           <div
             className="relative w-full h-[500px] flex justify-center items-center mb-8 [--cf-1:250px] [--cf-2:450px] md:h-[544px] md:[--cf-1:300px] md:[--cf-2:590px]"
             style={{ perspective: "1400px" }}
@@ -203,8 +187,6 @@ export default function CoverFlowCarousel({
                     transition: transition("all 800ms cubic-bezier(0.25, 1, 0.5, 1)"),
                   }}
                 >
-                  {/* Isi kartu (inert saat bukan kartu tengah: tidak bisa difokus). Foto di atas,
-                      teks di bawah tanpa saling menimpa, jadi tidak perlu lapisan gelap. */}
                   <div
                     inert={!isCenter}
                     className="relative flex h-full w-full flex-col text-center"
@@ -218,7 +200,6 @@ export default function CoverFlowCarousel({
                       {item.tag}
                     </span>
 
-                    {/* Foto: WebP transparan, object-contain agar piring tidak terpotong */}
                     <div className="relative mx-auto mt-4 aspect-square w-[240px] shrink-0 md:mx-0 md:mt-5 md:aspect-auto md:min-h-0 md:w-auto md:flex-1">
                       <Image
                         src={item.img}
@@ -303,7 +284,6 @@ export default function CoverFlowCarousel({
                     </div>
                   </div>
 
-                  {/* Kartu samping diredupkan dengan lapisan krem, bukan gelap */}
                   <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0 z-20 bg-paper"

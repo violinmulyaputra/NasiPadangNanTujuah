@@ -3,9 +3,6 @@ import AdminNav from "@/components/AdminNav";
 import { signOut } from "@/lib/actions/admin";
 import { requireAdmin } from "@/lib/admin-auth";
 
-// Email admin dan tombol Keluar membaca sesi, jadi di dalam Suspense. Layout tidak
-// dirender ulang saat berpindah halaman, karena itu SETIAP halaman juga memanggil
-// requireAdmin() sendiri.
 async function AdminAccount() {
   const admin = await requireAdmin();
   return (
@@ -34,7 +31,6 @@ export default function AdminPanelLayout({ children }: { children: React.ReactNo
           <AdminAccount />
         </Suspense>
       </div>
-      {/* usePathname() untuk /admin/pesanan/[kode] baru diketahui saat permintaan. */}
       <Suspense fallback={<div className="mt-4 h-10" />}>
         <AdminNav />
       </Suspense>

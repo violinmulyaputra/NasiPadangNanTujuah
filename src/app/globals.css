@@ -1,47 +1,34 @@
 @import "tailwindcss";
 
-/* Token dari docs/DESIGN.md. Komponen memakai utilitas ini, bukan nilai langsung. */
+/* Token desain */
 @theme {
   --color-brand: #e1331c;
   --color-ink: #161513;
   --color-paper: #fffdf9;
   --color-muted: #6b655e;
   --color-line: #d9d4cb;
-  /* Latar kartu carousel Best Seller (sedikit lebih gelap dari paper) */
   --color-surface: #f3ede2;
-  /* Latar kartu halaman Ulasan (ringkasan, form, kartu ulasan) */
   --color-card: #f9f6ef;
-  /* Hover tombol brand: merah lebih gelap, solid */
   --color-brand-dark: #b8281a;
-  /* Teks merah berukuran kecil di atas paper: kontras 5,20:1 (brand hanya 4,41:1) */
   --color-brand-strong: #cc2e19;
-  /* Cahaya hover foto cerita Tentang: krem hangat, lebih gelap dari surface agar terlihat di atas paper */
   --color-cream-glow: #e9dfcb;
-  /* Opacity latar panel teks kartu 7 Nilai (bg-paper/(--values-panel-opacity)).
-     15% adalah keputusan pemilik proyek; keterbacaan dibantu blur 2 px dan halo teks. */
   --values-panel-opacity: 15%;
 
-  /* Bayangan hangat dari ink, opasitas rendah */
   --shadow-card: 0 20px 40px rgb(22 21 19 / 0.12);
   --shadow-card-side: 0 10px 24px rgb(22 21 19 / 0.08);
   --shadow-control: 0 8px 24px rgb(22 21 19 / 0.12);
-  /* Bayangan halus foto piring agar piring putih tetap terpisah dari kartu semi-transparan */
   --drop-shadow-plate: 0 8px 14px rgb(22 21 19 / 0.16);
 
-  /* Ukuran judul di HP (di bawah md): judul Hero dan judul seksi sama besar.
-     Dipakai lewat utilitas text-title-mobile. */
   --text-title-mobile: clamp(1.5rem, 6.4vw, 2.5rem);
 
   --radius-card: 18px;
 
-  /* Lebar konten maksimum, pakai lewat max-w-(--container) atau max-w-container */
   --container: 1280px;
   --max-width-container: var(--container);
 
-  /* Marquee testimoni. Atur kecepatan dan jarak lewat --duration dan --gap di elemen. */
+  /* Animasi */
   --animate-marquee: marquee var(--duration, 40s) linear infinite;
 
-  /* Angka keranjang di Navbar membesar sebentar saat jumlah berubah (transform saja) */
   --animate-bump: bump 300ms ease-out;
 
   @keyframes bump {
@@ -60,15 +47,14 @@
   }
 }
 
-/* Halo tipis warna paper agar huruf terpisah dari detail foto di belakang panel transparan */
+/* Halo teks */
 @utility text-halo-paper {
   text-shadow:
     0 0 6px color-mix(in oklab, var(--color-paper) 70%, transparent),
     0 0 12px color-mix(in oklab, var(--color-paper) 70%, transparent);
 }
 
-/* Kartu membesar sedikit saat hover (kartu Ulasan Terkini dan kartu Kontak). Hanya perangkat
-   dengan kursor, jadi tidak menempel setelah ketukan; reduced motion: tanpa scale. */
+/* Hover kartu */
 @utility hover-lift {
   transition: scale 300ms ease-out;
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -78,7 +64,7 @@
   }
 }
 
-/* Font dari next/font (variabel di <html>), jadi pakai inline */
+/* Font */
 @theme inline {
   --font-sans: var(--font-jakarta);
   --font-display: var(--font-fraunces);
@@ -90,9 +76,7 @@
   }
 }
 
-/* Kartu spotlight halaman Kontak (adaptasi 21st.dev): garis tepi 1 px brand yang menyala
-   di sekitar kursor. radial-gradient dipotong jadi garis tepi saja lewat mask
-   (padding-box dikurangi border-box). Posisi --mx/--my diisi SpotlightCard. */
+/* Kartu spotlight */
 .spotlight-card::before {
   content: "";
   position: absolute;
@@ -118,7 +102,6 @@
   pointer-events: none;
 }
 
-/* Hanya perangkat dengan kursor; di layar sentuh tidak ada efek */
 @media (hover: hover) and (pointer: fine) {
   .spotlight-card:hover::before {
     opacity: 1;
@@ -131,13 +114,12 @@
   }
 }
 
-/* Kunci scroll halaman saat panel keranjang terbuka */
+/* Kunci scroll */
 html:has(dialog[open]) {
   overflow: hidden;
 }
 
-/* Latar halaman: paper juga di html, jadi kanvas (termasuk area overscroll di HP) tidak
-   bergantung pada perambatan latar body. Seksi tidak memberi latar sendiri. */
+/* Latar halaman */
 html,
 body {
   background: var(--color-paper);

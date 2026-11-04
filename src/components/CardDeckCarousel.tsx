@@ -1,12 +1,5 @@
 "use client";
 
-// Diadaptasi dari komponen 21st.dev "Card Deck Carousel": foto bertumpuk seperti setumpuk cetakan.
-// Kartu teratas bisa dilempar (seret lalu lepas), lalu masuk lagi ke dasar tumpukan. Tombol dan
-// panah keyboard melakukan lemparan yang sama; "sebelumnya" menarik kartu terbawah ke atas.
-// CSS, transisi, bayangan, dan gerak asli dipertahankan (lihat "Pengecualian komponen 21st.dev"
-// di docs/DESIGN.md). Penyesuaian: next/image, warna dan font lewat token, teks Indonesia,
-// tanpa lanskap lukisan bawaan, dan tanpa putar otomatis.
-
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
@@ -20,11 +13,8 @@ export type Slide = {
 
 export type CardDeckCarouselProps = {
   slides: Slide[];
-  /** CSS aspect-ratio kartu */
   aspect?: string;
-  /** Kemiringan terbesar (derajat) kartu di belakang */
   scatter?: number;
-  /** Atribut sizes untuk next/image, sesuai lebar kartu (--cd-w) */
   sizes: string;
   className?: string;
   ariaLabel: string;
@@ -34,7 +24,6 @@ function wrap(i: number, n: number): number {
   return n ? ((i % n) + n) % n : 0;
 }
 
-/** Pose diam kartu pada kedalaman `depth`. Hanya empat teratas yang terlihat. */
 function deckPose(depth: number, tilt: number, reduce = false) {
   const d = Math.min(depth, 3);
   return {
@@ -46,22 +35,15 @@ function deckPose(depth: number, tilt: number, reduce = false) {
   };
 }
 
-/** Kemiringan tetap yang tampak acak per kartu, dalam [-max, max] derajat. */
 function tiltFor(i: number, max: number): number {
   const u = (((i + 1) * 2654435761) >>> 0) / 4294967296;
   return (u * 2 - 1) * max;
 }
 
-/** Apakah seretan berakhir sebagai lemparan? dx dalam px, vx dalam px/ms, w = lebar kartu. */
 function isThrow(dx: number, vx: number, w: number): boolean {
   return Math.abs(dx) > w * 0.28 || (Math.abs(vx) > 0.55 && Math.abs(dx) > 24);
 }
 
-// CSS bawaan komponen. Diubah hanya: warna dan font lewat token, tinggi mengikuti isi (bukan
-// 100svh), judul boleh membungkus agar tidak terpotong, keterangan memakai --color-muted
-// supaya kontrasnya cukup, hover dan fokus panah merah brand (bukan hitam) seperti panah Best
-// Seller, dan penghitung halaman dihapus (nomor foto tetap dibacakan lewat
-// live region).
 const CD_CSS = [
   ".cd-root{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(28px,5vh,52px);overflow:hidden;background:var(--cd-bg);color:var(--cd-ink);outline:none;padding:24px 16px;box-sizing:border-box}",
   ".cd-root:focus-visible{box-shadow:inset 0 0 0 2px var(--cd-ink)}",
@@ -100,17 +82,14 @@ export default function CardDeckCarousel({
   const [over, setOver] = useState<Override | null>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
-  // Salinan `top` untuk handler; diperbarui setelah render (aturan react-hooks/refs)
   const topRef = useRef(0);
   useEffect(() => {
     topRef.current = top;
   }, [top]);
-  // Bernilai null saat render server, jadi hasil hydration tetap sama
   const reduce = useReducedMotion() ?? false;
 
   const later = (fn: () => void, ms: number) => window.setTimeout(fn, ms);
 
-  // Lempar kartu teratas ke arah (dirX, dirY), lalu selipkan ke dasar tumpukan.
   const throwTop = useCallback(
     (dirX: number, fromX = 0, fromY = 0, dirY = 0) => {
       const w = deckRef.current?.offsetWidth || 400;
@@ -131,7 +110,6 @@ export default function CardDeckCarousel({
     [n, reduce],
   );
 
-  // Tarik kartu terbawah kembali ke atas dari kiri.
   const pullBack = useCallback(() => {
     const w = deckRef.current?.offsetWidth || 400;
     if (busy.current || n < 2) return;
