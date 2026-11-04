@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Token desain */
+@theme {
+  --color-brand: #e1331c;
+  --color-ink: #161513;
+  --color-paper: #fffdf9;
+  --color-muted: #6b655e;
+  --color-line: #d9d4cb;
+  --color-surface: #f3ede2;
+  --color-card: #f9f6ef;
+  --color-brand-dark: #b8281a;
+  --color-brand-strong: #cc2e19;
+  --color-cream-glow: #e9dfcb;
+  --values-panel-opacity: 15%;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --shadow-card: 0 20px 40px rgb(22 21 19 / 0.12);
+  --shadow-card-side: 0 10px 24px rgb(22 21 19 / 0.08);
+  --shadow-control: 0 8px 24px rgb(22 21 19 / 0.12);
+  --drop-shadow-plate: 0 8px 14px rgb(22 21 19 / 0.16);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --text-title-mobile: clamp(1.5rem, 6.4vw, 2.5rem);
+
+  --radius-card: 18px;
+
+  --container: 1280px;
+  --max-width-container: var(--container);
+
+  /* Animasi */
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+
+  --animate-bump: bump 300ms ease-out;
+
+  @keyframes bump {
+    40% {
+      transform: scale(1.3);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap, 1rem)));
+    }
   }
 }
 
+/* Halo teks */
+@utility text-halo-paper {
+  text-shadow:
+    0 0 6px color-mix(in oklab, var(--color-paper) 70%, transparent),
+    0 0 12px color-mix(in oklab, var(--color-paper) 70%, transparent);
+}
+
+/* Hover kartu */
+@utility hover-lift {
+  transition: scale 300ms ease-out;
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover {
+      scale: 1.02;
+    }
+  }
+}
+
+/* Font */
+@theme inline {
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Kartu spotlight */
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background: radial-gradient(
+      200px circle at var(--mx, 50%) var(--my, 50%),
+      var(--color-brand),
+      transparent
+    )
+    border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-card::before {
+    transition: none;
+  }
+}
+
+/* Kunci scroll */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Latar halaman */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
