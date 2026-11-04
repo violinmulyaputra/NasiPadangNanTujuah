@@ -16,12 +16,9 @@
 --     service role key (melewati RLS), setelah input divalidasi di server.
 --     Jadi anon tidak punya akses langsung ke orders dan order_items, dan data
 --     pelanggan tidak bisa dibaca dari browser.
---   - Admin = user Supabase Auth dengan app_metadata.role = 'admin'.
---     Set lewat Dashboard > Authentication > Users, atau SQL:
---       update auth.users
---       set raw_app_meta_data = raw_app_meta_data || '{"role":"admin"}'
---       where email = '<email-admin>';
---     Matikan juga pendaftaran publik (Authentication > Sign In / Providers).
+--   - Admin: DIGANTI oleh supabase/schema-admin.sql (2026-11-04). Admin = user
+--     yang terdaftar di tabel admin_users; is_admin() di bawah didefinisikan ulang
+--     di sana. app_metadata.role tidak dipakai lagi.
 -- =============================================================================
 
 

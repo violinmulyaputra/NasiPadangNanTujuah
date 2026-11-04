@@ -14,3 +14,10 @@ export type MenuItem = {
   is_popular: boolean;
   sort_order: number;
 };
+
+// Hasil aksi ubah menu admin (F5), untuk useActionState.
+export type MenuEditState = {
+  status: "idle" | "success" | "error";
+  message: string;
+  fieldErrors: Partial<Record<"name" | "description" | "price", string>>;
+};

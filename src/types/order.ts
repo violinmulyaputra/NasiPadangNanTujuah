@@ -88,3 +88,34 @@ export type OrderTracking = {
   proofUploadCount: number;
   items: OrderSummaryLine[];
 };
+
+// Filter daftar pesanan admin (F5): empat status, ditambah "verifikasi" (menunggu_bayar
+// dengan bukti terkirim) dan "hari-ini" (dibuat hari ini, Asia/Jakarta).
+export type AdminOrderFilter = "semua" | OrderStatus | "verifikasi" | "hari-ini";
+
+// Satu baris daftar pesanan admin. Hanya untuk halaman admin.
+export type AdminOrderRow = {
+  code: string;
+  createdAt: string;
+  customerName: string;
+  total: number;
+  status: OrderStatus;
+  proofUploaded: boolean;
+};
+
+// Detail pesanan untuk admin, termasuk data pemesan. JANGAN dipakai di halaman publik.
+// proofUrl: signed URL berumur pendek, bukan jalur berkas.
+export type AdminOrderDetail = Omit<OrderTracking, "items"> & {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  notes: string | null;
+  isPaid: boolean;
+  paidAt: string | null;
+  updatedAt: string;
+  proofUrl: string | null;
+  items: (OrderSummaryLine & { unitPrice: number })[];
+};
+
+export type AdminActionResult = { status: "success" | "error"; message: string };
