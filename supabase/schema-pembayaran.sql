@@ -31,7 +31,7 @@ drop index if exists public.order_attempts_ip_created_idx;
 create index if not exists order_attempts_ip_kind_created_idx
   on public.order_attempts (ip_hash, kind, created_at);
 
--- Bucket Storage privat untuk bukti bayar
+-- Bucket bukti bayar
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('payment-proofs', 'payment-proofs', false, 2097152, array['image/jpeg', 'image/png', 'image/webp'])

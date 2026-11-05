@@ -42,7 +42,6 @@ export default function CheckoutDialog({ lines, zones, openKey, onClose }: Props
 
   const shownKey = useRef(0);
 
-  // efek bisa jalan ulang tanpa klik baru (Activity); buka hanya untuk openKey baru
   useEffect(() => {
     if (openKey === shownKey.current) return;
     shownKey.current = openKey;

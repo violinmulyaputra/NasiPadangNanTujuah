@@ -44,7 +44,6 @@ export default function ValuesAccordion() {
     triggers.current[i]?.focus();
   };
 
-  // tutup modal saat halaman disembunyikan Activity (mis. tombol Back); key baru melewati animasi keluar yang macet saat tersembunyi
   const [hideCount, setHideCount] = useState(0);
   useLayoutEffect(
     () => () => {

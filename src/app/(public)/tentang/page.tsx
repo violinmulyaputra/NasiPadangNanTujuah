@@ -1,14 +1,29 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import HoverGlow from "@/components/HoverGlow";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import ValuesAccordion from "@/components/ValuesAccordion";
 
-const STORY_PHOTO_1 = "/images/tentang/story-1.webp";
-const STORY_PHOTO_2 = "/images/tentang/story-2.webp";
-const PHOTO_ASPECT = "aspect-[3/2]";
-const PHOTO_SIZES = "(min-width: 1024px) 400px, (min-width: 768px) 320px, calc((100vw - 48px) * 4 / 9)";
+type StoryPhotoData = { src: string; mobileSrc?: string; position: string; alt: string };
+
+const STORY_PHOTO_1: StoryPhotoData = {
+  src: "/images/tentang/story-1.webp",
+  mobileSrc: undefined,
+  position: "object-center",
+  alt: "Aneka lauk Padang dalam piring putih, di antaranya rendang, ayam pop, gulai, dendeng balado, dan ikan goreng",
+};
+const STORY_PHOTO_2: StoryPhotoData = {
+  src: "/images/tentang/story-2.webp",
+  mobileSrc: undefined,
+  position: "object-center",
+  alt: "Bangunan restoran Nasi Padang Nan Tujuah beratap gonjong khas Minangkabau dengan lampu menyala saat senja dan hujan",
+};
+const PHOTO_ASPECT = "aspect-[9/16] md:aspect-[3/2]";
+const MOBILE_MEDIA = "(max-width: 767px)";
+const DESKTOP_SIZES = "(min-width: 1024px) 400px, 320px";
+const MOBILE_SIZES = "calc((100vw - 48px) * 2 / 5)";
+const CROP_SIZES = "(min-width: 1024px) 400px, (min-width: 768px) 320px, calc((100vw - 48px) * 16 / 15)";
 
 export const metadata: Metadata = {
   title: "Tentang | Nasi Padang Nan Tujuah",
@@ -18,20 +33,36 @@ export const metadata: Metadata = {
 
 const rowClass = "grid items-center gap-4 md:justify-center md:gap-12 lg:gap-16";
 const row1Cols =
-  "grid-cols-[4fr_5fr] md:grid-cols-[320px_minmax(0,30rem)] lg:grid-cols-[400px_minmax(0,30rem)]";
+  "grid-cols-[2fr_3fr] md:grid-cols-[320px_minmax(0,30rem)] lg:grid-cols-[400px_minmax(0,30rem)]";
 const row2Cols =
-  "grid-cols-[5fr_4fr] md:grid-cols-[minmax(0,30rem)_320px] lg:grid-cols-[minmax(0,30rem)_400px]";
+  "grid-cols-[3fr_2fr] md:grid-cols-[minmax(0,30rem)_320px] lg:grid-cols-[minmax(0,30rem)_400px]";
 const textClass = "relative text-sm leading-relaxed text-ink md:text-lg lg:text-xl";
 const accentClass = "font-semibold text-brand-strong";
 
-function StoryPhoto({ src, alt, preload }: { src: string; alt: string; preload?: boolean }) {
+function StoryPhoto({ photo, eager }: { photo: StoryPhotoData; eager?: boolean }) {
+  const hasMobile = Boolean(photo.mobileSrc);
+  const { props: img } = getImageProps({
+    src: photo.src,
+    alt: photo.alt,
+    fill: true,
+    sizes: hasMobile ? DESKTOP_SIZES : CROP_SIZES,
+    loading: eager ? "eager" : "lazy",
+    fetchPriority: eager ? "high" : undefined,
+  });
+  const mobile = photo.mobileSrc
+    ? getImageProps({ src: photo.mobileSrc, alt: "", fill: true, sizes: MOBILE_SIZES }).props
+    : null;
+
   return (
     <div className="group relative">
       <HoverGlow />
       <div
         className={`relative overflow-hidden rounded-card transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.04] ${PHOTO_ASPECT}`}
       >
-        <Image src={src} alt={alt} fill sizes={PHOTO_SIZES} preload={preload} className="object-cover object-center" />
+        <picture>
+          {mobile && <source media={MOBILE_MEDIA} srcSet={mobile.srcSet} sizes={mobile.sizes} />}
+          <img {...img} alt={photo.alt} className={`object-cover ${photo.position}`} />
+        </picture>
       </div>
     </div>
   );
@@ -49,11 +80,7 @@ export default function AboutPage() {
         <div className="mt-12 flex flex-col gap-12 md:mt-16 md:gap-16">
           <div className={`${rowClass} ${row1Cols}`}>
             <Reveal index={0}>
-              <StoryPhoto
-                src={STORY_PHOTO_1}
-                alt="Aneka lauk Padang dalam piring putih, di antaranya rendang, ayam pop, gulai, dendeng balado, dan ikan goreng"
-                preload
-              />
+              <StoryPhoto photo={STORY_PHOTO_1} eager />
             </Reveal>
             <Reveal index={1}>
               <p className={textClass}>
@@ -69,10 +96,7 @@ export default function AboutPage() {
 
           <div className={`${rowClass} ${row2Cols}`}>
             <Reveal index={0} className="order-2">
-              <StoryPhoto
-                src={STORY_PHOTO_2}
-                alt="Bangunan restoran Nasi Padang Nan Tujuah beratap gonjong khas Minangkabau dengan lampu menyala saat senja dan hujan"
-              />
+              <StoryPhoto photo={STORY_PHOTO_2} />
             </Reveal>
             <Reveal index={1}>
               <p className={textClass}>

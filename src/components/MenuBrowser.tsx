@@ -29,7 +29,6 @@ export default function MenuBrowser({ items }: { items: MenuItem[] }) {
 
   const visibleCount = category ? items.filter((i) => i.category === category).length : items.length;
 
-  // notifikasi lama tidak muncul lagi saat kembali ke /menu
   useLayoutEffect(() => () => setStatus(null), []);
 
   useEffect(() => {

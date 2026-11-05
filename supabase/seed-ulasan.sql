@@ -1,2 +1,2 @@
--- Ulasan contoh (tidak dipakai lagi)
+-- Ulasan contoh
 
