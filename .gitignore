@@ -45,3 +45,6 @@ next-env.d.ts
 .ui-craft/
 .claude/
 skills-lock.json
+CLAUDE.md
+AGENTS.md
+.claude/
